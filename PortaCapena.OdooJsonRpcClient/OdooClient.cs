@@ -42,18 +42,7 @@ namespace PortaCapena.OdooJsonRpcClient
         {
             var tableName = OdooExtensions.GetOdooTableName<T>();
             var request = OdooRequestModel.SearchRead(odooConfig, userUid, tableName, query);
-
-            try
-            {
-                var response = await CallAsync(request);
-                var responseString = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<OdooResult<T[]>>(responseString);
-                return result;
-            }
-            catch (Exception e)
-            {
-                return OdooResult<T[]>.FailedResult(e.Message);
-            }
+            return await CallAndDeserializeAsync<T[]>(request);
         }
 
         #endregion
@@ -65,25 +54,11 @@ namespace PortaCapena.OdooJsonRpcClient
             return await ExecuteWitrAccesDenideRetryAsync(userUid => CreateAsync(_config, userUid, model));
         }
 
-        public static async Task<OdooResult<long>> CreateAsync(OdooConfig odooConfig, int userUid,
-            IOdooCreateModel model)
+        public static async Task<OdooResult<long>> CreateAsync(OdooConfig odooConfig, int userUid, IOdooCreateModel model)
         {
-            var tableName = model.OdooTableName();
-            var request = OdooRequestModel.Create(odooConfig, userUid, tableName, model);
-
-            try
-            {
-                var response = await CallAsync(request);
-                var responseString = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<OdooResult<long[]>>(responseString);
-                return result.Failed
-                    ? OdooResult<long>.FailedResult(result)
-                    : result.ToResult(result.Value.FirstOrDefault());
-            }
-            catch (Exception e)
-            {
-                return OdooResult<long>.FailedResult(e.Message);
-            }
+            var request = OdooRequestModel.Create(odooConfig, userUid, model.OdooTableName(), model);
+            var result = await CallAndDeserializeAsync<long[]>(request);
+            return result.Succeed ? result.ToResult(result.Value.FirstOrDefault()) : OdooResult<long>.FailedResult(result);
         }
 
         public async Task<OdooResult<long>> CreateAsync(OdooCreateDictionary model, string tableName = null)
@@ -94,20 +69,8 @@ namespace PortaCapena.OdooJsonRpcClient
         public static async Task<OdooResult<long>> CreateAsync(OdooConfig odooConfig, int userUid, OdooCreateDictionary model, string tableName = null)
         {
             var request = OdooRequestModel.Create(odooConfig, userUid, GetTableName(model, tableName), model);
-
-            try
-            {
-                var response = await CallAsync(request);
-                var responseString = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<OdooResult<long[]>>(responseString);
-                return result.Failed
-                    ? OdooResult<long>.FailedResult(result)
-                    : result.ToResult(result.Value.FirstOrDefault());
-            }
-            catch (Exception e)
-            {
-                return OdooResult<long>.FailedResult(e.Message);
-            }
+            var result = await CallAndDeserializeAsync<long[]>(request);
+            return result.Succeed ? result.ToResult(result.Value.FirstOrDefault()) : OdooResult<long>.FailedResult(result);
         }
 
         #endregion
@@ -123,42 +86,18 @@ namespace PortaCapena.OdooJsonRpcClient
         {
             var tableName = model.OdooTableName();
             var request = OdooRequestModel.Update(odooConfig, userUid, tableName, new[] { id }, model);
-
-            try
-            {
-                var response = await CallAsync(request);
-                var responseString = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<OdooResult<bool>>(responseString);
-                return result;
-
-            }
-            catch (Exception e)
-            {
-                return OdooResult<bool>.FailedResult(e.Message);
-            }
+            return await CallAndDeserializeAsync<bool>(request);
         }
 
         public async Task<OdooResult<bool>> UpdateAsync(OdooCreateDictionary model, long[] ids, string tableName = null)
         {
-            return await ExecuteWitrAccesDenideRetryAsync(userUid =>
-                UpdateAsync(_config, userUid, model, ids, tableName));
+            return await ExecuteWitrAccesDenideRetryAsync(userUid => UpdateAsync(_config, userUid, model, ids, tableName));
         }
 
         public static async Task<OdooResult<bool>> UpdateAsync(OdooConfig odooConfig, int userUid, OdooCreateDictionary model, long[] ids, string tableName = null)
         {
             var request = OdooRequestModel.Update(odooConfig, userUid, GetTableName(model, tableName), ids, model);
-
-            try
-            {
-                var response = await CallAsync(request);
-                var responseString = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<OdooResult<bool>>(responseString);
-                return result;
-            }
-            catch (Exception e)
-            {
-                return OdooResult<bool>.FailedResult(e.Message);
-            }
+            return await CallAndDeserializeAsync<bool>(request);
         }
 
         #endregion
@@ -191,25 +130,13 @@ namespace PortaCapena.OdooJsonRpcClient
 
         public async Task<OdooResult<bool>> DeleteRangeAsync(string tableName, long[] ids)
         {
-            return await ExecuteWitrAccesDenideRetryAsync(userUid =>
-                DeleteRangeAsync(_config, userUid, tableName, ids));
+            return await ExecuteWitrAccesDenideRetryAsync(userUid =>DeleteRangeAsync(_config, userUid, tableName, ids));
         }
 
         public static async Task<OdooResult<bool>> DeleteRangeAsync(OdooConfig odooConfig, int userUid, string tableName, long[] ids)
         {
             var request = OdooRequestModel.Delete(odooConfig, userUid, tableName, ids);
-
-            try
-            {
-                var response = await CallAsync(request);
-                var responseString = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<OdooResult<bool>>(responseString);
-                return result;
-            }
-            catch (Exception e)
-            {
-                return OdooResult<bool>.FailedResult(e.Message);
-            }
+            return await CallAndDeserializeAsync<bool>(request);
         }
 
         #endregion
@@ -237,18 +164,7 @@ namespace PortaCapena.OdooJsonRpcClient
         public static async Task<OdooResult<int>> LoginAsync(OdooConfig odooConfig)
         {
             var request = OdooRequestModel.Login(odooConfig);
-
-            try
-            {
-                var response = await CallAsync(request);
-                var responseString = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<OdooResult<int>>(responseString);
-                return result;
-            }
-            catch (HttpRequestException e)
-            {
-                return OdooResult<int>.FailedResult(e.Message);
-            }
+            return await CallAndDeserializeAsync<int>(request);
         }
 
         #endregion
@@ -263,19 +179,7 @@ namespace PortaCapena.OdooJsonRpcClient
         public static async Task<OdooResult<Dictionary<string, OdooPropertyInfo>>> GetModelAsync(OdooConfig odooConfig, int userUid, string tableName)
         {
             var request = OdooRequestModel.ModelFields(odooConfig, userUid, tableName);
-            try
-            {
-                var response = await CallAsync(request);
-                var responseString = await response.Content.ReadAsStringAsync();
-                var result =
-                    JsonConvert.DeserializeObject<OdooResult<Dictionary<string, OdooPropertyInfo>>>(responseString);
-                return result;
-            }
-            catch (Exception e)
-            {
-                return OdooResult<Dictionary<string, OdooPropertyInfo>>.FailedResult(e.Message);
-            }
-
+            return await CallAndDeserializeAsync<Dictionary<string, OdooPropertyInfo>>(request);
         }
 
         #endregion
@@ -290,25 +194,12 @@ namespace PortaCapena.OdooJsonRpcClient
         public static async Task<OdooResult<OdooVersion>> GetVersionAsync(OdooConfig odooConfig)
         {
             var request = OdooRequestModel.Version(odooConfig);
-
-            try
-            {
-                var response = await CallAsync(request);
-                var responseString = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<OdooResult<OdooVersion>>(responseString);
-                return result;
-            }
-            catch (HttpRequestException e)
-            {
-                return OdooResult<OdooVersion>.FailedResult(e.Message);
-            }
-
+            return await CallAndDeserializeAsync<OdooVersion>(request);
         }
 
         #endregion
 
-        private async Task<OdooResult<TResult>> ExecuteWitrAccesDenideRetryAsync<TResult>(
-            Func<int, Task<OdooResult<TResult>>> func)
+        private async Task<OdooResult<TResult>> ExecuteWitrAccesDenideRetryAsync<TResult>(Func<int, Task<OdooResult<TResult>>> func)
         {
             var userUid = await GetCurrentUserUidOrLoginAsync();
             if (userUid.Failed)
@@ -326,6 +217,21 @@ namespace PortaCapena.OdooJsonRpcClient
             return await func.Invoke(loginUid.Value);
         }
 
+        public static async Task<OdooResult<T>> CallAndDeserializeAsync<T>(OdooRequestModel request)
+        {
+            try
+            {
+                var response = await CallAsync(request);
+                var responseString = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<OdooResult<T>>(responseString);
+                return result;
+            }
+            catch (Exception e)
+            {
+                return OdooResult<T>.FailedResult(e.ToString());
+            }
+        }
+
         public static async Task<HttpResponseMessage> CallAsync(OdooRequestModel requestModel)
         {
             var json = JsonConvert.SerializeObject(requestModel);
@@ -339,7 +245,6 @@ namespace PortaCapena.OdooJsonRpcClient
                 return result;
             }
         }
-
 
         private static string GetTableName(OdooCreateDictionary model, string tableName)
         {

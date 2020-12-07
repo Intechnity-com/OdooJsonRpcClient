@@ -7,8 +7,12 @@ namespace PortaCapena.OdooJsonRpcClient.Request
     {
         public OdooFilter Filters { get; set; }
         public HashSet<string> ReturnFields { get; set; }
-        public int? Skip { get; set; }
-        public int? Take { get; set; }
+
+        // skip
+        public int? Offset { get; set; }
+
+        // take
+        public int? Limit { get; set; }
 
         public string Order { get; set; }
 
@@ -19,18 +23,15 @@ namespace PortaCapena.OdooJsonRpcClient.Request
             Filters = new OdooFilter();
         }
 
-        public object[] GetFilters()
+
+        public object[] GetRequestFilters()
         {
-            if (Filters.Count > 0)
-                return Filters.ToArray();
-            return null;
+            return Filters.Count > 0 ? Filters.ToArray() : null;
         }
 
-        public string[] GetFields()
+        public string[] GetRequestFields()
         {
-            if (ReturnFields.Any())
-                return ReturnFields.ToArray();
-            return null;
+            return ReturnFields.Any() ? ReturnFields.ToArray() : null;
         }
     }
 }

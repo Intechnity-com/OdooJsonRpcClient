@@ -53,18 +53,18 @@ namespace PortaCapena.OdooJsonRpcClient.Request
 
         public static OdooRequestModel Search(OdooConfig config, int uid, string tableName, OdooQuery query = null)
         {
-            var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute", config.DbName, uid, config.Password, tableName, OdooOperation.Search, query?.GetFilters(), query?.GetFields(), query?.Skip, query?.Take, query?.Order);
+            var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute", config.DbName, uid, config.Password, tableName, OdooOperation.Search, query?.GetRequestFilters(), query?.GetRequestFields(), query?.Offset, query?.Limit, query?.Order);
             return new OdooRequestModel(param);
         }
         public static OdooRequestModel SearchRead(OdooConfig config, int uid, string tableName, OdooQuery query = null)
         {
-            var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute", config.DbName, uid, config.Password, tableName, OdooOperation.SearchRead, query?.GetFilters(), query?.GetFields(), query?.Skip, query?.Take, query?.Order);
+            var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute", config.DbName, uid, config.Password, tableName, OdooOperation.SearchRead, query?.GetRequestFilters(), query?.GetRequestFields(), query?.Offset, query?.Limit, query?.Order);
             return new OdooRequestModel(param);
         }
 
         public static OdooRequestModel Create(OdooConfig config, int uid, string tableName, object model)
         {
-            var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute", config.DbName, uid, config.Password, tableName, OdooOperation.Create, new object[] { model }, config.Context);
+            var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute", config.DbName, uid, config.Password, tableName, OdooOperation.Create, new [] { model }, config.Context);
             return new OdooRequestModel(param);
         }
         public static OdooRequestModel Update(OdooConfig config, int uid, string tableName, long[] ids, object model)

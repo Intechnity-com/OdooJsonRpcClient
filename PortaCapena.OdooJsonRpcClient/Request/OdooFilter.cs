@@ -14,7 +14,7 @@ namespace PortaCapena.OdooJsonRpcClient.Request
             return new OdooFilter();
         }
 
-        public OdooFilter Equal(string fieldName, object value)
+        public OdooFilter EqualTo(string fieldName, object value)
         {
             var field = new object[] { fieldName, "=", value };
             Add(field);
