@@ -6,7 +6,6 @@ using PortaCapena.OdooJsonRpcClient.Consts;
 using PortaCapena.OdooJsonRpcClient.Extensions;
 using PortaCapena.OdooJsonRpcClient.Models;
 using PortaCapena.OdooJsonRpcClient.Result;
-using PortaCapena.OdooJsonRpcClient.Utils;
 
 namespace PortaCapena.OdooJsonRpcClient.Request
 {
@@ -28,9 +27,16 @@ namespace PortaCapena.OdooJsonRpcClient.Request
             _query.Select(selector);
             return this;
         }
+
         public OdooQueryBuilder<T> Select(params string[] fields)
         {
             _query.Select(fields);
+            return this;
+        }
+
+        public OdooQueryBuilder<T> SelectSimplifiedModel()
+        {
+            _query.SelectSimplifiedModel();
             return this;
         }
 
@@ -116,12 +122,12 @@ namespace PortaCapena.OdooJsonRpcClient.Request
             return result.Succeed ? result.ToResult(result.Value.FirstOrDefault()) : OdooResult<T>.FailedResult(result);
         }
 
-        public async Task<int> CountAsync()
+        public async Task<OdooResult<int>> CountAsync()
         {
             //   return await  _odooRepository.GetAsync(this);
             throw new NotImplementedException();
         }
-        public async Task<bool> AnyAsync()
+        public async Task<OdooResult<bool>> AnyAsync()
         {
             //  return await  _odooRepository.GetAsync(this);
             throw new NotImplementedException();

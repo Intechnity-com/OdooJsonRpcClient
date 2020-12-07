@@ -28,12 +28,7 @@ namespace PortaCapena.OdooJsonRpcClient.Request
             var model = selector.Invoke(new T());
             PropertyInfo[] modelProps = model.GetType().GetProperties();
 
-            foreach (var propertyInfo in modelProps)
-            {
-                var key = new T().OdooPropertyName(propertyInfo.Name);
-                ReturnFields.Add(key);
-            }
-            return this;
+            return Select(modelProps.Select(x => OdooExtensions.GetOdooPropertyName<T>(x.Name)).ToArray());
         }
         public OdooQuery<T> Select(params string[] fields)
         {
@@ -41,6 +36,12 @@ namespace PortaCapena.OdooJsonRpcClient.Request
                 ReturnFields.Add(f);
 
             return this;
+        }
+
+        public OdooQuery<T> SelectSimplifiedModel()
+        {
+            PropertyInfo[] modelProps = typeof(T).GetProperties();
+            return Select(modelProps.Select(x => OdooExtensions.GetOdooPropertyName<T>(x.Name)).ToArray());
         }
 
         #endregion
