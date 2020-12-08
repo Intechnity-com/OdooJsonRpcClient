@@ -2,7 +2,7 @@
 using PortaCapena.OdooJsonRpcClient.Models;
 using PortaCapena.OdooJsonRpcClient.Utils;
 
-namespace PortaCapena.OdooJsonRpcClient.Tests.Models.Create
+namespace PortaCapena.OdooJsonRpcClient.Shared.Models.Create
 {
     [OdooTableName("product.product")]
     public class OdooCreateProduct : IOdooCreateModel

@@ -4,7 +4,7 @@ using PortaCapena.OdooJsonRpcClient.Converters;
 using PortaCapena.OdooJsonRpcClient.Models;
 using PortaCapena.OdooJsonRpcClient.Utils;
 
-namespace PortaCapena.OdooJsonRpcClient.Tests.Models
+namespace PortaCapena.OdooJsonRpcClient.Shared.Models
 {
     [OdooTableName("product.template")]
     [JsonConverter(typeof(OdooModelConverter))]

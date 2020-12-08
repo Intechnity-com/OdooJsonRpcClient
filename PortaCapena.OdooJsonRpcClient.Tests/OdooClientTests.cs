@@ -6,8 +6,9 @@ using PortaCapena.OdooJsonRpcClient.Consts;
 using PortaCapena.OdooJsonRpcClient.Extensions;
 using PortaCapena.OdooJsonRpcClient.Models;
 using PortaCapena.OdooJsonRpcClient.Request;
-using PortaCapena.OdooJsonRpcClient.Tests.Models;
-using PortaCapena.OdooJsonRpcClient.Tests.Models.Create;
+using PortaCapena.OdooJsonRpcClient.Shared;
+using PortaCapena.OdooJsonRpcClient.Shared.Models;
+using PortaCapena.OdooJsonRpcClient.Shared.Models.Create;
 using PortaCapena.OdooJsonRpcClient.Utils;
 using Xunit;
 

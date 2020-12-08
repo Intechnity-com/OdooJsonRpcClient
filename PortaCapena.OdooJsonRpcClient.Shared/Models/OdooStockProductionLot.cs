@@ -4,7 +4,7 @@ using PortaCapena.OdooJsonRpcClient.Converters;
 using PortaCapena.OdooJsonRpcClient.Models;
 using PortaCapena.OdooJsonRpcClient.Utils;
 
-namespace PortaCapena.OdooJsonRpcClient.Tests.Models
+namespace PortaCapena.OdooJsonRpcClient.Shared.Models
 {
     [OdooTableName("stock.production.lot")]
     [JsonConverter(typeof(OdooModelConverter))]

@@ -4,7 +4,7 @@ using PortaCapena.OdooJsonRpcClient.Converters;
 using PortaCapena.OdooJsonRpcClient.Models;
 using PortaCapena.OdooJsonRpcClient.Utils;
 
-namespace PortaCapena.OdooJsonRpcClient.Tests.Models.Create
+namespace PortaCapena.OdooJsonRpcClient.Shared.Models.Create
 {
     [OdooTableName("coupon.program")]
     [JsonConverter(typeof(OdooModelConverter))]
