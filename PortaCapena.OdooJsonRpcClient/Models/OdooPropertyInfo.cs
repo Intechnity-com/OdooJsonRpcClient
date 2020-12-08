@@ -4,6 +4,7 @@ using PortaCapena.OdooJsonRpcClient.Converters;
 
 namespace PortaCapena.OdooJsonRpcClient.Models
 {
+    [JsonConverter(typeof(OdooModelConverter))]
     public class OdooPropertyInfo
     {
         [JsonProperty("type")]
@@ -110,6 +111,8 @@ namespace PortaCapena.OdooJsonRpcClient.Models
                     return OdooValueTypeEnum.Reference;
                 case "one2one":
                     return OdooValueTypeEnum.One2One;
+                case "monetary":
+                    return OdooValueTypeEnum.Monetary;
 
             }
             throw new Exception($"Cannot unmarshal Enum '{nameof(OdooValueTypeEnum)}' - '{value}'");
@@ -126,6 +129,8 @@ namespace PortaCapena.OdooJsonRpcClient.Models
         Datetime,
         Float,
         Integer,
+
+        Monetary,
 
         Many2Many,
         Many2One,

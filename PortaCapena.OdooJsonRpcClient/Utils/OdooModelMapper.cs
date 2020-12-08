@@ -19,16 +19,23 @@ namespace PortaCapena.OdooJsonRpcClient.Utils
             {
                 case JTokenType.Boolean when dotnetType != typeof(bool):
                     return false;
+
                 case JTokenType.Boolean:
                     result = value.ToObject(dotnetType);
                     return true;
-                case JTokenType.Integer:
+
+                case JTokenType.Integer when dotnetType == typeof(int) || dotnetType == typeof(int) || dotnetType == typeof(long) || dotnetType == typeof(long):
                 case JTokenType.Float:
                     result = value.ToObject(dotnetType);
+                    return true;
+
+                case JTokenType.Integer when dotnetType.IsArray && (int)value.ToObject(typeof(int)) == 0:
+                    result = Activator.CreateInstance(dotnetType, 0);
                     return true;
                 case JTokenType.String when dotnetType == typeof(string):
                     result = value.ToObject(dotnetType);
                     return true;
+
                 case JTokenType.String when (dotnetType == typeof(DateTime) || dotnetType == typeof(DateTime?)):
                     {
                         var stringTime = value.ToObject(typeof(string)) as string;
@@ -61,7 +68,7 @@ namespace PortaCapena.OdooJsonRpcClient.Utils
                     }
 
                 default:
-                    throw new Exception($"Not implemented json mapping '${value.Parent}'");
+                    throw new Exception($"Not implemented json mapping value: '${value.Parent}' to {dotnetType.Name}");
             }
         }
 
@@ -71,7 +78,7 @@ namespace PortaCapena.OdooJsonRpcClient.Utils
             var builder = new StringBuilder();
             builder.AppendLine($"[OdooTableName(\"{tableName}\")]");
             builder.AppendLine($"[JsonConverter(typeof({nameof(OdooModelConverter)}))]");
-            builder.AppendLine($"public class Odoo{ConvertOdooNameToDotNet(tableName)} : IOdooModel");
+            builder.AppendLine($"public class {ConvertOdooNameToDotNet(tableName)}OdooModel : IOdooModel");
             builder.AppendLine("{");
 
             foreach (var property in properties)
@@ -106,6 +113,9 @@ namespace PortaCapena.OdooJsonRpcClient.Utils
 
                 case OdooValueTypeEnum.Boolean:
                     return propery.Value.ResultRequired ? "bool" : "bool?";
+
+                case OdooValueTypeEnum.Monetary: 
+                    return propery.Value.ResultRequired ? "decimal" : "decimal?";
 
                 case OdooValueTypeEnum.Float:
                     return propery.Value.ResultRequired ? "double" : "double?";

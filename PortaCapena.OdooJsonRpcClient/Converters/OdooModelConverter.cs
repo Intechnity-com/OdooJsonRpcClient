@@ -20,14 +20,20 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            var propertiesMap = objectType.GetProperties().Select(p =>
-            {
-                var jsonAttribute = Attribute.GetCustomAttributes(p).FirstOrDefault(x => x is JsonPropertyAttribute) as JsonPropertyAttribute;
-                if (jsonAttribute == null)
-                    throw new ArgumentException($"Mising attribute '{nameof(JsonPropertyAttribute)}' for property '{p.Name}' in model '{objectType.Name}'");
+            var propertiesMap = new Dictionary<string, string>();
 
-                return new KeyValuePair<string, string>(jsonAttribute.PropertyName, p.Name);
-            }).ToDictionary(x => x.Key, x => x.Value);
+            foreach (var propertyInfo in objectType.GetProperties())
+            {
+                var atributes = Attribute.GetCustomAttributes(propertyInfo);
+                var jsonAttribute = atributes.FirstOrDefault(x => x is JsonPropertyAttribute) as JsonPropertyAttribute;
+                if (jsonAttribute == null)
+                {
+                    if (atributes.Any(x => x is JsonIgnoreAttribute))
+                        continue;
+                    throw new ArgumentException($"Mising attribute '{nameof(JsonPropertyAttribute)}' for property '{propertyInfo.Name}' in model '{objectType.Name}'");
+                }
+                propertiesMap.Add(jsonAttribute.PropertyName, propertyInfo.Name);
+            }
 
             var instance = Activator.CreateInstance(objectType);
 
