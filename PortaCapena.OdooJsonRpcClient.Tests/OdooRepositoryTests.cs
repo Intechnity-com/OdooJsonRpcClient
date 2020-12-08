@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using PortaCapena.OdooJsonRpcClient.Consts;
+using PortaCapena.OdooJsonRpcClient.Shared;
 using PortaCapena.OdooJsonRpcClient.Shared.Models;
-using PortaCapena.OdooJsonRpcClient.Tests.Models;
 using Xunit;
 
 namespace PortaCapena.OdooJsonRpcClient.Tests
@@ -52,10 +52,10 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         [Fact]
         public async Task Get_All_OdooVoucher()
         {
-            var repository = new OdooRepository<OdooVoucherEntity>(Config);
+            var repository = new OdooRepository<OdooCouponProgram>(Config);
 
             var products = await repository.Query()
-                .Where(x => x.PromoCode, OdooOperator.EqualsTo, "codetest1")
+             //   .Where(x => x.PromoCode, OdooOperator.EqualsTo, "codetest1")
                 .SelectSimplifiedModel()
                 .FirstOrDefaultAsync();
 

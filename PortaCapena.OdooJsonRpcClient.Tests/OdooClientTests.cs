@@ -163,7 +163,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         public async Task Get_DotNet_model_should_return_string()
         {
             var odooClient = new OdooClient(Config);
-            var tableName = "stock.production.lot";
+            var tableName = "coupon.program";
             var modelResult = await odooClient.GetModelAsync(tableName);
 
             var model = OdooModelMapper.GetDotNetModel(tableName, modelResult.Value);

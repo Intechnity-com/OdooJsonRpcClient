@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using FluentAssertions;
 using PortaCapena.OdooJsonRpcClient.Request;
+using PortaCapena.OdooJsonRpcClient.Shared;
 using Xunit;
 
 namespace PortaCapena.OdooJsonRpcClient.Tests
