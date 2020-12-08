@@ -47,7 +47,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
             var odooClient = new OdooClient(Config);
 
             var query = OdooQuery<OdooProductProduct>.Create()
-                .Where(x => x.Id, OdooOperator.EqualsTo, 67);
+                .Where(x => x.Barcode, OdooOperator.EqualsTo, 67);
 
             var products = await odooClient.GetAsync<OdooProductProduct>(query);
 
@@ -162,7 +162,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         public async Task Get_DotNet_model_should_return_string()
         {
             var odooClient = new OdooClient(Config);
-            var tableName = "product.product";
+            var tableName = "stock.production.lot";
             var modelResult = await odooClient.GetModelAsync(tableName);
 
             var model = OdooModelMapper.GetDotNetModel(tableName, modelResult.Value);

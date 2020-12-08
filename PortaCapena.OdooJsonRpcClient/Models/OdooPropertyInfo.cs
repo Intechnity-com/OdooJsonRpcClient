@@ -104,8 +104,15 @@ namespace PortaCapena.OdooJsonRpcClient.Models
                     return OdooValueTypeEnum.Selection;
                 case "text":
                     return OdooValueTypeEnum.Text;
+                case "html":
+                    return OdooValueTypeEnum.Html;
+                case "related":
+                    return OdooValueTypeEnum.Reference;
+                case "one2one":
+                    return OdooValueTypeEnum.One2One;
+
             }
-            throw new Exception("Cannot unmarshal type TypeEnum");
+            throw new Exception($"Cannot unmarshal Enum '{nameof(OdooValueTypeEnum)}' - '{value}'");
         }
     }
 
@@ -119,10 +126,15 @@ namespace PortaCapena.OdooJsonRpcClient.Models
         Datetime,
         Float,
         Integer,
+
         Many2Many,
         Many2One,
         One2Many,
+        One2One,
+        Reference,
+
         Selection,
-        Text
+        Text,
+        Html
     };
 }

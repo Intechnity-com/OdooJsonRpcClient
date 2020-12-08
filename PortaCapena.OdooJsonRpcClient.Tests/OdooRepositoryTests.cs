@@ -53,7 +53,10 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         {
             var repository = new OdooRepository<OdooVoucherEntity>(Config);
 
-            var products = await repository.Query().Where(x => x.PromoCode, OdooOperator.EqualsTo, "codetest1").SelectSimplifiedModel().FirstOrDefaultAsync();
+            var products = await repository.Query()
+                .Where(x => x.PromoCode, OdooOperator.EqualsTo, "codetest1")
+                .SelectSimplifiedModel()
+                .FirstOrDefaultAsync();
 
             products.Error.Should().BeNull();
             products.Value.Should().NotBeNull();

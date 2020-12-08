@@ -12,6 +12,7 @@
     <Copyright>Porta Capena</Copyright>
     <PackageTags>Odoo JsonRpc Client</PackageTags>
     <Description>JsonRpc Odoo Client</Description>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

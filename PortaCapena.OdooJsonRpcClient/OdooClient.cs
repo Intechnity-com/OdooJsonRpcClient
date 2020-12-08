@@ -165,6 +165,7 @@ namespace PortaCapena.OdooJsonRpcClient
         public static async Task<OdooResult<int>> LoginAsync(OdooConfig odooConfig)
         {
             var request = OdooRequestModel.Login(odooConfig);
+            //TODO: if faild returns false
             return await CallAndDeserializeAsync<int>(request);
         }
 

@@ -101,6 +101,8 @@ namespace PortaCapena.OdooJsonRpcClient.Utils
                     return "string";
                 case OdooValueTypeEnum.Text:
                     return "string";
+                case OdooValueTypeEnum.Html:
+                    return "string";
 
                 case OdooValueTypeEnum.Boolean:
                     return propery.Value.ResultRequired ? "bool" : "bool?";
@@ -116,13 +118,17 @@ namespace PortaCapena.OdooJsonRpcClient.Utils
                     return propery.Value.ResultRequired ? "DateTime" : "DateTime?";
 
                 case OdooValueTypeEnum.Many2One:
-                    return propery.Value.ResultRequired ? "int" : "int?";
-
+                    return propery.Value.ResultRequired ? "long" : "long?";
                 case OdooValueTypeEnum.Many2Many:
-                    return "int[]";
+                    return "long[]";
                 case OdooValueTypeEnum.One2Many:
-                    return "int[]";
-              
+                    return "long[]";
+                case OdooValueTypeEnum.One2One:
+                    return propery.Value.ResultRequired ? "long" : "long?";
+
+                case OdooValueTypeEnum.Reference:
+                    return "Odoo" + ConvertOdooNameToDotNet(propery.Value.RelationField);
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }

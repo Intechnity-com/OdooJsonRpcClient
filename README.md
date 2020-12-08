@@ -114,7 +114,7 @@ var products = await repository.Query().ToListAsync();
 ```
 
 In Repository U can use `OdooQueryBuilder`. 
-```
+```C#
   var products = await repository.Query()
                 .Where(x => x.Barcode, OdooOperator.EqualsTo, "barcodetest1")
                 .Select(x => new
