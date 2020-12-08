@@ -53,7 +53,7 @@ namespace PortaCapena.OdooJsonRpcClient.Utils
                         if (!value.HasValues)
                             return false;
 
-                        if (value.Count() > 2 || (dotnetType != typeof(int) && dotnetType != typeof(int?)) || value.First.Type != JTokenType.Integer)
+                        if (value.Count() > 2 || dotnetType != typeof(long) && dotnetType != typeof(long?) && dotnetType != typeof(int) && dotnetType != typeof(int?) || value.First.Type != JTokenType.Integer)
                             throw new Exception($"Not implemented json mapping '${value.Parent}'");
 
                         result = value.First.ToObject(dotnetType);

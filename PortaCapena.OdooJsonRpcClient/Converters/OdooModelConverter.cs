@@ -12,8 +12,6 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
 {
     public class OdooModelConverter : JsonConverter
     {
-      
-
         public override bool CanWrite { get { return false; } }
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
@@ -51,7 +49,7 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
 
         public override bool CanConvert(Type objectType)
         {
-            return System.Attribute.GetCustomAttributes(objectType).Any(v => v is KnownTypeAttribute);
+            return Attribute.GetCustomAttributes(objectType).Any(v => v is KnownTypeAttribute);
         }
     }
 }
