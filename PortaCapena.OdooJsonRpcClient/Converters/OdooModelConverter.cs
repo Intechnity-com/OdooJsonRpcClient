@@ -12,6 +12,9 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
 {
     public class OdooModelConverter : JsonConverter
     {
+      
+
+        public override bool CanWrite { get { return false; } }
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             throw new NotImplementedException();

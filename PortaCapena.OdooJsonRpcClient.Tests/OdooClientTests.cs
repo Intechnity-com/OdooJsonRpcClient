@@ -47,7 +47,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
             var odooClient = new OdooClient(Config);
 
             var query = OdooQuery<OdooProductProduct>.Create()
-                .Where(x => x.Id, OdooOperator.EqualsTo, 66);
+                .Where(x => x.Id, OdooOperator.EqualsTo, 67);
 
             var products = await odooClient.GetAsync<OdooProductProduct>(query);
 
@@ -312,5 +312,27 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         //    deleteProductResult.Succeed.Should().BeTrue();
         //    deleteProductResult.Value.Should().BeTrue();
         //}
+
+
+        [Fact(Skip = "Test for working on Odoo")]
+        //[Fact]
+        public async Task Create_voucher()
+        {
+            var odooClient = new OdooClient(Config);
+
+            var model = new OdooVoucherCreateOrUpdate()
+            {
+                Active = true,
+                Name = $"GiftCard 123E",
+                PromoCode = "codetest1",
+                RuleDateTo = new DateTime(2021, 1, 1),
+                DiscountFixedAmount = 2d,
+                DiscountType = "fixed_amount",
+                ProgramType = "promotion_program"
+            };
+
+            var createResult = await odooClient.CreateAsync(model);
+            createResult.Succeed.Should().BeTrue();
+        }
     }
 }

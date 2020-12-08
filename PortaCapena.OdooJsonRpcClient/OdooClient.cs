@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using PortaCapena.OdooJsonRpcClient.Consts;
 using PortaCapena.OdooJsonRpcClient.Extensions;
 using PortaCapena.OdooJsonRpcClient.Models;
@@ -130,7 +131,7 @@ namespace PortaCapena.OdooJsonRpcClient
 
         public async Task<OdooResult<bool>> DeleteRangeAsync(string tableName, long[] ids)
         {
-            return await ExecuteWitrAccesDenideRetryAsync(userUid =>DeleteRangeAsync(_config, userUid, tableName, ids));
+            return await ExecuteWitrAccesDenideRetryAsync(userUid => DeleteRangeAsync(_config, userUid, tableName, ids));
         }
 
         public static async Task<OdooResult<bool>> DeleteRangeAsync(OdooConfig odooConfig, int userUid, string tableName, long[] ids)
@@ -234,7 +235,7 @@ namespace PortaCapena.OdooJsonRpcClient
 
         public static async Task<HttpResponseMessage> CallAsync(OdooRequestModel requestModel)
         {
-            var json = JsonConvert.SerializeObject(requestModel);
+            string json = JsonConvert.SerializeObject(requestModel, new IsoDateTimeConverter { DateTimeFormat = OdooConsts.DateTimeFormat });
             var data = new StringContent(json, Encoding.UTF8, "application/json");
 
             using (var client = new HttpClient())

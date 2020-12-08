@@ -14,15 +14,13 @@ namespace PortaCapena.OdooJsonRpcClient.Extensions
     {
         public static string GetOdooTableName<T>() where T : IOdooAtributtesModel
         {
-            var attribute = typeof(T).GetCustomAttributes(typeof(OdooTableNameAttribute), true).FirstOrDefault() as OdooTableNameAttribute;
-            if (attribute == null)
+            if (!(typeof(T).GetCustomAttributes(typeof(OdooTableNameAttribute), true).FirstOrDefault() is OdooTableNameAttribute attribute))
                 throw new ArgumentException($"Mising attribute '{nameof(OdooTableNameAttribute)}' for model '{typeof(T).Name}'");
             return attribute.Name;
         }
         public static string OdooTableName(this IOdooAtributtesModel model)
         {
-            var attribute = model.GetType().GetCustomAttributes(typeof(OdooTableNameAttribute), true).FirstOrDefault() as OdooTableNameAttribute;
-            if (attribute == null)
+            if (!(model.GetType().GetCustomAttributes(typeof(OdooTableNameAttribute), true).FirstOrDefault() is OdooTableNameAttribute attribute))
                 throw new ArgumentException($"Mising attribute '{nameof(OdooTableNameAttribute)}' for model '{model.GetType().Name}'");
             return attribute.Name;
         }
