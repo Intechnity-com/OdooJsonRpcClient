@@ -111,14 +111,14 @@ namespace PortaCapena.OdooJsonRpcClient.Request
         public async Task<OdooResult<T>> FirstAsync()
         {
             Take(1);
-            var result = await _odooClient.GetAsync<T>(_query);
+            var result = await ToListAsync();
             return result.Succeed ? result.ToResult(result.Value.First()) : OdooResult<T>.FailedResult(result);
         }
 
         public async Task<OdooResult<T>> FirstOrDefaultAsync()
         {
             Take(1);
-            var result = await _odooClient.GetAsync<T>(_query);
+            var result = await ToListAsync();
             return result.Succeed ? result.ToResult(result.Value.FirstOrDefault()) : OdooResult<T>.FailedResult(result);
         }
 
