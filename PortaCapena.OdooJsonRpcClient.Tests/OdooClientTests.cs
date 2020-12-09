@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -163,7 +164,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         public async Task Get_DotNet_model_should_return_string()
         {
             var odooClient = new OdooClient(Config);
-            var tableName = "res.partner";
+            var tableName = "purchase.order";
             var modelResult = await odooClient.GetModelAsync(tableName);
 
             modelResult.Succeed.Should().BeTrue();
@@ -322,7 +323,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
             partnerResult.Succeed.Should().BeTrue();
             var partner = partnerResult.Value.First();
 
-            var productQuery =  OdooQuery<ProductProductOdooDto>.Create().ById(41);
+            var productQuery = OdooQuery<ProductProductOdooDto>.Create().ById(41);
             var productsResult = await odooClient.GetAsync<ProductProductOdooDto>(productQuery);
             productsResult.Succeed.Should().BeTrue();
             var product = productsResult.Value.First();
@@ -361,6 +362,54 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
             var createLineResult = await odooClient.CreateAsync(lineModel);
             createLineResult.Succeed.Should().BeTrue();
         }
+
+        [Fact(Skip = "Test for working on Odoo")]
+        //[Fact]
+        public async Task OnChange_test()
+        {
+            try
+            {
+                var loginResult = await OdooClient.LoginAsync(Config);
+
+                var param = new OdooRequestParams(Config.ApiUrlJson, "object", "execute", Config.DbName, loginResult.Value, Config.Password, "sale.order", OdooOperation.OnChage,
+                    new Dictionary<string, int>() { { "onchange_pricelist_id", 17 } }, 135);
+                var request = new OdooRequestModel(param);
+
+                var result = OdooClient.CallAsync(request);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+       // [Fact(Skip = "Test for working on Odoo")]
+        [Fact]
+        public async Task Create_purchase_order()
+        {
+
+            var odooClient = new OdooClient(Config);
+
+            var partnerResult = await odooClient.GetAsync<StockPickingTypeOdooDto>();
+
+
+            var dupa = new PurchaseOrderOdooDto
+            {
+                DateOrder = DateTime.Now,
+                PartnerId = 9,
+                CurrencyId = 15,
+                CompanyId = 1,
+                PickingTypeId = 1,
+                Name = "test purchase"
+            };
+
+            //var createResult = await odooClient.CreateAsync(dupa);
+            //createResult.Message.Should().BeNullOrEmpty();
+            //createResult.Succeed.Should().BeTrue();
+        }
+
 
         #endregion
 

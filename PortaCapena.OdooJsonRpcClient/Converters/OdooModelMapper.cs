@@ -10,7 +10,7 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
 {
     public static class OdooModelMapper
     {
-        private const string OdooModelSuffix = "OdooDto";
+        private const string OdooModelSuffix = "OdooModel";
 
         public static bool ConverOdooPropertyToDotNet(Type dotnetType, JToken value, out object result)
         {
@@ -22,6 +22,10 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                     return false;
 
                 case JTokenType.Boolean:
+                    result = value.ToObject(dotnetType);
+                    return true;
+
+                case JTokenType.Integer when dotnetType == typeof(bool) || dotnetType == typeof(bool?):
                     result = value.ToObject(dotnetType);
                     return true;
 
@@ -87,6 +91,8 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                 builder.AppendLine(string.Empty);
                 if (!string.IsNullOrEmpty(property.Value.Relation))
                     builder.AppendLine($"// {property.Value.Relation}");
+                if (property.Value.ResultRequired)
+                    builder.AppendLine("// required");
 
                 builder.AppendLine($"[JsonProperty(\"{property.Key}\")]");
                 builder.AppendLine($"public {ConvertToDotNetPropertyTypeName(property)} {ConvertOdooNameToDotNet(property.Key)} {{ get; set; }}");

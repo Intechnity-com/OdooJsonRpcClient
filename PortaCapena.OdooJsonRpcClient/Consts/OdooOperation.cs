@@ -15,5 +15,7 @@
         public const string NameGet = "name_get";
         public const string SearchCount = "search_count";
         public const string GetMetadata = "get_metadata";
+
+        public const string OnChage = "onchage";
     }
 }

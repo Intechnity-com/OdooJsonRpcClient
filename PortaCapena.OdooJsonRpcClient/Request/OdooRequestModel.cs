@@ -62,6 +62,12 @@ namespace PortaCapena.OdooJsonRpcClient.Request
             return new OdooRequestModel(param);
         }
 
+        public static OdooRequestModel SearchCount(OdooConfig config, int uid, string tableName, OdooQuery query = null)
+        {
+            var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute", config.DbName, uid, config.Password, tableName, OdooOperation.SearchCount, query?.GetRequestFilters());
+            return new OdooRequestModel(param);
+        }
+
         public static OdooRequestModel Create(OdooConfig config, int uid, string tableName, object model)
         {
             var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute", config.DbName, uid, config.Password, tableName, OdooOperation.Create, new [] { model }, config.Context);
