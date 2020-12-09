@@ -11,12 +11,12 @@ namespace PortaCapena.OdooJsonRpcClient.Request
 {
     public class OdooQueryBuilder<T> where T : IOdooModel, new()
     {
-        private readonly OdooRepository<T> _odooRepository;
+        private readonly OdooClient _odooClient;
         private readonly OdooQuery<T> _query;
 
-        internal OdooQueryBuilder(OdooRepository<T> odooRepository) : base()
+        internal OdooQueryBuilder(OdooClient odooClient) : base()
         {
-            _odooRepository = odooRepository;
+            _odooClient = odooClient;
             _query = new OdooQuery<T>();
         }
 
@@ -105,20 +105,20 @@ namespace PortaCapena.OdooJsonRpcClient.Request
 
         public async Task<OdooResult<T[]>> ToListAsync()
         {
-            return await _odooRepository.GetAsync(_query);
+            return await _odooClient.GetAsync<T>(_query);
         }
 
         public async Task<OdooResult<T>> FirstAsync()
         {
             Take(1);
-            var result = await _odooRepository.GetAsync(_query);
+            var result = await _odooClient.GetAsync<T>(_query);
             return result.Succeed ? result.ToResult(result.Value.First()) : OdooResult<T>.FailedResult(result);
         }
 
         public async Task<OdooResult<T>> FirstOrDefaultAsync()
         {
             Take(1);
-            var result = await _odooRepository.GetAsync(_query);
+            var result = await _odooClient.GetAsync<T>(_query);
             return result.Succeed ? result.ToResult(result.Value.FirstOrDefault()) : OdooResult<T>.FailedResult(result);
         }
 

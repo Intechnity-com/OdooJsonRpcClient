@@ -20,12 +20,7 @@ namespace PortaCapena.OdooJsonRpcClient
 
         public OdooQueryBuilder<T> Query()
         {
-            return new OdooQueryBuilder<T>(this);
-        }
-
-        protected internal async Task<OdooResult<T[]>> GetAsync(OdooQuery query = null)
-        {
-            return await OdooClient.GetAsync<T>(query);
+            return new OdooQueryBuilder<T>(OdooClient);
         }
 
         public async Task<OdooResult<long>> CreateAsync(IOdooCreateModel model)
