@@ -8,10 +8,11 @@ OdooJsonRpcClient is a C# library for communication with Odoo by JsonRpc.
 
 ## Installation
 
-Use the package manager console or nuget package manager.
+Use the package manager console or nuget package manager or check on
+[nuget](https://www.nuget.org/packages/PortaCapena.OdooJsonRpcClient/)
 
 ```bash
-Install-Package PortaCapena.OdooJsonRpcClient -Version 1.0.1
+Install-Package PortaCapena.OdooJsonRpcClient -Version 1.0.2
 ```
 
 

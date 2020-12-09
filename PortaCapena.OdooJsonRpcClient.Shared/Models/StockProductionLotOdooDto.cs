@@ -1,14 +1,14 @@
 ﻿using System;
 using Newtonsoft.Json;
+using PortaCapena.OdooJsonRpcClient.Attributes;
 using PortaCapena.OdooJsonRpcClient.Converters;
 using PortaCapena.OdooJsonRpcClient.Models;
-using PortaCapena.OdooJsonRpcClient.Utils;
 
 namespace PortaCapena.OdooJsonRpcClient.Shared.Models
 {
     [OdooTableName("stock.production.lot")]
     [JsonConverter(typeof(OdooModelConverter))]
-    public class OdooStockProductionLot : IOdooModel
+    public class StockProductionLotOdooDto : IOdooModel
     {
 
         [JsonProperty("name")]

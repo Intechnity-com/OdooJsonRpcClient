@@ -14,7 +14,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         [Fact]
         public void Builder_shoud_create_and_build()
         {
-            var filters = OdooQuery<OdooProductProduct>.Create();
+            var filters = OdooQuery<ProductProductOdooDto>.Create();
 
             filters.Should().NotBeNull();
             filters.Filters.Count.Should().Be(0);
@@ -27,7 +27,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         [Fact]
         public void When_use_select_shoud_return_filds()
         {
-            var filters = OdooQuery<OdooProductProduct>.Create()
+            var filters = OdooQuery<ProductProductOdooDto>.Create()
                 .Select(x => new
                 {
                     x.Name,
@@ -46,7 +46,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         [Fact]
         public void When_use_pridicate_where_shoud_return_filters()
         {
-            var filters = OdooQuery<OdooProductProduct>.Create()
+            var filters = OdooQuery<ProductProductOdooDto>.Create()
                 .Where(x => x.Id, OdooOperator.EqualsTo, 10)
                 ;
 
@@ -64,7 +64,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         [Fact]
         public void When_use_pridicate_where_shoud_return_filters2()
         {
-            var filters = OdooQuery<OdooProductProduct>.Create()
+            var filters = OdooQuery<ProductProductOdooDto>.Create()
                 .Where(x => x.WriteDate, OdooOperator.GreaterThanOrEqualTo, new DateTime(2020, 12, 2))
                 .Where(x => x.Name, OdooOperator.EqualsTo, "Bioboxen 610l")
                 ;
@@ -84,7 +84,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         public void When_use_where_shoud_return_filters()
         {
 
-            var filters = OdooQuery<OdooProductProduct>.Create()
+            var filters = OdooQuery<ProductProductOdooDto>.Create()
                 .Where(OdooFilter.Create().GreaterThanOrEqual("write_date", new DateTime(2020, 12, 2)))
                 .Where(OdooFilter.Create().EqualTo("name", "Bioboxen 610l"))
                 ;
@@ -103,9 +103,11 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         [Fact]
         public void When_use_where_shoud_return_filters2()
         {
-            var filters = OdooQuery<OdooProductProduct>.Create()
-                .Where(OdooFilter.Create().GreaterThanOrEqual("write_date", new DateTime(2020, 12, 2)).And().EqualTo("name", "Bioboxen 610l"))
-                ;
+            var filters = OdooQuery<ProductProductOdooDto>.Create()
+                .Where(OdooFilter.Create()
+                    .GreaterThanOrEqual("write_date", new DateTime(2020, 12, 2))
+                    .And()
+                    .EqualTo("name", "Bioboxen 610l"));
 
             var json = JsonConvert.SerializeObject(filters.Filters);
             json.Should().Be("[[\"write_date\",\">=\",\"2020-12-02T00:00:00\"],\"&\",[\"name\",\"=\",\"Bioboxen 610l\"]]");

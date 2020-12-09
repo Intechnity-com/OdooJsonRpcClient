@@ -4,8 +4,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Newtonsoft.Json;
+using PortaCapena.OdooJsonRpcClient.Attributes;
 using PortaCapena.OdooJsonRpcClient.Extensions;
-using PortaCapena.OdooJsonRpcClient.Utils;
 
 namespace PortaCapena.OdooJsonRpcClient.Models
 {

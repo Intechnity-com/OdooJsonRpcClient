@@ -1,6 +1,4 @@
-﻿using PortaCapena.OdooJsonRpcClient.Models;
-
-namespace PortaCapena.OdooJsonRpcClient.Utils
+﻿namespace PortaCapena.OdooJsonRpcClient.Models
 {
     public class OdooConfig
     {

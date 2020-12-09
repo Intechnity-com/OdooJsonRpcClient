@@ -1,14 +1,14 @@
 ﻿using System;
 using Newtonsoft.Json;
+using PortaCapena.OdooJsonRpcClient.Attributes;
 using PortaCapena.OdooJsonRpcClient.Converters;
 using PortaCapena.OdooJsonRpcClient.Models;
-using PortaCapena.OdooJsonRpcClient.Utils;
 
 namespace PortaCapena.OdooJsonRpcClient.Shared.Models
 {
     [OdooTableName("product.template")]
     [JsonConverter(typeof(OdooModelConverter))]
-    public class OdooProductTemplate : IOdooModel
+    public class ProductTemplateOdooDto : IOdooModel
     {
         [JsonProperty("id")]
         public long Id { get; set; }

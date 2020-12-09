@@ -1,16 +1,15 @@
 ﻿using System;
 using Newtonsoft.Json;
+using PortaCapena.OdooJsonRpcClient.Attributes;
 using PortaCapena.OdooJsonRpcClient.Converters;
 using PortaCapena.OdooJsonRpcClient.Models;
-using PortaCapena.OdooJsonRpcClient.Utils;
 
 namespace PortaCapena.OdooJsonRpcClient.Shared.Models
 {
     [OdooTableName("product.product")]
     [JsonConverter(typeof(OdooModelConverter))]
-    public class OdooProductProduct : IOdooModel
+    public class ProductProductOdooDto : IOdooModel
     {
-
         [JsonProperty("price")]
         public double? Price { get; set; }
 

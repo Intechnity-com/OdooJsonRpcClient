@@ -1,8 +1,8 @@
 ﻿using System;
 using Newtonsoft.Json;
+using PortaCapena.OdooJsonRpcClient.Attributes;
 using PortaCapena.OdooJsonRpcClient.Converters;
 using PortaCapena.OdooJsonRpcClient.Models;
-using PortaCapena.OdooJsonRpcClient.Utils;
 
 namespace PortaCapena.OdooJsonRpcClient.Shared.Models.Create
 {

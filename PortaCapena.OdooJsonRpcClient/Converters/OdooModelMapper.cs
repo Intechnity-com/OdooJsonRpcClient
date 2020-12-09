@@ -4,13 +4,14 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
-using PortaCapena.OdooJsonRpcClient.Converters;
 using PortaCapena.OdooJsonRpcClient.Models;
 
-namespace PortaCapena.OdooJsonRpcClient.Utils
+namespace PortaCapena.OdooJsonRpcClient.Converters
 {
     public static class OdooModelMapper
     {
+        private const string OdooModelSuffix = "OdooDto";
+
         public static bool ConverOdooPropertyToDotNet(Type dotnetType, JToken value, out object result)
         {
             result = null;
@@ -78,7 +79,7 @@ namespace PortaCapena.OdooJsonRpcClient.Utils
             var builder = new StringBuilder();
             builder.AppendLine($"[OdooTableName(\"{tableName}\")]");
             builder.AppendLine($"[JsonConverter(typeof({nameof(OdooModelConverter)}))]");
-            builder.AppendLine($"public class {ConvertOdooNameToDotNet(tableName)}OdooModel : IOdooModel");
+            builder.AppendLine($"public class {ConvertOdooNameToDotNet(tableName)}{OdooModelSuffix} : IOdooModel");
             builder.AppendLine("{");
 
             foreach (var property in properties)
@@ -137,7 +138,7 @@ namespace PortaCapena.OdooJsonRpcClient.Utils
                     return propery.Value.ResultRequired ? "long" : "long?";
 
                 case OdooValueTypeEnum.Reference:
-                    return "Odoo" + ConvertOdooNameToDotNet(propery.Value.RelationField);
+                    return  ConvertOdooNameToDotNet(propery.Value.RelationField) + OdooModelSuffix;
 
                 default:
                     throw new ArgumentOutOfRangeException();

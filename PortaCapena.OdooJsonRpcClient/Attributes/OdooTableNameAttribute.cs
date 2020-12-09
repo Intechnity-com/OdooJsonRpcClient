@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace PortaCapena.OdooJsonRpcClient.Utils
+namespace PortaCapena.OdooJsonRpcClient.Attributes
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class OdooTableNameAttribute : System.Attribute
+    public class OdooTableNameAttribute : Attribute
     {
         public string Name;
         public double Version;

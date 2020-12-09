@@ -3,10 +3,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Newtonsoft.Json;
+using PortaCapena.OdooJsonRpcClient.Attributes;
 using PortaCapena.OdooJsonRpcClient.Consts;
 using PortaCapena.OdooJsonRpcClient.Models;
 using PortaCapena.OdooJsonRpcClient.Result;
-using PortaCapena.OdooJsonRpcClient.Utils;
 
 namespace PortaCapena.OdooJsonRpcClient.Extensions
 {
