@@ -48,7 +48,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
             var odooClient = new OdooClient(Config);
 
             var query = OdooQuery<ProductProductOdooDto>.Create()
-                .Where(x => x.Barcode, OdooOperator.EqualsTo, 67);
+                .Where(x => x.Barcode, OdooOperator.EqualsTo, 66);
 
             var products = await odooClient.GetAsync<ProductProductOdooDto>(query);
 
@@ -163,7 +163,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         public async Task Get_DotNet_model_should_return_string()
         {
             var odooClient = new OdooClient(Config);
-            var tableName = "sale.order.line";
+            var tableName = "res.partner";
             var modelResult = await odooClient.GetModelAsync(tableName);
 
             modelResult.Succeed.Should().BeTrue();
@@ -314,18 +314,38 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         {
             var odooClient = new OdooClient(Config);
 
+            var companyResult = await odooClient.GetAsync<CompanyOdooDto>(OdooQuery<CompanyOdooDto>.Create().ById(1));
+            companyResult.Succeed.Should().BeTrue();
+            var company = companyResult.Value.First();
+
+            var partnerResult = await odooClient.GetAsync<PartnerOdooDto>(OdooQuery<PartnerOdooDto>.Create().ById(9));
+            partnerResult.Succeed.Should().BeTrue();
+            var partner = partnerResult.Value.First();
+
+            var productQuery =  OdooQuery<ProductProductOdooDto>.Create().ById(41);
+            var productsResult = await odooClient.GetAsync<ProductProductOdooDto>(productQuery);
+            productsResult.Succeed.Should().BeTrue();
+            var product = productsResult.Value.First();
+
+
+
             var dictModel = OdooCreateDictionary.Create(() => new SaleOrderOdooDto
             {
-                CompanyId = 1,
+                WarehouseId = 1,
+
+                PricelistId = 17,
+
+                PartnerId = partner.Id,
+                PartnerInvoiceId = partner.Id,
+                PartnerShippingId = partner.Id,
+
+                CompanyId = company.Id,
+
                 DateOrder = DateTime.Now,
-                PartnerId = 1,
-                PricelistId = 1,
-                PartnerInvoiceId = 1,
-                PartnerShippingId = 1,
-                WarehouseId = 1
             });
 
             var createResult = await odooClient.CreateAsync(dictModel);
+            createResult.Message.Should().BeNullOrEmpty();
             createResult.Succeed.Should().BeTrue();
 
 
@@ -333,8 +353,8 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
             {
                 OrderId = createResult.Value,
                 Name = "test line",
-                ProductId = 327,
-                ProductUomQty = 1,
+                ProductId = product.Id,
+                ProductUomQty = 24,
                 PriceUnit = 15
             });
 

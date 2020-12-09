@@ -12,6 +12,7 @@ namespace PortaCapena.OdooJsonRpcClient.Result
         public TResult Value { get; set; }
 
 
+        public string Message => Error?.Message;
         public bool Succeed => Error == null;
         public bool Failed => !Succeed;
 

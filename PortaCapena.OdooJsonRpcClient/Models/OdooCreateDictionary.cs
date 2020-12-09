@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using PortaCapena.OdooJsonRpcClient.Attributes;
 using PortaCapena.OdooJsonRpcClient.Extensions;
@@ -32,30 +33,7 @@ namespace PortaCapena.OdooJsonRpcClient.Models
 
         public static OdooCreateDictionary Create<T>(Expression<Func<T>> expression) where T : IOdooModel, new()
         {
-            if (expression.Body is MemberInitExpression body)
-            {
-                foreach (var memberExpression in body.Bindings)
-                {
-                    if (memberExpression is MemberAssignment memberExp && memberExp.Expression is ConstantExpression constantExpression)
-                    {
-                        var property = (PropertyInfo)memberExpression.Member;
-                        var attribute = property.GetCustomAttributes<JsonPropertyAttribute>();
-
-                        var odooName = attribute.FirstOrDefault()?.PropertyName;
-                        var value = constantExpression.Value;
-
-                        if (odooName != null)
-                        {
-                            var result = new OdooCreateDictionary { { odooName, value } };
-                            if (TryGetOdooTableName(expression, out var tableName))
-                                result.TableName = tableName;
-
-                            return result;
-                        }
-                    }
-                }
-            }
-            throw new ArgumentException("invalid func");
+            return Create().Add(expression);
         }
 
         public OdooCreateDictionary Add<T>(Expression<Func<T>> expression, object value) where T : IOdooModel
@@ -68,30 +46,45 @@ namespace PortaCapena.OdooJsonRpcClient.Models
 
         public OdooCreateDictionary Add<T>(Expression<Func<T>> expression) where T : IOdooModel, new()
         {
-            if (TableName != null && TryGetOdooTableName(expression, out var tableName))
+            if (TableName == null && TryGetOdooTableName(expression, out var tableName))
                 TableName = tableName;
 
-            if (expression.Body is MemberInitExpression body)
+            if (!(expression.Body is MemberInitExpression body)) throw new ArgumentException("invalid func");
+
+            foreach (var memberExpression in body.Bindings)
             {
-                foreach (var memberExpression in body.Bindings)
+                if (memberExpression is MemberAssignment memberExp)
                 {
-                    if (memberExpression is MemberAssignment memberExp && memberExp.Expression is ConstantExpression constantExpression)
+                    var property = (PropertyInfo)memberExpression.Member;
+                    var attribute = property.GetCustomAttributes<JsonPropertyAttribute>();
+
+                    var odooName = attribute.FirstOrDefault()?.PropertyName;
+
+                    if (odooName != null)
                     {
-                        var property = (PropertyInfo)memberExpression.Member;
-                        var attribute = property.GetCustomAttributes<JsonPropertyAttribute>();
-
-                        var odooName = attribute.FirstOrDefault()?.PropertyName;
-                        var value = constantExpression.Value;
-
-                        if (odooName != null)
+                        if (memberExp.Expression is ConstantExpression constantExpression)
                         {
+                            var value = constantExpression.Value;
                             Add(odooName, value);
-                            return this;
+                            continue;
+                        }
+                        else if (memberExp.Expression is MemberExpression memberExpr)
+                        {
+                            var value = Expression.Lambda(memberExpr).Compile().DynamicInvoke();
+                            Add(odooName, value);
+                            continue;
+                        }
+                        else if (memberExp.Expression is UnaryExpression unaryExpression)
+                        {
+                            var value = Expression.Lambda(unaryExpression).Compile().DynamicInvoke();
+                            Add(odooName, value);
+                            continue;
                         }
                     }
                 }
+                throw new ArgumentException("invalid func");
             }
-            throw new ArgumentException("invalid func");
+            return this;
         }
 
 

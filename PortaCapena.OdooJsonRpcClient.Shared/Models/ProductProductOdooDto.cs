@@ -317,7 +317,7 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
 
         // product.pricelist
         [JsonProperty("pricelist_id")]
-        public int? PricelistId { get; set; }
+        public long? PricelistId { get; set; }
 
         // uom.uom
         [JsonProperty("uom_id")]
