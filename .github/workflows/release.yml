@@ -5,18 +5,15 @@ on:
     types: [published]
 
 jobs:
-  build:
-
+  publish-nuget:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repository
     - uses: actions/checkout@v2
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.301
-    - name: Restore dependencies
+        dotnet-version: 3.1.x
+    - name: Install dependencies
       run: dotnet restore
     - name: Build
       run: dotnet build --configuration Release --no-restore
