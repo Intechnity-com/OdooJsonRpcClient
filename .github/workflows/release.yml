@@ -17,6 +17,8 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --configuration Release --no-restore
+    - name: Test PR      
+      run: dotnet test PortaCapena.OdooJsonRpcClient.Tests/PortaCapena.OdooJsonRpcClient.Tests.csproj --no-restore --no-build
     - name: Publish to NuGet
       uses: brandedoutcast/publish-nuget@v2
       with:
