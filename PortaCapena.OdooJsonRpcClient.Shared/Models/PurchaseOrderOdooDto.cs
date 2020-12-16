@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 using PortaCapena.OdooJsonRpcClient.Attributes;
 using PortaCapena.OdooJsonRpcClient.Converters;
@@ -12,7 +11,6 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
     public class PurchaseOrderOdooDto : IOdooModel, IOdooCreateModel
     {
 
-        [Required(ErrorMessage = "DocumentTypeis required.")]
         [JsonProperty("name")]
         public string Name { get; set; }
 
@@ -25,7 +23,6 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         [JsonProperty("partner_ref")]
         public string PartnerRef { get; set; }
 
-        [Required]
         [JsonProperty("date_order")]
         public DateTime DateOrder { get; set; }
 
@@ -33,7 +30,6 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         public DateTime? DateApprove { get; set; }
 
         // res.partner
-        [Required]
         [JsonProperty("partner_id")]
         public long PartnerId { get; set; }
 
@@ -42,7 +38,6 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         public long? DestAddressId { get; set; }
 
         // res.currency
-        [Required]
         [JsonProperty("currency_id")]
         public long CurrencyId { get; set; }
 
@@ -98,7 +93,6 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         public long? UserId { get; set; }
 
         // res.company
-        [Required]
         [JsonProperty("company_id")]
         public long CompanyId { get; set; }
 
@@ -129,7 +123,6 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         public long[] PickingIds { get; set; }
 
         // stock.picking.type
-        [Required]
         [JsonProperty("picking_type_id")]
         public long PickingTypeId { get; set; }
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 using PortaCapena.OdooJsonRpcClient.Attributes;
 using PortaCapena.OdooJsonRpcClient.Converters;
@@ -12,7 +11,6 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
     public class StockPickingTypeOdooDto : IOdooModel
     {
 
-        [Required]
         [JsonProperty("name")]
         public string Name { get; set; }
 
@@ -26,7 +24,6 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         [JsonProperty("sequence_id")]
         public long? SequenceId { get; set; }
 
-        [Required]
         [JsonProperty("sequence_code")]
         public string SequenceCode { get; set; }
 
@@ -38,7 +35,6 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         [JsonProperty("default_location_dest_id")]
         public long? DefaultLocationDestId { get; set; }
 
-        [Required]
         [JsonProperty("code")]
         public string Code { get; set; }
 
@@ -96,7 +92,6 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         public string Barcode { get; set; }
 
         // res.company
-        [Required]
         [JsonProperty("company_id")]
         public long CompanyId { get; set; }
 
