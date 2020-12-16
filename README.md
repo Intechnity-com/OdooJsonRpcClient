@@ -155,6 +155,62 @@ var deleteProductResult = await repository.DeleteAsync(productId);
 
 
 
+## Odoo Request and Result models examples
+#### Request 
+```C# 
+{
+   "id":948165322,
+   "jsonrpc":"2.0",
+   "method":"call",
+   "params":{
+      "service":"object",
+      "method":"execute",
+      "args":[
+         "odoo_db_name",
+         2,
+         "odoo_user_name",
+         "product.product",
+         "search_read",
+         [
+            [
+               "name",
+               "=",
+               "Bioboxen 610l"
+            ],
+            [
+               "write_date",
+               ">=",
+               "2020-12-02 00:00:00"
+            ]
+         ],
+         [
+            "name",
+            "description",
+            "write_date"
+         ]
+      ]
+   }
+}
+```
+
+#### Result
+```C# 
+{
+   "jsonrpc":"2.0",
+   "id":948165322,
+   "result":[
+      {
+         "id":324,
+         "name":"Bioboxen 610l",
+         "description":false,
+         "write_date":"2020-12-02 08:47:08"
+      }
+   ]
+}
+```
+
+
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
