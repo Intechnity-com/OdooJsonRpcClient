@@ -15,20 +15,9 @@ jobs:
         dotnet-version: 3.1.x
     - name: Install dependencies
       run: dotnet restore
-    - name: check files
-      run: ls -la
-      
-    - name: Build Main
-      run: dotnet build PortaCapena.OdooJsonRpcClient/PortaCapena.OdooJsonRpcClient.csproj --configuration Release
-      
-    - name: Build Shared
-      run: dotnet build PortaCapena.OdooJsonRpcClient.Shared/PortaCapena.OdooJsonRpcClient.Shared.csproj --configuration Release
-      
-    - name: Build Example
-      run: dotnet build PortaCapena.OdooJsonRpcClient.Example/PortaCapena.OdooJsonRpcClient.Example.csproj --configuration Release
-          
-    - name: Build Tests
-      run: dotnet build PortaCapena.OdooJsonRpcClient.Tests/PortaCapena.OdooJsonRpcClient.Tests.csproj --configuration Release
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore -o out
       
     - name: Test PR      
       run: dotnet test PortaCapena.OdooJsonRpcClient.Tests/PortaCapena.OdooJsonRpcClient.Tests.csproj --configuration Release --no-restore --no-build
