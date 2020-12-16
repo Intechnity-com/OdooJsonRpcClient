@@ -18,7 +18,7 @@ jobs:
     - name: check files
       run: ls -la
     - name: Build
-      run: dotnet build --configuration Release
+      run: dotnet build
     - name: Test PR      
       run: dotnet test PortaCapena.OdooJsonRpcClient.Tests/PortaCapena.OdooJsonRpcClient.Tests.csproj --configuration Release --no-restore --no-build
     - name: Publish to NuGet
