@@ -9,7 +9,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
     public class OdooRequestModelTests : OdooTestBase
     {
         [Fact]
-        public void CreateRequestModel_should_return_request_with_corect_params_count()
+        public void RequestModel_should_return_request_with_corect_params_count()
         {
             var query = new OdooQuery()
             {

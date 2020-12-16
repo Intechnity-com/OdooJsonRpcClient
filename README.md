@@ -12,7 +12,7 @@ Use the package manager console or nuget package manager or check on
 [nuget](https://www.nuget.org/packages/PortaCapena.OdooJsonRpcClient/)
 
 ```bash
-Install-Package PortaCapena.OdooJsonRpcClient -Version 1.0.2
+Install-Package PortaCapena.OdooJsonRpcClient -Version 1.0.3
 ```
 
 

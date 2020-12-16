@@ -12,7 +12,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
     public class OdooQueryTests
     {
         [Fact]
-        public void Builder_shoud_create_and_build()
+        public void Can_create_builder_with_static_method()
         {
             var filters = OdooQuery<ProductProductOdooDto>.Create();
 
@@ -25,7 +25,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
 
 
         [Fact]
-        public void When_use_select_shoud_return_filds()
+        public void When_use_select_shoud_return_filds_with_odoo_prop_names()
         {
             var filters = OdooQuery<ProductProductOdooDto>.Create()
                 .Select(x => new
@@ -44,7 +44,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         }
 
         [Fact]
-        public void When_use_pridicate_where_shoud_return_filters()
+        public void When_use_pridicate_where_shoud_return_correct_filters_model()
         {
             var filters = OdooQuery<ProductProductOdooDto>.Create()
                 .Where(x => x.Id, OdooOperator.EqualsTo, 10)
@@ -62,7 +62,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
 
 
         [Fact]
-        public void When_use_pridicate_where_shoud_return_filters2()
+        public void When_use_pridicate_where_with_two_times_shoud_return_correct_filters_model()
         {
             var filters = OdooQuery<ProductProductOdooDto>.Create()
                 .Where(x => x.WriteDate, OdooOperator.GreaterThanOrEqualTo, new DateTime(2020, 12, 2))
@@ -81,7 +81,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
 
 
         [Fact]
-        public void When_use_where_shoud_return_filters()
+        public void When_use_where_with_OdooFilter_param_shoud_return_correct_filters_model()
         {
 
             var filters = OdooQuery<ProductProductOdooDto>.Create()
@@ -101,7 +101,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
 
 
         [Fact]
-        public void When_use_where_shoud_return_filters2()
+        public void When_use_where_with_complex_OdooFilter_param_shoud_return_correct_filters_model()
         {
             var filters = OdooQuery<ProductProductOdooDto>.Create()
                 .Where(OdooFilter.Create()
