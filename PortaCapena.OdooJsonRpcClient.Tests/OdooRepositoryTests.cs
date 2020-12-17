@@ -6,7 +6,7 @@ using Xunit;
 
 namespace PortaCapena.OdooJsonRpcClient.Tests
 {
-    public class OdooRepositoryTests : OdooTestBase
+    public class OdooRepositoryTests : TestBase
     {
      
     }

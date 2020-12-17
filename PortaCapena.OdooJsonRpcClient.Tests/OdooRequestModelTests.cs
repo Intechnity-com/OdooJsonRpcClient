@@ -6,7 +6,7 @@ using Xunit;
 
 namespace PortaCapena.OdooJsonRpcClient.Tests
 {
-    public class OdooRequestModelTests : OdooTestBase
+    public class OdooRequestModelTests : TestBase
     {
         [Fact]
         public void RequestModel_should_return_request_with_corect_params_count()
