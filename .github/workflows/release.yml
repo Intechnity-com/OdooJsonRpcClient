@@ -31,5 +31,5 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name:  PortaCapena.OdooJsonRpcClient.${{github.event.release.tag_name}}.nupkg
-        path: ./PortaCapena.OdooJsonRpcClient/PortaCapena.OdooJsonRpcClient/bin/Release/PortaCapena.OdooJsonRpcClient.${{github.event.release.tag_name}}.nupkg
+        path: ./PortaCapena.OdooJsonRpcClient/bin/Release/PortaCapena.OdooJsonRpcClient.${{github.event.release.tag_name}}.nupkg
       
