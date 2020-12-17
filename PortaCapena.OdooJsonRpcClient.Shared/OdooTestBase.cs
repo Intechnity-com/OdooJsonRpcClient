@@ -1,4 +1,4 @@
-﻿using PortaCapena.OdooJsonRpcClient.Models;
+using PortaCapena.OdooJsonRpcClient.Models;
 
 namespace PortaCapena.OdooJsonRpcClient.Shared
 {
