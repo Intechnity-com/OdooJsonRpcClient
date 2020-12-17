@@ -1,8 +1,4 @@
-﻿using System.Threading.Tasks;
-using FluentAssertions;
-using PortaCapena.OdooJsonRpcClient.Shared;
-using PortaCapena.OdooJsonRpcClient.Shared.Models;
-using Xunit;
+﻿using PortaCapena.OdooJsonRpcClient.Shared;
 
 namespace PortaCapena.OdooJsonRpcClient.Tests
 {
