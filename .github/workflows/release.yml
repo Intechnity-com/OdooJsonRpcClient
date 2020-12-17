@@ -13,19 +13,23 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.x
+        
     - name: Install dependencies
       run: dotnet restore
 
     - name: Build 
-      run: dotnet build --configuration Release
+      run: dotnet build --configuration Release --no-restore
       
-    - name: Test PR      
+    - name: Test      
       run: dotnet test PortaCapena.OdooJsonRpcClient.Tests/PortaCapena.OdooJsonRpcClient.Tests.csproj --configuration Release --no-restore --no-build
-    - name: Publish to NuGet
-      uses: brandedoutcast/publish-nuget@v2
+      
+    - name: Create Nuget Package
+      run: dotnet pack --configuration Release /p:Version=${{github.event.release.tag_name}} /p:PackageReleaseNotes="See https://github.com/patricoos/PortaCapena.OdooJsonRpcClient/releases/tag/${{github.event.release.tag_name}}"     
+      working-directory: ./PortaCapena.OdooJsonRpcClient
+      
+    - name: Archive Nuget Package
+      uses: actions/upload-artifact@v1
       with:
-        PROJECT_FILE_PATH: PortaCapena.OdooJsonRpcClient/PortaCapena.OdooJsonRpcClient.csproj
-        VERSION_REGEX: '^\s*<PackageVersion>(.*)<\/PackageVersion>\s*$'
-        TAG_FORMAT: '*'
-        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
-        
+        name:  PortaCapena.OdooJsonRpcClient.${{github.event.release.tag_name}}.nupkg
+        path: ./PortaCapena.OdooJsonRpcClient/PortaCapena.OdooJsonRpcClient/bin/Release/PortaCapena.OdooJsonRpcClient.${{github.event.release.tag_name}}.nupkg
+      
