@@ -32,4 +32,6 @@ jobs:
       with:
         name:  PortaCapena.OdooJsonRpcClient.${{github.event.release.tag_name}}.nupkg
         path: ./PortaCapena.OdooJsonRpcClient/bin/Release/PortaCapena.OdooJsonRpcClient.${{github.event.release.tag_name}}.nupkg
-      
+        
+    - name: Publish NuGet Package
+      run: dotnet nuget push **/*.nupkg --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json --no-symbols true
