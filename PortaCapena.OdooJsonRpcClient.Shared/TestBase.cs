@@ -1,11 +1,11 @@
-﻿using PortaCapena.OdooJsonRpcClient.Utils;
+﻿using PortaCapena.OdooJsonRpcClient.Models;
 
 namespace PortaCapena.OdooJsonRpcClient.Shared
 {
-    public abstract class OdooTestBase
+    public class TestBase
     {
         protected static readonly OdooConfig Config = new OdooConfig(
-            apiUrl: "https://odoo-api-url.com",
+           apiUrl: "https://odoo-api-url.com",
             dbName: "odoo-db-name",
             userName: "admin",
             password: "admin"

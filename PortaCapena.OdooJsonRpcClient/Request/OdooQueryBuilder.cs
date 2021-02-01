@@ -122,15 +122,22 @@ namespace PortaCapena.OdooJsonRpcClient.Request
             return result.Succeed ? result.ToResult(result.Value.FirstOrDefault()) : OdooResult<T>.FailedResult(result);
         }
 
-        public async Task<OdooResult<int>> CountAsync()
+        public async Task<OdooResult<T>> SingleAsync()
         {
-            //   return await  _odooRepository.GetAsync(this);
-            throw new NotImplementedException();
+            Take(2);
+            var result = await ToListAsync();
+            return result.Succeed ? result.ToResult(result.Value.Single()) : OdooResult<T>.FailedResult(result);
+        }
+
+        public async Task<OdooResult<long>> CountAsync()
+        {
+            return await _odooClient.GetCountAsync<T>(_query);
         }
         public async Task<OdooResult<bool>> AnyAsync()
         {
-            //  return await  _odooRepository.GetAsync(this);
-            throw new NotImplementedException();
+            Take(1);
+            var result = await ToListAsync();
+            return result.Succeed ? result.ToResult(result.Value.Any()) : OdooResult<bool>.FailedResult(result);
         }
     }
 }

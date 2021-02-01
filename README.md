@@ -1,18 +1,18 @@
 # PortaCapena.OdooJsonRpcClient
 
-OdooJsonRpcClient is a C# library for communication with Odoo by JsonRpc.
+OdooJsonRpcClient is a C# library (.NET Standard) for communication with Odoo.
 
-
+[Porta Capena - Odoo Partner](https://www.odoo.com/partners/porta-capena-3710126)
 
 
 
 ## Installation
 
-Use the package manager console or nuget package manager or check on
-[nuget](https://www.nuget.org/packages/PortaCapena.OdooJsonRpcClient/)
+Use the package manager console, nuget package manager or check on
+[NuGet.org](https://www.nuget.org/packages/PortaCapena.OdooJsonRpcClient/)
 
 ```bash
-Install-Package PortaCapena.OdooJsonRpcClient -Version 1.0.3
+Install-Package PortaCapena.OdooJsonRpcClient
 ```
 
 
@@ -157,7 +157,7 @@ var deleteProductResult = await repository.DeleteAsync(productId);
 
 ## Odoo Request and Result models examples
 #### Request 
-```C# 
+```json
 {
    "id":948165322,
    "jsonrpc":"2.0",
@@ -194,7 +194,7 @@ var deleteProductResult = await repository.DeleteAsync(productId);
 ```
 
 #### Result
-```C# 
+```json
 {
    "jsonrpc":"2.0",
    "id":948165322,

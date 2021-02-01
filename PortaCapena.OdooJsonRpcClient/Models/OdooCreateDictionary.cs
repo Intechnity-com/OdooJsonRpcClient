@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using PortaCapena.OdooJsonRpcClient.Attributes;
 using PortaCapena.OdooJsonRpcClient.Extensions;
@@ -31,12 +30,18 @@ namespace PortaCapena.OdooJsonRpcClient.Models
             return new OdooCreateDictionary(tableName);
         }
 
-        public static OdooCreateDictionary Create<T>(Expression<Func<T>> expression) where T : IOdooModel, new()
+        public static OdooCreateDictionary Create<T>() where T : IOdooAtributtesModel, new()
+        {
+            var tableName = OdooExtensions.GetOdooTableName<T>();
+            return new OdooCreateDictionary(tableName);
+        }
+
+        public static OdooCreateDictionary Create<T>(Expression<Func<T>> expression) where T : IOdooAtributtesModel, new()
         {
             return Create().Add(expression);
         }
 
-        public OdooCreateDictionary Add<T>(Expression<Func<T>> expression, object value) where T : IOdooModel
+        public OdooCreateDictionary Add<T>(Expression<Func<T>> expression, object value) where T : IOdooAtributtesModel
         {
             if (TableName != null && TryGetOdooTableName(expression, out var tableName))
                 TableName = tableName;
@@ -44,7 +49,7 @@ namespace PortaCapena.OdooJsonRpcClient.Models
             return this;
         }
 
-        public OdooCreateDictionary Add<T>(Expression<Func<T>> expression) where T : IOdooModel, new()
+        public OdooCreateDictionary Add<T>(Expression<Func<T>> expression) where T : IOdooAtributtesModel, new()
         {
             if (TableName == null && TryGetOdooTableName(expression, out var tableName))
                 TableName = tableName;

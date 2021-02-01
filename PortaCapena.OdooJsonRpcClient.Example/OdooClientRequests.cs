@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using PortaCapena.OdooJsonRpcClient.Consts;
@@ -15,7 +19,7 @@ using Xunit;
 
 namespace PortaCapena.OdooJsonRpcClient.Example
 {
-    public class OdooClientRequests : OdooTestBase
+    public class OdooClientRequests : TestBase
     {
 
         [Fact]
@@ -35,7 +39,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         {
             var odooClient = new OdooClient(Config);
 
-            var products = await odooClient.GetAsync<ProductProductOdooDto>();
+            var products = await odooClient.GetAsync<StockPickingTypeOdooModel>();
 
             products.Error.Should().BeNull();
             products.Value.Should().NotBeNull();
@@ -164,7 +168,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         public async Task Get_DotNet_model_should_return_string()
         {
             var odooClient = new OdooClient(Config);
-            var tableName = "purchase.order";
+            var tableName = "stock.warehouse";
             var modelResult = await odooClient.GetModelAsync(tableName);
 
             modelResult.Succeed.Should().BeTrue();
@@ -413,5 +417,25 @@ namespace PortaCapena.OdooJsonRpcClient.Example
 
         #endregion
 
+
+        [Fact(Skip = "Test for working on Odoo")]
+        //[Fact]
+        public async Task OnChange_test1()
+        {
+            try
+            {
+                using (var client = new WebClient())
+                {
+                    client.Credentials = new NetworkCredential(Config.UserName, Config.Password);
+                    var json = "{\"jsonrpc\":\"2.0\",\"method\":\"GUI.ShowNotification\",\"params\":{\"title\":\"This is the title of the message\",\"message\":\"This is the body of the message\"},\"id\":1}";
+                    var response = client.UploadString(Config.ApiUrlJson, "POST", json);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
     }
 }

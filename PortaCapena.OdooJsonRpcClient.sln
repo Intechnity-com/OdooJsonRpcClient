@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortaCapena.OdooJsonRpcClie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortaCapena.OdooJsonRpcClient.Tests", "PortaCapena.OdooJsonRpcClient.Tests\PortaCapena.OdooJsonRpcClient.Tests.csproj", "{974F781B-1B71-4805-8422-490915D28ABB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortaCapena.OdooJsonRpcClient.Example", "PortaCapena.OdooJsonRpcClient.Example\PortaCapena.OdooJsonRpcClient.Example.csproj", "{051178E2-51C3-4617-A025-5CB6A5E38F14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortaCapena.OdooJsonRpcClient.Example", "PortaCapena.OdooJsonRpcClient.Example\PortaCapena.OdooJsonRpcClient.Example.csproj", "{051178E2-51C3-4617-A025-5CB6A5E38F14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortaCapena.OdooJsonRpcClient.Shared", "PortaCapena.OdooJsonRpcClient.Shared\PortaCapena.OdooJsonRpcClient.Shared.csproj", "{A3381900-A853-48AB-995C-2F782067ABB2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortaCapena.OdooJsonRpcClient.Shared", "PortaCapena.OdooJsonRpcClient.Shared\PortaCapena.OdooJsonRpcClient.Shared.csproj", "{77298CC5-411E-47AE-BABA-AA687C9EB7EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{051178E2-51C3-4617-A025-5CB6A5E38F14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{051178E2-51C3-4617-A025-5CB6A5E38F14}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{051178E2-51C3-4617-A025-5CB6A5E38F14}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A3381900-A853-48AB-995C-2F782067ABB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A3381900-A853-48AB-995C-2F782067ABB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A3381900-A853-48AB-995C-2F782067ABB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A3381900-A853-48AB-995C-2F782067ABB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77298CC5-411E-47AE-BABA-AA687C9EB7EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77298CC5-411E-47AE-BABA-AA687C9EB7EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77298CC5-411E-47AE-BABA-AA687C9EB7EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77298CC5-411E-47AE-BABA-AA687C9EB7EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
