@@ -48,6 +48,27 @@ namespace PortaCapena.OdooJsonRpcClient
 
         #endregion
 
+        #region Count 
+
+        public async Task<OdooResult<long>> GetCountAsync<T>(OdooQuery query = null) where T : IOdooModel, new()
+        {
+            return await ExecuteWitrAccesDenideRetryAsync(userUid => GetCountAsync<T>(userUid, query));
+        }
+
+        public async Task<OdooResult<long>> GetCountAsync<T>(int userUid, OdooQuery query = null) where T : IOdooModel, new()
+        {
+            return await GetCountAsync<T>(_config, userUid, query);
+        }
+
+        public static async Task<OdooResult<long>> GetCountAsync<T>(OdooConfig odooConfig, int userUid, OdooQuery query = null) where T : IOdooModel, new()
+        {
+            var tableName = OdooExtensions.GetOdooTableName<T>();
+            var request = OdooRequestModel.SearchCount(odooConfig, userUid, tableName, query);
+            return await CallAndDeserializeAsync<long>(request);
+        }
+
+        #endregion
+
         #region Create
 
         public async Task<OdooResult<long>> CreateAsync(IOdooCreateModel model)
