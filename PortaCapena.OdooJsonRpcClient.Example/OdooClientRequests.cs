@@ -420,7 +420,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
 
         [Fact(Skip = "Test for working on Odoo")]
         //[Fact]
-        public async Task OnChange_test1()
+        public void OnChange_test1()
         {
             try
             {
