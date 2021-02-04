@@ -83,14 +83,14 @@ namespace PortaCapena.OdooJsonRpcClient
             return result.Succeed ? result.ToResult(result.Value.FirstOrDefault()) : OdooResult<long>.FailedResult(result);
         }
 
-        public async Task<OdooResult<long>> CreateAsync(OdooCreateDictionary model, string tableName = null)
+        public async Task<OdooResult<long>> CreateAsync(OdooCreateDictionary model)
         {
-            return await ExecuteWitrAccesDenideRetryAsync(userUid => CreateAsync(_config, userUid, model, tableName));
+            return await ExecuteWitrAccesDenideRetryAsync(userUid => CreateAsync(_config, userUid, model));
         }
 
-        public static async Task<OdooResult<long>> CreateAsync(OdooConfig odooConfig, int userUid, OdooCreateDictionary model, string tableName = null)
+        public static async Task<OdooResult<long>> CreateAsync(OdooConfig odooConfig, int userUid, OdooCreateDictionary model)
         {
-            var request = OdooRequestModel.Create(odooConfig, userUid, GetTableName(model, tableName), model);
+            var request = OdooRequestModel.Create(odooConfig, userUid, GetTableName(model), model);
             var result = await CallAndDeserializeAsync<long[]>(request);
             return result.Succeed ? result.ToResult(result.Value.FirstOrDefault()) : OdooResult<long>.FailedResult(result);
         }
@@ -99,26 +99,26 @@ namespace PortaCapena.OdooJsonRpcClient
 
         #region  Update
 
-        public async Task<OdooResult<bool>> UpdateAsync(IOdooCreateModel model, long id)
+        public async Task<OdooResult<bool>> UpdateAsync(IOdooCreateModel model, params long[] ids)
         {
-            return await ExecuteWitrAccesDenideRetryAsync(userUid => UpdateAsync(_config, userUid, model, id));
+            return await ExecuteWitrAccesDenideRetryAsync(userUid => UpdateAsync(_config, userUid, model, ids));
         }
 
-        public static async Task<OdooResult<bool>> UpdateAsync(OdooConfig odooConfig, int userUid, IOdooCreateModel model, long id)
+        public static async Task<OdooResult<bool>> UpdateAsync(OdooConfig odooConfig, int userUid, IOdooCreateModel model, params long[] ids)
         {
             var tableName = model.OdooTableName();
-            var request = OdooRequestModel.Update(odooConfig, userUid, tableName, new[] { id }, model);
+            var request = OdooRequestModel.Update(odooConfig, userUid, tableName, ids, model);
             return await CallAndDeserializeAsync<bool>(request);
         }
 
-        public async Task<OdooResult<bool>> UpdateAsync(OdooCreateDictionary model, long[] ids, string tableName = null)
+        public async Task<OdooResult<bool>> UpdateAsync(OdooCreateDictionary model, long[] ids)
         {
-            return await ExecuteWitrAccesDenideRetryAsync(userUid => UpdateAsync(_config, userUid, model, ids, tableName));
+            return await ExecuteWitrAccesDenideRetryAsync(userUid => UpdateAsync(_config, userUid, model, ids));
         }
 
-        public static async Task<OdooResult<bool>> UpdateAsync(OdooConfig odooConfig, int userUid, OdooCreateDictionary model, long[] ids, string tableName = null)
+        public static async Task<OdooResult<bool>> UpdateAsync(OdooConfig odooConfig, int userUid, OdooCreateDictionary model, long[] ids)
         {
-            var request = OdooRequestModel.Update(odooConfig, userUid, GetTableName(model, tableName), ids, model);
+            var request = OdooRequestModel.Update(odooConfig, userUid, GetTableName(model), ids, model);
             return await CallAndDeserializeAsync<bool>(request);
         }
 
@@ -268,7 +268,7 @@ namespace PortaCapena.OdooJsonRpcClient
             }
         }
 
-        private static string GetTableName(OdooCreateDictionary model, string tableName)
+        private static string GetTableName(OdooCreateDictionary model, string tableName = null)
         {
             if (tableName != null)
                 return tableName;
@@ -276,7 +276,7 @@ namespace PortaCapena.OdooJsonRpcClient
                 return model.TableName;
             else
                 throw new ArgumentException(
-                    $"TableName not set, please set it in {nameof(OdooCreateDictionary)} or add in {nameof(UpdateAsync)} method parameter");
+                    $"TableName not set in {nameof(OdooCreateDictionary)}, use ctor or {nameof(OdooCreateDictionary.Create)} method with param");
         }
     }
 }
