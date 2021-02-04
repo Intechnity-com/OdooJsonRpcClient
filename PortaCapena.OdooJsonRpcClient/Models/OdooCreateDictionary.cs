@@ -11,7 +11,7 @@ namespace PortaCapena.OdooJsonRpcClient.Models
 {
     public class OdooCreateDictionary : Dictionary<string, object>
     {
-        public string TableName { get; private set; }
+        public string TableName { get; internal set; }
 
         public OdooCreateDictionary() { }
 
