@@ -47,51 +47,39 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                     return true;
 
                 case JTokenType.String when dotnetType == typeof(DateTime) || dotnetType == typeof(DateTime?):
-                    {
-                        var stringTime = value.ToObject(typeof(string)) as string;
-                        result = DateTime.Parse(stringTime);
-                        return true;
-                    }
+                    var stringTime = value.ToObject(typeof(string)) as string;
+                    result = DateTime.Parse(stringTime);
+                    return true;
 
-                case JTokenType.String when dotnetType.IsEnum ||
-                    (dotnetType.IsGenericType &&
-                    dotnetType.GetGenericTypeDefinition() == typeof(Nullable<>) &&
-                    dotnetType.GenericTypeArguments.Length == 1 &&
-                    dotnetType.GenericTypeArguments[0].IsEnum):
-                    {
-                        if (dotnetType.IsEnum)
-                        {
-                            result = ConvertToDotNetEnum(dotnetType, value.ToString());
-                            return true;
-                        }
-                        var nullableType = Nullable.GetUnderlyingType(dotnetType);
-                        result = ConvertToDotNetEnum(nullableType, value);
-                        return true;
-                    }
+                case JTokenType.String when dotnetType.IsEnum:
+                    result = ConvertToDotNetEnum(dotnetType, value.ToString());
+                    return true;
+
+                case JTokenType.String when dotnetType.IsGenericType && dotnetType.GetGenericTypeDefinition() == typeof(Nullable<>) &&
+                                            dotnetType.GenericTypeArguments.Length == 1 && dotnetType.GenericTypeArguments[0].IsEnum:
+                    var nullableType = Nullable.GetUnderlyingType(dotnetType);
+                    result = ConvertToDotNetEnum(nullableType, value);
+                    return true;
 
                 case JTokenType.Array when dotnetType.IsArray:
+                    if (!value.HasValues)
                     {
-                        if (!value.HasValues)
-                        {
-                            result = Activator.CreateInstance(dotnetType, 0);
-                            return true;
-                        }
-
-                        result = value.ToObject(dotnetType);
+                        result = Activator.CreateInstance(dotnetType, 0);
                         return true;
                     }
+
+                    result = value.ToObject(dotnetType);
+                    return true;
 
                 case JTokenType.Array when !dotnetType.IsArray:
-                    {
-                        if (!value.HasValues)
-                            return false;
+                    if (!value.HasValues)
+                        return false;
 
-                        if (value.Count() > 2 || dotnetType != typeof(long) && dotnetType != typeof(long?) && dotnetType != typeof(int) && dotnetType != typeof(int?) || value.First.Type != JTokenType.Integer)
-                            throw new Exception($"Not implemented json mapping '${value.Parent}'");
+                    if (value.Count() > 2 || dotnetType != typeof(long) && dotnetType != typeof(long?) && dotnetType != typeof(int) && dotnetType != typeof(int?) || value.First.Type != JTokenType.Integer)
+                        throw new Exception($"Not implemented json mapping '${value.Parent}'");
 
-                        result = value.First.ToObject(dotnetType);
-                        return true;
-                    }
+                    result = value.First.ToObject(dotnetType);
+                    return true;
 
                 default:
                     throw new Exception($"Not implemented json mapping value: '${value.Parent}' to {dotnetType.Name}");
@@ -206,23 +194,24 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
 
         public static object ConvertToDotNetEnum(Type type, JToken value)
         {
-            foreach (var name in Enum.GetNames(type))
-            {
-                var odooValue = GetOdooEnumName(type.GetField(name));
-                if (value.ToString() == odooValue)
-                    return Enum.Parse(type, name);
-            }
-            throw new ArgumentException();
+            var field = type.GetFields()
+              .Where(x => x.IsLiteral && GetOdooEnumName(x) == value.ToString())
+              .FirstOrDefault();
+
+            if (field != null)
+                return Enum.Parse(type, field.Name);
+
+            throw new ArgumentException($"Value: '{value}' not found in enum : '{type.FullName}'");
         }
 
         public static string GetOdooEnumName(FieldInfo fieldInfo)
         {
-            var jsonEnumAttribute = Attribute.GetCustomAttributes(fieldInfo)
+            var enumAttribute = Attribute.GetCustomAttributes(fieldInfo)
                 .FirstOrDefault(x => x is EnumMemberAttribute) as EnumMemberAttribute;
-            if (jsonEnumAttribute != null)
-                return jsonEnumAttribute.Value;
+            if (enumAttribute != null)
+                return enumAttribute.Value;
 
-            throw new ArgumentException($"Missing atrribute: '{nameof(EnumMemberAttribute)}' in enum");
+            throw new ArgumentException($"Missing atrribute: '{nameof(EnumMemberAttribute)}' for enum '{fieldInfo.FieldType.Name}' - '{fieldInfo.Name}'");
         }
     }
 }
