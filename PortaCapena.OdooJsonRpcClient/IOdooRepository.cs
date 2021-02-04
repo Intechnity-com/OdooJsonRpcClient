@@ -19,5 +19,6 @@ namespace PortaCapena.OdooJsonRpcClient
 
         Task<OdooResult<bool>> DeleteAsync(T model);
         Task<OdooResult<bool>> DeleteAsync(long id);
+        Task<OdooResult<bool>> DeleteRangeAsync(T[] models);
     }
 }
