@@ -27,7 +27,6 @@ namespace PortaCapena.OdooJsonRpcClient
         {
             return await OdooClient.CreateAsync(model);
         }
-
         public async Task<OdooResult<long>> CreateAsync(OdooCreateDictionary model)
         {
             return await OdooClient.CreateAsync(model);
@@ -37,24 +36,30 @@ namespace PortaCapena.OdooJsonRpcClient
         {
             return await OdooClient.UpdateAsync(model, id);
         }
+        public async Task<OdooResult<bool>> UpdateRangeAsync(IOdooCreateModel model, long[] ids)
+        {
+            return await OdooClient.UpdateRangeAsync(model, ids);
+        }
 
-        public async Task<OdooResult<bool>> UpdateAsync(OdooCreateDictionary model, params long[] ids)
+        public async Task<OdooResult<bool>> UpdateAsync(OdooCreateDictionary model, long id)
+        {
+            return await OdooClient.UpdateAsync(model, id);
+        }
+        public async Task<OdooResult<bool>> UpdateRangeAsync(OdooCreateDictionary model, long[] ids)
         {
             model.TableName = TableName;
-            return await OdooClient.UpdateAsync(model, ids);
+            return await OdooClient.UpdateRangeAsync(model, ids);
         }
 
         public async Task<OdooResult<bool>> DeleteAsync(T model)
         {
             return await OdooClient.DeleteAsync(model);
         }
-
         public async Task<OdooResult<bool>> DeleteAsync(long id)
         {
             return await OdooClient.DeleteAsync(TableName, id);
         }
-
-        public async Task<OdooResult<bool>> DeleteRangeAsync(params T[] models)
+        public async Task<OdooResult<bool>> DeleteRangeAsync(T[] models)
         {
             return await OdooClient.DeleteRangeAsync(models as IOdooModel[]);
         }
