@@ -68,10 +68,12 @@ public class OdooProductProduct : IOdooModel
     [JsonProperty("product_tmpl_id")]
     public int ProductTmplId { get; set; }
     
+    [JsonProperty("activity_exception_decoration")]
+    public ActivityExceptionDecorationOdooEnum? ActivityExceptionDecoration { get; set; }
+    
     ...
 }
-    
-// Type of the exception activity on record.
+
 [JsonConverter(typeof(StringEnumConverter))]
 public enum ActivityExceptionDecorationOdooEnum
 {
