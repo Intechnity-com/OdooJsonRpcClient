@@ -69,17 +69,18 @@ public class OdooProductProduct : IOdooModel
     public int ProductTmplId { get; set; }
     
     ...
+}
     
-    // Type of the exception activity on record.
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum ActivityExceptionDecorationOdooEnum
-    {
-        [EnumMember(Value = "warning")]
-        Alert = 1,
+// Type of the exception activity on record.
+[JsonConverter(typeof(StringEnumConverter))]
+public enum ActivityExceptionDecorationOdooEnum
+{
+    [EnumMember(Value = "warning")]
+    Alert = 1,
 
-        [EnumMember(Value = "danger")]
-        Error = 2,
-    }
+    [EnumMember(Value = "danger")]
+    Error = 2,
+}
 ```
 
 
