@@ -1,7 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using PortaCapena.OdooJsonRpcClient.Converters;
+using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 
 namespace PortaCapena.OdooJsonRpcClient.Extensions
 {
@@ -23,6 +26,12 @@ namespace PortaCapena.OdooJsonRpcClient.Extensions
             {
                 return value.ToString();
             }
+        }
+
+        public static string OdooValue(this Enum value)
+        {
+            var type = value.GetType().GetField(value.ToString());
+            return OdooModelMapper.GetOdooEnumName(type);
         }
     }
 }
