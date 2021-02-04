@@ -15,5 +15,8 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models.Create
 
         [JsonProperty("uom_po_id")]
         public int UomPoId { get; set; }
+
+        [JsonProperty("invoice_policy")]
+        public InvoicingPolicyOdooEnum? InvoicePolicy { get; set; }
     }
 }

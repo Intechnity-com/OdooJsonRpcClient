@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using PortaCapena.OdooJsonRpcClient.Attributes;
 using PortaCapena.OdooJsonRpcClient.Converters;
 using PortaCapena.OdooJsonRpcClient.Models;
@@ -8,9 +10,10 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
 {
     [OdooTableName("sale.order")]
     [JsonConverter(typeof(OdooModelConverter))]
-    public class SaleOrderOdooDto : IOdooModel
+    public class SaleOrderOdooModel : IOdooModel
     {
 
+        // required
         [JsonProperty("name")]
         public string Name { get; set; }
 
@@ -24,8 +27,9 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         public string Reference { get; set; }
 
         [JsonProperty("state")]
-        public string State { get; set; }
+        public StatusOdooEnum? State { get; set; }
 
+        // required
         [JsonProperty("date_order")]
         public DateTime DateOrder { get; set; }
 
@@ -49,18 +53,22 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         public long? UserId { get; set; }
 
         // res.partner
+        // required
         [JsonProperty("partner_id")]
         public long PartnerId { get; set; }
 
         // res.partner
+        // required
         [JsonProperty("partner_invoice_id")]
         public long PartnerInvoiceId { get; set; }
 
         // res.partner
+        // required
         [JsonProperty("partner_shipping_id")]
         public long PartnerShippingId { get; set; }
 
         // product.pricelist
+        // required
         [JsonProperty("pricelist_id")]
         public long PricelistId { get; set; }
 
@@ -84,22 +92,22 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         public long[] InvoiceIds { get; set; }
 
         [JsonProperty("invoice_status")]
-        public string InvoiceStatus { get; set; }
+        public InvoiceStatusOdooEnum? InvoiceStatus { get; set; }
 
         [JsonProperty("note")]
         public string Note { get; set; }
 
         [JsonProperty("amount_untaxed")]
-        public double? AmountUntaxed { get; set; }
+        public decimal? AmountUntaxed { get; set; }
 
         [JsonProperty("amount_by_group")]
         public string AmountByGroup { get; set; }
 
         [JsonProperty("amount_tax")]
-        public double? AmountTax { get; set; }
+        public decimal? AmountTax { get; set; }
 
         [JsonProperty("amount_total")]
-        public double? AmountTotal { get; set; }
+        public decimal? AmountTotal { get; set; }
 
         [JsonProperty("currency_rate")]
         public double? CurrencyRate { get; set; }
@@ -113,6 +121,7 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         public long? FiscalPositionId { get; set; }
 
         // res.company
+        // required
         [JsonProperty("company_id")]
         public long CompanyId { get; set; }
 
@@ -131,6 +140,9 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
 
         [JsonProperty("commitment_date")]
         public DateTime? CommitmentDate { get; set; }
+
+        [JsonProperty("expected_date")]
+        public DateTime? ExpectedDate { get; set; }
 
         [JsonProperty("amount_undiscounted")]
         public double? AmountUndiscounted { get; set; }
@@ -164,68 +176,6 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         [JsonProperty("purchase_order_count")]
         public int? PurchaseOrderCount { get; set; }
 
-        [JsonProperty("is_rental_order")]
-        public bool? IsRentalOrder { get; set; }
-
-        [JsonProperty("rental_status")]
-        public string RentalStatus { get; set; }
-
-        [JsonProperty("has_pickable_lines")]
-        public bool? HasPickableLines { get; set; }
-
-        [JsonProperty("has_returnable_lines")]
-        public bool? HasReturnableLines { get; set; }
-
-        [JsonProperty("next_action_date")]
-        public DateTime? NextActionDate { get; set; }
-
-        [JsonProperty("has_late_lines")]
-        public bool? HasLateLines { get; set; }
-
-        // account.incoterms
-        [JsonProperty("incoterm")]
-        public long? Incoterm { get; set; }
-
-        [JsonProperty("picking_policy")]
-        public string PickingPolicy { get; set; }
-
-        // stock.warehouse
-        [JsonProperty("warehouse_id")]
-        public long WarehouseId { get; set; }
-
-        // stock.picking
-        [JsonProperty("picking_ids")]
-        public long[] PickingIds { get; set; }
-
-        [JsonProperty("delivery_count")]
-        public int? DeliveryCount { get; set; }
-
-        // procurement.group
-        [JsonProperty("procurement_group_id")]
-        public long? ProcurementGroupId { get; set; }
-
-        [JsonProperty("effective_date")]
-        public DateTime? EffectiveDate { get; set; }
-
-        [JsonProperty("expected_date")]
-        public DateTime? ExpectedDate { get; set; }
-
-        [JsonProperty("json_popover")]
-        public string JsonPopover { get; set; }
-
-        [JsonProperty("show_json_popover")]
-        public bool? ShowJsonPopover { get; set; }
-
-        // crm.lead
-        [JsonProperty("opportunity_id")]
-        public long? OpportunityId { get; set; }
-
-        [JsonProperty("subscription_management")]
-        public string SubscriptionManagement { get; set; }
-
-        [JsonProperty("subscription_count")]
-        public int? SubscriptionCount { get; set; }
-
         // utm.campaign
         [JsonProperty("campaign_id")]
         public long? CampaignId { get; set; }
@@ -243,7 +193,7 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         public long[] ActivityIds { get; set; }
 
         [JsonProperty("activity_state")]
-        public string ActivityState { get; set; }
+        public ActivityStateOdooEnum? ActivityState { get; set; }
 
         // res.users
         [JsonProperty("activity_user_id")]
@@ -263,7 +213,7 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         public string ActivitySummary { get; set; }
 
         [JsonProperty("activity_exception_decoration")]
-        public string ActivityExceptionDecoration { get; set; }
+        public ActivityExceptionDecorationOdooEnum? ActivityExceptionDecoration { get; set; }
 
         [JsonProperty("activity_exception_icon")]
         public string ActivityExceptionIcon { get; set; }
@@ -349,4 +299,40 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         public DateTime? LastUpdate { get; set; }
     }
 
+
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum StatusOdooEnum
+    {
+        [EnumMember(Value = "draft")]
+        Quotation = 1,
+
+        [EnumMember(Value = "sent")]
+        QuotationSent = 2,
+
+        [EnumMember(Value = "sale")]
+        SalesOrder = 3,
+
+        [EnumMember(Value = "done")]
+        Locked = 4,
+
+        [EnumMember(Value = "cancel")]
+        Cancelled = 5,
+    }
+
+
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum InvoiceStatusOdooEnum
+    {
+        [EnumMember(Value = "upselling")]
+        UpsellingOpportunity = 1,
+
+        [EnumMember(Value = "invoiced")]
+        FullyInvoiced = 2,
+
+        [EnumMember(Value = "to invoice")]
+        ToInvoice = 3,
+
+        [EnumMember(Value = "no")]
+        NothingToInvoice = 4,
+    }
 }

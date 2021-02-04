@@ -39,7 +39,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         {
             var odooClient = new OdooClient(Config);
 
-            var products = await odooClient.GetAsync<StockPickingTypeOdooModel>();
+            var products = await odooClient.GetAsync<SaleOrderOdooModel>();
 
             products.Error.Should().BeNull();
             products.Value.Should().NotBeNull();
@@ -53,7 +53,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             var odooClient = new OdooClient(Config);
 
             var query = OdooQuery<ProductProductOdooDto>.Create()
-                .Where(x => x.Barcode, OdooOperator.EqualsTo, 66);
+                .Where(x => x.Barcode, OdooOperator.EqualsTo, 1);
 
             var products = await odooClient.GetAsync<ProductProductOdooDto>(query);
 
@@ -167,8 +167,9 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         [Fact]
         public async Task Get_DotNet_model_should_return_string()
         {
+            var dupa = InvoicingPolicyOdooEnum.DeliveredQuantities.OdooValue();
             var odooClient = new OdooClient(Config);
-            var tableName = "stock.warehouse";
+            var tableName = "sale.order";
             var modelResult = await odooClient.GetModelAsync(tableName);
 
             modelResult.Succeed.Should().BeTrue();
@@ -180,8 +181,8 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         #region Create
 
 
-        [Fact(Skip = "Test for working on Odoo")]
-        // [Fact]
+        //  [Fact(Skip = "Test for working on Odoo")]
+        [Fact]
         public async Task Can_create_product()
         {
             var odooClient = new OdooClient(Config);
@@ -190,7 +191,8 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             {
                 Name = "Prod test Kg",
                 UomId = 3,
-                UomPoId = 3
+                UomPoId = 3,
+                InvoicePolicy = InvoicingPolicyOdooEnum.DeliveredQuantities
             };
 
             var products = await odooClient.CreateAsync(model);
@@ -313,8 +315,8 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             createResult.Succeed.Should().BeTrue();
         }
 
-        //[Fact(Skip = "Test for working on Odoo")]
-        [Fact]
+        [Fact(Skip = "Test for working on Odoo")]
+        // [Fact]
         public async Task Can_create_sale_order()
         {
             var odooClient = new OdooClient(Config);
@@ -334,9 +336,8 @@ namespace PortaCapena.OdooJsonRpcClient.Example
 
 
 
-            var dictModel = OdooCreateDictionary.Create(() => new SaleOrderOdooDto
+            var dictModel = OdooCreateDictionary.Create(() => new SaleOrderOdooModel
             {
-                WarehouseId = 1,
 
                 PricelistId = 17,
 
