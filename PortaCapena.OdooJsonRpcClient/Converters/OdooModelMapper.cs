@@ -188,7 +188,7 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
 
         public static string ConvertOdooNameToDotNet(string odooName)
         {
-            var dotnetKeys = odooName.Split('.', '_', ' ', '-').Select(x => CultureInfo.InvariantCulture.TextInfo.ToTitleCase(x));
+            var dotnetKeys = odooName.Split('.', '_', ' ', '-', ':', ',').Select(x => CultureInfo.InvariantCulture.TextInfo.ToTitleCase(x));
             return string.Join(string.Empty, dotnetKeys);
         }
 
