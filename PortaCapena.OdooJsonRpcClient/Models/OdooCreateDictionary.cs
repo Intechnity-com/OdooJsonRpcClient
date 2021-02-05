@@ -38,7 +38,32 @@ namespace PortaCapena.OdooJsonRpcClient.Models
 
         public static OdooCreateDictionary Create<T>(Expression<Func<T>> expression) where T : IOdooAtributtesModel, new()
         {
-            return Create().Add(expression);
+            return new OdooCreateDictionary().Add(expression);
+        }
+
+        public static OdooCreateDictionary Create<T>(Expression<Func<T, object>> expression, object value) where T : IOdooAtributtesModel, new()
+        {
+            return new OdooCreateDictionary().Add(expression, value);
+        }
+        public static OdooCreateDictionary Create<T>(Expression<Func<T, Enum>> expression, Enum value) where T : IOdooAtributtesModel, new()
+        {
+            return new OdooCreateDictionary().Add(expression, value);
+        }
+
+        public OdooCreateDictionary Add<T>(Expression<Func<T, object>> expression, object value) where T : IOdooAtributtesModel
+        {
+            if (TableName != null && TryGetOdooTableName(expression, out var tableName))
+                TableName = tableName;
+            Add(OdooExtensions.GetOdooPropertyName(expression), value);
+            return this;
+        }
+
+        public OdooCreateDictionary Add<T>(Expression<Func<T, Enum>> expression, Enum value) where T : IOdooAtributtesModel
+        {
+            if (TableName != null && TryGetOdooTableName(expression, out var tableName))
+                TableName = tableName;
+            Add(OdooExtensions.GetOdooPropertyName(expression), value.OdooValue());
+            return this;
         }
 
         public OdooCreateDictionary Add<T>(Expression<Func<T>> expression, object value) where T : IOdooAtributtesModel
@@ -94,6 +119,26 @@ namespace PortaCapena.OdooJsonRpcClient.Models
 
 
         private static bool TryGetOdooTableName<T>(Expression<Func<T>> expression, out string result)
+        {
+            result = null;
+            var tableNameAttribute = expression.ReturnType.GetCustomAttributes(typeof(OdooTableNameAttribute), true).FirstOrDefault() as OdooTableNameAttribute;
+            if (tableNameAttribute == null) return false;
+
+            result = tableNameAttribute.Name;
+            return true;
+        }
+
+        private static bool TryGetOdooTableName<T>(Expression<Func<T, object>> expression, out string result)
+        {
+            result = null;
+            var tableNameAttribute = expression.ReturnType.GetCustomAttributes(typeof(OdooTableNameAttribute), true).FirstOrDefault() as OdooTableNameAttribute;
+            if (tableNameAttribute == null) return false;
+
+            result = tableNameAttribute.Name;
+            return true;
+        }
+
+        private static bool TryGetOdooTableName<T>(Expression<Func<T, Enum>> expression, out string result)
         {
             result = null;
             var tableNameAttribute = expression.ReturnType.GetCustomAttributes(typeof(OdooTableNameAttribute), true).FirstOrDefault() as OdooTableNameAttribute;
