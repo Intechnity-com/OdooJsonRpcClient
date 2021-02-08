@@ -99,6 +99,8 @@ namespace PortaCapena.OdooJsonRpcClient.Models
                     return OdooValueTypeEnum.Many2Many;
                 case "many2one":
                     return OdooValueTypeEnum.Many2One;
+                case "many2one_reference":
+                    return OdooValueTypeEnum.Many2OneReference;
                 case "one2many":
                     return OdooValueTypeEnum.One2Many;
                 case "selection":
@@ -134,6 +136,7 @@ namespace PortaCapena.OdooJsonRpcClient.Models
 
         Many2Many,
         Many2One,
+        Many2OneReference,
         One2Many,
         One2One,
         Reference,

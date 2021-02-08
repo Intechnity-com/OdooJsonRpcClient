@@ -40,7 +40,6 @@ namespace PortaCapena.OdooJsonRpcClient
         {
             return await OdooClient.UpdateRangeAsync(model, ids);
         }
-
         public async Task<OdooResult<bool>> UpdateAsync(OdooCreateDictionary model, long id)
         {
             return await OdooClient.UpdateAsync(model, id);

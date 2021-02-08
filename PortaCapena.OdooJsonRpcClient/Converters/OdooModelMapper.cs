@@ -171,6 +171,8 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
 
                 case OdooValueTypeEnum.Many2One:
                     return property.Value.ResultRequired ? "long" : "long?";
+                case OdooValueTypeEnum.Many2OneReference:
+                    return property.Value.ResultRequired ? "long" : "long?";
                 case OdooValueTypeEnum.Many2Many:
                     return "long[]";
                 case OdooValueTypeEnum.One2Many:
@@ -182,13 +184,13 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                     return ConvertOdooNameToDotNet(property.Value.RelationField) + OdooModelSuffix;
 
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentException($"Not expected Property Value Type: '{property.Value.PropertyValueType}'");
             }
         }
 
         public static string ConvertOdooNameToDotNet(string odooName)
         {
-            var dotnetKeys = odooName.Split('.', '_', ' ', '-').Select(x => CultureInfo.InvariantCulture.TextInfo.ToTitleCase(x));
+            var dotnetKeys = odooName.Split('.', '_', ' ', '-', ':', ',').Select(x => CultureInfo.InvariantCulture.TextInfo.ToTitleCase(x));
             return string.Join(string.Empty, dotnetKeys);
         }
 

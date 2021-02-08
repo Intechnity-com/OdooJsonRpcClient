@@ -202,7 +202,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         }
 
         [Fact(Skip = "Test for working on Odoo")]
-        // [Fact]
+        //[Fact]
         public async Task Can_create_update_delete_product()
         {
             var odooClient = new OdooClient(Config);
@@ -211,7 +211,8 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             {
                 Name = "Prod test Kg",
                 UomId = 3,
-                UomPoId = 3
+                UomPoId = 3,
+                InvoicePolicy = InvoicingPolicyOdooEnum.DeliveredQuantities
             };
 
             var createResult = await odooClient.CreateAsync(model);
@@ -246,7 +247,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         }
 
         [Fact(Skip = "Test for working on Odoo")]
-        //  [Fact]
+        // [Fact]
         public async Task Can_create_product_from_dictionary_model()
         {
             var odooClient = new OdooClient(Config);
@@ -254,8 +255,14 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             var dictModel = OdooCreateDictionary.Create(() => new ProductProductOdooDto
             {
                 Name = "test OdooCreateDictionary",
-                CombinationIndices = "sadasd"
             });
+
+            var dictModel2 = OdooCreateDictionary.Create<ProductProductOdooDto>(x => x.CombinationIndices, "create test");
+
+            var dictModel3 = OdooCreateDictionary.Create<ProductProductOdooDto>(x => x.InvoicePolicy, InvoicingPolicyOdooEnum.DeliveredQuantities);
+
+            dictModel.Add<ProductProductOdooDto>(x => x.CombinationIndices, "sadasd");
+            dictModel.Add<ProductProductOdooDto>(x => x.InvoicePolicy, InvoicingPolicyOdooEnum.DeliveredQuantities);
 
             var createResult = await odooClient.CreateAsync(dictModel);
             createResult.Succeed.Should().BeTrue();
