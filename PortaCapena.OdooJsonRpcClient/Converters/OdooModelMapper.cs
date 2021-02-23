@@ -119,7 +119,7 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                     builder.AppendLine("// " + property.Value.Help.Replace("\n", "\n // "));
 
                 builder.AppendLine($"[JsonConverter(typeof(StringEnumConverter))]");
-                builder.AppendLine($"public enum {ConvertOdooNameToDotNet(property.Value.String)}{OdooEnumSuffix}");
+                builder.AppendLine($"public enum {ConvertOdooNameToDotNet(property.Value.String)}{ConvertOdooNameToDotNet(tableName)}{OdooEnumSuffix}");
                 builder.AppendLine("{");
 
                 for (int i = 0; i < property.Value.Selection.Length; i++)
