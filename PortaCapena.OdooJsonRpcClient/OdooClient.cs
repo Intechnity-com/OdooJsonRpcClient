@@ -77,11 +77,11 @@ namespace PortaCapena.OdooJsonRpcClient
             var result = await CallAndDeserializeAsync<long[]>(request);
             return result.Succeed ? result.ToResult(result.Value.FirstOrDefault()) : OdooResult<long>.FailedResult(result);
         }
-        public async Task<OdooResult<long>> CreateAsync(OdooCommandModel model)
+        public async Task<OdooResult<long>> CreateAsync(OdooDictionaryModel model)
         {
             return await ExecuteWitrAccesDenideRetryAsync(userUid => CreateAsync(_config, userUid, model));
         }
-        public static async Task<OdooResult<long>> CreateAsync(OdooConfig odooConfig, int userUid, OdooCommandModel model)
+        public static async Task<OdooResult<long>> CreateAsync(OdooConfig odooConfig, int userUid, OdooDictionaryModel model)
         {
             var request = OdooRequestModel.Create(odooConfig, userUid, GetTableName(model), model);
             var result = await CallAndDeserializeAsync<long[]>(request);
@@ -100,11 +100,11 @@ namespace PortaCapena.OdooJsonRpcClient
         {
             return await UpdateRangeAsync(odooConfig, userUid, model, new[] { id });
         }
-        public async Task<OdooResult<bool>> UpdateAsync(OdooCommandModel model, long id)
+        public async Task<OdooResult<bool>> UpdateAsync(OdooDictionaryModel model, long id)
         {
             return await UpdateRangeAsync(model, new[] { id });
         }
-        public static async Task<OdooResult<bool>> UpdateAsync(OdooConfig odooConfig, int userUid, OdooCommandModel model, long id)
+        public static async Task<OdooResult<bool>> UpdateAsync(OdooConfig odooConfig, int userUid, OdooDictionaryModel model, long id)
         {
             return await UpdateRangeAsync(odooConfig, userUid, model, new[] { id });
         }
@@ -119,11 +119,11 @@ namespace PortaCapena.OdooJsonRpcClient
             var request = OdooRequestModel.Update(odooConfig, userUid, tableName, ids, model);
             return await CallAndDeserializeAsync<bool>(request);
         }
-        public async Task<OdooResult<bool>> UpdateRangeAsync(OdooCommandModel model, long[] ids)
+        public async Task<OdooResult<bool>> UpdateRangeAsync(OdooDictionaryModel model, long[] ids)
         {
             return await ExecuteWitrAccesDenideRetryAsync(userUid => UpdateRangeAsync(_config, userUid, model, ids));
         }
-        public static async Task<OdooResult<bool>> UpdateRangeAsync(OdooConfig odooConfig, int userUid, OdooCommandModel model, long[] ids)
+        public static async Task<OdooResult<bool>> UpdateRangeAsync(OdooConfig odooConfig, int userUid, OdooDictionaryModel model, long[] ids)
         {
             var request = OdooRequestModel.Update(odooConfig, userUid, GetTableName(model), ids, model);
             return await CallAndDeserializeAsync<bool>(request);
@@ -264,7 +264,7 @@ namespace PortaCapena.OdooJsonRpcClient
                 return result;
             }
         }
-        private static string GetTableName(OdooCommandModel model, string tableName = null)
+        private static string GetTableName(OdooDictionaryModel model, string tableName = null)
         {
             if (tableName != null)
                 return tableName;
@@ -272,7 +272,7 @@ namespace PortaCapena.OdooJsonRpcClient
                 return model.TableName;
             else
                 throw new ArgumentException(
-                    $"TableName not set in {nameof(OdooCommandModel)}, use ctor or {nameof(OdooCommandModel.Create)} method with param");
+                    $"TableName not set in {nameof(OdooDictionaryModel)}, use ctor or {nameof(OdooDictionaryModel.Create)} method with param");
         }
     }
 }

@@ -211,7 +211,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
 
             CompanyTypeResPartnerOdooEnum? test = CompanyTypeResPartnerOdooEnum.Company;
 
-            var model = OdooCommandModel.Create(() => new ResPartnerOdooModel()
+            var model = OdooDictionaryModel.Create(() => new ResPartnerOdooModel()
             {
                 Name = name,
                 CountryId = 20,
@@ -301,14 +301,14 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         {
             var odooClient = new OdooClient(Config);
 
-            var dictModel = OdooCommandModel.Create(() => new ProductProductOdooDto
+            var dictModel = OdooDictionaryModel.Create(() => new ProductProductOdooDto
             {
                 Name = "test OdooCreateDictionary",
             });
 
-            var dictModel2 = OdooCommandModel.Create<ProductProductOdooDto>(x => x.CombinationIndices, "create test");
+            var dictModel2 = OdooDictionaryModel.Create<ProductProductOdooDto>(x => x.CombinationIndices, "create test");
 
-            var dictModel3 = OdooCommandModel.Create<ProductProductOdooDto>(x => x.InvoicePolicy, InvoicingPolicyOdooEnum.DeliveredQuantities);
+            var dictModel3 = OdooDictionaryModel.Create<ProductProductOdooDto>(x => x.InvoicePolicy, InvoicingPolicyOdooEnum.DeliveredQuantities);
 
             dictModel.Add<ProductProductOdooDto>(x => x.CombinationIndices, "sadasd");
             dictModel.Add<ProductProductOdooDto>(x => x.InvoicePolicy, InvoicingPolicyOdooEnum.DeliveredQuantities);
@@ -392,7 +392,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
 
 
 
-            var dictModel = OdooCommandModel.Create(() => new SaleOrderOdooModel
+            var dictModel = OdooDictionaryModel.Create(() => new SaleOrderOdooModel
             {
 
                 PricelistId = 17,
@@ -411,7 +411,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             createResult.Succeed.Should().BeTrue();
 
 
-            var lineModel = OdooCommandModel.Create(() => new SaleOrderLineOdooDto()
+            var lineModel = OdooDictionaryModel.Create(() => new SaleOrderLineOdooDto()
             {
                 OrderId = createResult.Value,
                 Name = "test line",
@@ -518,7 +518,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             //  odooCompanyTaxes.Succeed.Should().BeTrue();
             //   odooCompanyTaxes.Value.Should().NotBeNull().And.NotBeEmpty();
 
-            var purchaseOrderModel = OdooCommandModel.Create(() => new PurchaseOrderOdooModel()
+            var purchaseOrderModel = OdooDictionaryModel.Create(() => new PurchaseOrderOdooModel()
             {
                 CompanyId = odooCompanyId,
                 DateOrder = GetTestdate(),
@@ -537,7 +537,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
 
         //    taxId.Should().NotBeNull();
 
-            var model = OdooCommandModel.Create(() => new PurchaseOrderLineOdooModel()
+            var model = OdooDictionaryModel.Create(() => new PurchaseOrderLineOdooModel()
             {
                 PriceUnit = 10,
                 ProductId = 12,

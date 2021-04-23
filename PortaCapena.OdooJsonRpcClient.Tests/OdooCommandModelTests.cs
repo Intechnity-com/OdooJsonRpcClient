@@ -12,7 +12,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         [Fact]
         public void Can_create_simple_dictionary()
         {
-            var model = OdooCommandModel.Create(() => new PurchaseOrderOdooModel()
+            var model = OdooDictionaryModel.Create(() => new PurchaseOrderOdooModel()
             {
                 CompanyId = 1,
                 PartnerId = 2,
@@ -44,7 +44,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         [Fact]
         public void Can_create_dictionary_with_create_instance()
         {
-            var model = OdooCommandModel.Create(() => new PurchaseOrderLineOdooModel()
+            var model = OdooDictionaryModel.Create(() => new PurchaseOrderLineOdooModel()
             {
               DateOrder = new DateTime(),
             });
@@ -64,7 +64,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         [Fact]
         public void Can_create_dictionary_with_call_method()
         {
-            var model = OdooCommandModel.Create(() => new PurchaseOrderLineOdooModel()
+            var model = OdooDictionaryModel.Create(() => new PurchaseOrderLineOdooModel()
             {
                 Name = TestString(),
             });
@@ -84,11 +84,11 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         [Fact]
         public void Can_create_dictionary_with_call_method_with_params()
         {
-            var model = OdooCommandModel.Create(() => new PurchaseOrderLineOdooModel()
+            var model = OdooDictionaryModel.Create(() => new PurchaseOrderLineOdooModel()
             {
                 Name = TestString("123"),
             });
-            model.Add(x => x.DisplayName, TestString("123"));
+            model.Add(x => x.DisplayName, TestString("456"));
 
             model.TableName.Should().NotBeEmpty();
             model.Should().NotBeEmpty();
@@ -96,15 +96,17 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
 
             model.First().Key.Should().Be("name");
             model.First().Value.Should().BeOfType<string>();
+            model.First().Value.Should().Be("123test");
 
             model.Skip(1).First().Key.Should().Be("display_name");
             model.Skip(1).First().Value.Should().BeOfType<string>();
+            model.Skip(1).First().Value.Should().Be("456test");
         }
 
         [Fact]
         public void Can_create_dictionary_with_array()
         {
-            var model = OdooCommandModel.Create(() => new PurchaseOrderLineOdooModel()
+            var model = OdooDictionaryModel.Create(() => new PurchaseOrderLineOdooModel()
             {
                 AnalyticTagIds = new long[]{1, 2, 3}
             });
@@ -115,16 +117,16 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
             model.Count.Should().Be(2);
 
             model.First().Key.Should().Be("analytic_tag_ids");
-            model.First().Value.Should().BeOfType<long[]>();
+            model.First().Value.Should().BeOfType<long[]>().And.NotBeNull();
             model.First().Value.Should().BeEquivalentTo(new long[] { 1, 2, 3 });
 
             model.Skip(1).First().Key.Should().Be("invoice_lines");
-            model.Skip(1).First().Value.Should().BeOfType<long[]>();
+            model.Skip(1).First().Value.Should().BeOfType<long[]>().And.NotBeNull();
             model.Skip(1).First().Value.Should().BeEquivalentTo(new long[] { 4, 5, 6 });
         }
 
 
         private string TestString() => new Guid().ToString();
-        private string TestString(string x) => x;
+        private string TestString(string x) => x + "test";
     }
 }
