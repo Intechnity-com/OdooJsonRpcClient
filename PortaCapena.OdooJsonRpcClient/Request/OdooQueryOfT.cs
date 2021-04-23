@@ -15,7 +15,7 @@ namespace PortaCapena.OdooJsonRpcClient.Request
 
         public static OdooQuery<T> Create()
         {
-            return  new OdooQuery<T>();
+            return new OdooQuery<T>();
         }
 
 

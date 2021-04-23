@@ -104,8 +104,6 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         }
 
 
-
         private string TestString() => new Guid().ToString();
-
     }
 }

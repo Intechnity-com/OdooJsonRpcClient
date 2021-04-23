@@ -18,6 +18,11 @@ namespace PortaCapena.OdooJsonRpcClient.Result
             Code = code;
             HttpStatus = httpStatus;
         }
+
+        public override string ToString()
+        {
+            return $"{Message}, \n {Data?.Message}"; ;
+        }
     }
 }
 
