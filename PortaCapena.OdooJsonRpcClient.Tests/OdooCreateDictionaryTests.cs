@@ -12,7 +12,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         [Fact]
         public void Can_create_simple_dictionary()
         {
-            var model = OdooCreateDictionary.Create(() => new PurchaseOrderOdooModel()
+            var model = OdooCommandModel.Create(() => new PurchaseOrderOdooModel()
             {
                 CompanyId = 1,
                 PartnerId = 2,
@@ -44,7 +44,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         [Fact]
         public void Can_create_dictionary_with_create_instance()
         {
-            var model = OdooCreateDictionary.Create(() => new PurchaseOrderLineOdooModel()
+            var model = OdooCommandModel.Create(() => new PurchaseOrderLineOdooModel()
             {
               DateOrder = new DateTime(),
             });
@@ -64,7 +64,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         [Fact]
         public void Can_create_dictionary_with_call_method()
         {
-            var model = OdooCreateDictionary.Create(() => new PurchaseOrderLineOdooModel()
+            var model = OdooCommandModel.Create(() => new PurchaseOrderLineOdooModel()
             {
                 Name = TestString(),
             });
@@ -84,7 +84,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         [Fact]
         public void Can_create_dictionary_with_array()
         {
-            var model = OdooCreateDictionary.Create(() => new PurchaseOrderLineOdooModel()
+            var model = OdooCommandModel.Create(() => new PurchaseOrderLineOdooModel()
             {
                 AnalyticTagIds = new long[]{1, 2, 3}
             });

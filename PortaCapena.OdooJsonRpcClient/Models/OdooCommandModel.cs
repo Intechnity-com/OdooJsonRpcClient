@@ -10,47 +10,47 @@ using PortaCapena.OdooJsonRpcClient.Extensions;
 
 namespace PortaCapena.OdooJsonRpcClient.Models
 {
-    public class OdooCreateDictionary : Dictionary<string, object>
+    public class OdooCommandModel : Dictionary<string, object>
     {
         public string TableName { get; internal set; }
 
-        public OdooCreateDictionary() { }
+        public OdooCommandModel() { }
 
-        public OdooCreateDictionary(string tableName)
+        public OdooCommandModel(string tableName)
         {
             TableName = tableName;
         }
 
-        public static OdooCreateDictionary Create()
+        public static OdooCommandModel Create()
         {
-            return new OdooCreateDictionary();
+            return new OdooCommandModel();
         }
 
-        public static OdooCreateDictionary Create(string tableName)
+        public static OdooCommandModel Create(string tableName)
         {
-            return new OdooCreateDictionary(tableName);
+            return new OdooCommandModel(tableName);
         }
 
-        public static OdooCreateDictionary<T> Create<T>() where T : IOdooAtributtesModel, new()
+        public static OdooCommandModel<T> Create<T>() where T : IOdooAtributtesModel, new()
         {
-            return new OdooCreateDictionary<T>();
+            return new OdooCommandModel<T>();
         }
 
-        public static OdooCreateDictionary<T> Create<T>(Expression<Func<T>> expression) where T : IOdooAtributtesModel, new()
+        public static OdooCommandModel<T> Create<T>(Expression<Func<T>> expression) where T : IOdooAtributtesModel, new()
         {
-            return new OdooCreateDictionary<T>().Add(expression);
+            return new OdooCommandModel<T>().Add(expression);
         }
 
-        public static OdooCreateDictionary Create<T>(Expression<Func<T, object>> expression, object value) where T : IOdooAtributtesModel, new()
+        public static OdooCommandModel Create<T>(Expression<Func<T, object>> expression, object value) where T : IOdooAtributtesModel, new()
         {
-            return new OdooCreateDictionary<T>().Add(expression, value);
+            return new OdooCommandModel<T>().Add(expression, value);
         }
-        public static OdooCreateDictionary Create<T>(Expression<Func<T, Enum>> expression, Enum value) where T : IOdooAtributtesModel, new()
+        public static OdooCommandModel Create<T>(Expression<Func<T, Enum>> expression, Enum value) where T : IOdooAtributtesModel, new()
         {
-            return new OdooCreateDictionary<T>().Add(expression, value);
+            return new OdooCommandModel<T>().Add(expression, value);
         }
 
-        public OdooCreateDictionary Add<T>(Expression<Func<T, object>> expression, object value) where T : IOdooAtributtesModel
+        public OdooCommandModel Add<T>(Expression<Func<T, object>> expression, object value) where T : IOdooAtributtesModel
         {
             if (TableName != null && TryGetOdooTableName(expression, out var tableName))
                 TableName = tableName;
@@ -58,7 +58,7 @@ namespace PortaCapena.OdooJsonRpcClient.Models
             return this;
         }
 
-        public OdooCreateDictionary Add<T>(Expression<Func<T, Enum>> expression, Enum value) where T : IOdooAtributtesModel
+        public OdooCommandModel Add<T>(Expression<Func<T, Enum>> expression, Enum value) where T : IOdooAtributtesModel
         {
             if (TableName != null && TryGetOdooTableName(expression, out var tableName))
                 TableName = tableName;
@@ -66,7 +66,7 @@ namespace PortaCapena.OdooJsonRpcClient.Models
             return this;
         }
 
-        public OdooCreateDictionary Add<T>(Expression<Func<T>> expression, object value) where T : IOdooAtributtesModel
+        public OdooCommandModel Add<T>(Expression<Func<T>> expression, object value) where T : IOdooAtributtesModel
         {
             if (TableName != null && TryGetOdooTableName(expression, out var tableName))
                 TableName = tableName;
@@ -74,7 +74,7 @@ namespace PortaCapena.OdooJsonRpcClient.Models
             return this;
         }
 
-        public OdooCreateDictionary Add<T>(Expression<Func<T>> expression) where T : IOdooAtributtesModel, new()
+        public OdooCommandModel Add<T>(Expression<Func<T>> expression) where T : IOdooAtributtesModel, new()
         {
             if (TableName == null && TryGetOdooTableName(expression, out var tableName))
                 TableName = tableName;

@@ -23,7 +23,7 @@ namespace PortaCapena.OdooJsonRpcClient
         {
             return await OdooClient.CreateAsync(model);
         }
-        public async Task<OdooResult<long>> CreateAsync(OdooCreateDictionary model)
+        public async Task<OdooResult<long>> CreateAsync(OdooCommandModel model)
         {
             return await OdooClient.CreateAsync(model);
         }
@@ -36,11 +36,11 @@ namespace PortaCapena.OdooJsonRpcClient
         {
             return await OdooClient.UpdateRangeAsync(model, ids);
         }
-        public async Task<OdooResult<bool>> UpdateAsync(OdooCreateDictionary model, long id)
+        public async Task<OdooResult<bool>> UpdateAsync(OdooCommandModel model, long id)
         {
             return await OdooClient.UpdateAsync(model, id);
         }
-        public async Task<OdooResult<bool>> UpdateRangeAsync(OdooCreateDictionary model, long[] ids)
+        public async Task<OdooResult<bool>> UpdateRangeAsync(OdooCommandModel model, long[] ids)
         {
             model.TableName = TableName;
             return await OdooClient.UpdateRangeAsync(model, ids);
