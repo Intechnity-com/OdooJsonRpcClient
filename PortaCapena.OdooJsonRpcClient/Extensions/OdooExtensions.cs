@@ -41,51 +41,6 @@ namespace PortaCapena.OdooJsonRpcClient.Extensions
             return key.PropertyName;
         }
 
-        internal static string GetOdooPropertyName<T>(Expression<Func<T, object>> expression) where T : IOdooAtributtesModel
-        {
-            return GetOdooPropertyName<T>(GetPropertyName(expression));
-        }
-
-        internal static string GetOdooPropertyName<T>(Expression<Func<T, Enum>> expression) where T : IOdooAtributtesModel
-        {
-            return GetOdooPropertyName<T>(GetPropertyName(expression));
-        }
-
-        internal static string GetOdooPropertyName<T>(Expression<Func<T>> expression) where T : IOdooAtributtesModel
-        {
-            return GetOdooPropertyName<T>(GetPropertyName(expression));
-        }
-        internal static string GetPropertyName<T>(Expression<Func<T>> expression) where T : IOdooAtributtesModel
-        {
-            if (expression.Body is MemberExpression body)
-                return body.Member.Name;
-
-            if (expression.Body is UnaryExpression unar && unar.Operand is MemberExpression member)
-                return member.Member.Name;
-
-            return null;
-        }
-        internal static string GetPropertyName<T>(Expression<Func<T, object>> expression) where T : IOdooAtributtesModel
-        {
-            if (expression.Body is MemberExpression body)
-                return body.Member.Name;
-
-            if (expression.Body is UnaryExpression unar && unar.Operand is MemberExpression member)
-                return member.Member.Name;
-
-            return null;
-        }
-        internal static string GetPropertyName<T>(Expression<Func<T, Enum>> expression) where T : IOdooAtributtesModel
-        {
-            if (expression.Body is MemberExpression body)
-                return body.Member.Name;
-
-            if (expression.Body is UnaryExpression unar && unar.Operand is MemberExpression member)
-                return member.Member.Name;
-
-            return null;
-        }
-
         public static OdooResult<TResult> ToResult<T, TResult>(this OdooResult<T> result, TResult newValue)
         {
             return new OdooResult<TResult> { Id = result.Id, Jsonrpc = result.Jsonrpc, Value = newValue };
