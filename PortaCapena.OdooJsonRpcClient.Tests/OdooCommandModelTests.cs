@@ -7,7 +7,7 @@ using Xunit;
 
 namespace PortaCapena.OdooJsonRpcClient.Tests
 {
-    public class OdooCreateDictionaryTests
+    public class OdooCommandModelTests
     {
         [Fact]
         public void Can_create_simple_dictionary()
@@ -82,6 +82,26 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         }
 
         [Fact]
+        public void Can_create_dictionary_with_call_method_with_params()
+        {
+            var model = OdooCommandModel.Create(() => new PurchaseOrderLineOdooModel()
+            {
+                Name = TestString("123"),
+            });
+            model.Add(x => x.DisplayName, TestString("123"));
+
+            model.TableName.Should().NotBeEmpty();
+            model.Should().NotBeEmpty();
+            model.Count.Should().Be(2);
+
+            model.First().Key.Should().Be("name");
+            model.First().Value.Should().BeOfType<string>();
+
+            model.Skip(1).First().Key.Should().Be("display_name");
+            model.Skip(1).First().Value.Should().BeOfType<string>();
+        }
+
+        [Fact]
         public void Can_create_dictionary_with_array()
         {
             var model = OdooCommandModel.Create(() => new PurchaseOrderLineOdooModel()
@@ -105,5 +125,6 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
 
 
         private string TestString() => new Guid().ToString();
+        private string TestString(string x) => x;
     }
 }
