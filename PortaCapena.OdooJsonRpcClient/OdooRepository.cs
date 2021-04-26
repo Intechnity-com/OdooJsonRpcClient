@@ -11,6 +11,7 @@ namespace PortaCapena.OdooJsonRpcClient
     {
         public string TableName { get; }
         protected readonly OdooClient OdooClient;
+        public OdooQueryBuilder<T> Query() => new OdooQueryBuilder<T>(OdooClient);
 
         public OdooRepository(OdooConfig config)
         {
@@ -18,16 +19,11 @@ namespace PortaCapena.OdooJsonRpcClient
             TableName = OdooExtensions.GetOdooTableName<T>();
         }
 
-        public OdooQueryBuilder<T> Query()
-        {
-            return new OdooQueryBuilder<T>(OdooClient);
-        }
-
         public async Task<OdooResult<long>> CreateAsync(IOdooCreateModel model)
         {
             return await OdooClient.CreateAsync(model);
         }
-        public async Task<OdooResult<long>> CreateAsync(OdooCreateDictionary model)
+        public async Task<OdooResult<long>> CreateAsync(OdooDictionaryModel model)
         {
             return await OdooClient.CreateAsync(model);
         }
@@ -40,11 +36,11 @@ namespace PortaCapena.OdooJsonRpcClient
         {
             return await OdooClient.UpdateRangeAsync(model, ids);
         }
-        public async Task<OdooResult<bool>> UpdateAsync(OdooCreateDictionary model, long id)
+        public async Task<OdooResult<bool>> UpdateAsync(OdooDictionaryModel model, long id)
         {
             return await OdooClient.UpdateAsync(model, id);
         }
-        public async Task<OdooResult<bool>> UpdateRangeAsync(OdooCreateDictionary model, long[] ids)
+        public async Task<OdooResult<bool>> UpdateRangeAsync(OdooDictionaryModel model, long[] ids)
         {
             model.TableName = TableName;
             return await OdooClient.UpdateRangeAsync(model, ids);

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
@@ -23,7 +24,7 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
 
             switch (value.Type)
             {
-                case JTokenType.Boolean when dotnetType != typeof(bool):
+                case JTokenType.Boolean when dotnetType != typeof(bool) && dotnetType != typeof(bool?):
                     return false;
 
                 case JTokenType.Boolean:
@@ -104,7 +105,7 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                     builder.AppendLine("// required");
 
                 builder.AppendLine($"[JsonProperty(\"{property.Key}\")]");
-                builder.AppendLine($"public {ConvertToDotNetPropertyTypeName(property)} {ConvertOdooNameToDotNet(property.Key)} {{ get; set; }}");
+                builder.AppendLine($"public {ConvertToDotNetPropertyTypeName(property, tableName)} {ConvertOdooNameToDotNet(property.Key)} {{ get; set; }}");
             }
             builder.AppendLine("}");
 
@@ -119,7 +120,7 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                     builder.AppendLine("// " + property.Value.Help.Replace("\n", "\n // "));
 
                 builder.AppendLine($"[JsonConverter(typeof(StringEnumConverter))]");
-                builder.AppendLine($"public enum {ConvertOdooNameToDotNet(property.Value.String)}{OdooEnumSuffix}");
+                builder.AppendLine($"public enum {ConvertOdooNameToDotNet(property.Value.String)}{ConvertOdooNameToDotNet(tableName)}{OdooEnumSuffix}");
                 builder.AppendLine("{");
 
                 for (int i = 0; i < property.Value.Selection.Length; i++)
@@ -136,7 +137,7 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
             return builder.ToString();
         }
 
-        public static string ConvertToDotNetPropertyTypeName(KeyValuePair<string, OdooPropertyInfo> property)
+        public static string ConvertToDotNetPropertyTypeName(KeyValuePair<string, OdooPropertyInfo> property, string tableName)
         {
             switch (property.Value.PropertyValueType)
             {
@@ -145,7 +146,7 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                 case OdooValueTypeEnum.Char:
                     return "string";
                 case OdooValueTypeEnum.Selection:
-                    return $"{ConvertOdooNameToDotNet(property.Value.String)}{OdooEnumSuffix}{(property.Value.ResultRequired ? "" : "?")}";
+                    return $"{ConvertOdooNameToDotNet(property.Value.String)}{ConvertOdooNameToDotNet(tableName)}{OdooEnumSuffix}{(property.Value.ResultRequired ? "" : "?")}";
                 case OdooValueTypeEnum.Text:
                     return "string";
                 case OdooValueTypeEnum.Html:
@@ -190,7 +191,8 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
 
         public static string ConvertOdooNameToDotNet(string odooName)
         {
-            var dotnetKeys = odooName.Split('.', '_', ' ', '-', ':', ',').Select(x => CultureInfo.InvariantCulture.TextInfo.ToTitleCase(x));
+            var odooNameCleaned = Regex.Replace(odooName, "[^A-Za-z0-9-]", "_");
+            var dotnetKeys = odooNameCleaned.Split('_', '-', '.', ',', ' ', ':', ';', '/', '\\', '*', '+', '(', ')', '[', ']').Select(x => CultureInfo.InvariantCulture.TextInfo.ToTitleCase(x));
             return string.Join(string.Empty, dotnetKeys);
         }
 

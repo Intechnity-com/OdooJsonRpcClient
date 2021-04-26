@@ -47,8 +47,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         public void When_use_pridicate_where_shoud_return_correct_filters_model()
         {
             var filters = OdooQuery<ProductProductOdooDto>.Create()
-                .Where(x => x.Id, OdooOperator.EqualsTo, 10)
-                ;
+                .Where(x => x.Id, OdooOperator.EqualsTo, 10);
 
             filters.Filters.Count.Should().Be(1);
             var json = JsonConvert.SerializeObject(filters.Filters);
@@ -86,8 +85,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
 
             var filters = OdooQuery<ProductProductOdooDto>.Create()
                 .Where(OdooFilter.Create().GreaterThanOrEqual("write_date", new DateTime(2020, 12, 2)))
-                .Where(OdooFilter.Create().EqualTo("name", "Bioboxen 610l"))
-                ;
+                .Where(OdooFilter.Create().EqualTo("name", "Bioboxen 610l"));
 
             filters.Filters.Count.Should().Be(2);
             var json = JsonConvert.SerializeObject(filters.Filters);
@@ -115,6 +113,29 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
             filters.ReturnFields.Count.Should().Be(0);
             filters.Limit.Should().BeNull();
             filters.Offset.Should().BeNull();
+        }
+
+
+        [Fact]
+        public void When_use_select_with_anymous_model_shoud_return_correct_filters_model()
+        {
+            var filters = OdooQuery<ProductProductOdooDto>.Create()
+                .Select(x => new
+                {
+                    x.Name,
+                    x.Description,
+                    x.WriteDate
+                });
+
+            filters.Limit.Should().BeNull();
+            filters.Offset.Should().BeNull();
+            filters.Filters.Count.Should().Be(0);
+
+            filters.ReturnFields.Count.Should().Be(3);
+
+            filters.ReturnFields.First().Should().Be("name");
+            filters.ReturnFields.Skip(1).First().Should().Be("description");
+            filters.ReturnFields.Skip(2).First().Should().Be("write_date");
         }
     }
 }

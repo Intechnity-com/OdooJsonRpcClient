@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Threading.Tasks;
 using PortaCapena.OdooJsonRpcClient.Consts;
+using PortaCapena.OdooJsonRpcClient.Converters;
 using PortaCapena.OdooJsonRpcClient.Extensions;
 using PortaCapena.OdooJsonRpcClient.Models;
-using PortaCapena.OdooJsonRpcClient.Result;
 using PortaCapena.OdooJsonRpcClient.Utils;
 
 namespace PortaCapena.OdooJsonRpcClient.Request
@@ -17,7 +15,7 @@ namespace PortaCapena.OdooJsonRpcClient.Request
 
         public static OdooQuery<T> Create()
         {
-            return  new OdooQuery<T>();
+            return new OdooQuery<T>();
         }
 
 
@@ -54,7 +52,7 @@ namespace PortaCapena.OdooJsonRpcClient.Request
         }
         public OdooQuery<T> Where(Expression<Func<T, object>> expression, OdooOperator odooOperator, object value)
         {
-            Filters.Add(OdooFilterMapper.ToOdooExpresion<T>(OdooExtensions.GetPropertyName(expression), odooOperator, value));
+            Filters.Add(OdooFilterMapper.ToOdooExpresion<T>(OdooExpresionMapper.GetPropertyName(expression), odooOperator, value));
             return this;
         }
 
@@ -85,25 +83,25 @@ namespace PortaCapena.OdooJsonRpcClient.Request
 
         public OdooQuery<T> OrderBy(Expression<Func<T, object>> expression)
         {
-            var odooPropertyName = OdooExtensions.GetOdooPropertyName(expression);
+            var odooPropertyName = OdooExpresionMapper.GetOdooPropertyName(expression);
             this.Order = $"{odooPropertyName} ASC";
             return this;
         }
         public OdooQuery<T> OrderByDescending(Expression<Func<T, object>> expression)
         {
-            var odooPropertyName = OdooExtensions.GetOdooPropertyName(expression);
+            var odooPropertyName = OdooExpresionMapper.GetOdooPropertyName(expression);
             this.Order = $"{odooPropertyName} DESC";
             return this;
         }
         public OdooQuery<T> ThenOrderBy(Expression<Func<T, object>> expression)
         {
-            var odooPropertyName = OdooExtensions.GetOdooPropertyName(expression);
+            var odooPropertyName = OdooExpresionMapper.GetOdooPropertyName(expression);
             this.Order += $", {odooPropertyName} ASC";
             return this;
         }
         public OdooQuery<T> ThenOrderByDescending(Expression<Func<T, object>> expression)
         {
-            var odooPropertyName = OdooExtensions.GetOdooPropertyName(expression);
+            var odooPropertyName = OdooExpresionMapper.GetOdooPropertyName(expression);
             this.Order += $", {odooPropertyName} DESC";
             return this;
         }

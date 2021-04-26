@@ -39,12 +39,31 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         {
             var odooClient = new OdooClient(Config);
 
-            var products = await odooClient.GetAsync<SaleOrderOdooModel>();
+            var products = await odooClient.GetAsync<ResCountryOdooModel>();
+
 
             products.Error.Should().BeNull();
             products.Value.Should().NotBeNull();
             products.Value.Length.Should().BeGreaterThan(0);
             products.Succeed.Should().BeTrue();
+
+            var dupa = products.Value.Where(x => x.XStudioIsInEu == true).ToList();
+        }
+
+
+        [Fact]
+        public async Task Can_get_all_countries()
+        {
+            var odoorepository = new OdooRepository<ResCountryOdooModel>(Config);
+
+            var products = await odoorepository.Query().Where(x => x.XStudioIsInEu, OdooOperator.EqualsTo, true).ToListAsync();
+
+            products.Error.Should().BeNull();
+            products.Value.Should().NotBeNull();
+            products.Value.Length.Should().BeGreaterThan(0);
+            products.Succeed.Should().BeTrue();
+
+            var dupa = products.Value.Where(x => x.XStudioIsInEu == true).ToList();
         }
 
         [Fact]
@@ -167,9 +186,8 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         [Fact]
         public async Task Get_DotNet_model_should_return_string()
         {
-            var dupa = InvoicingPolicyOdooEnum.DeliveredQuantities.OdooValue();
             var odooClient = new OdooClient(Config);
-            var tableName = "sale.order";
+            var tableName = "res.country";
             var modelResult = await odooClient.GetModelAsync(tableName);
 
             modelResult.Succeed.Should().BeTrue();
@@ -180,9 +198,40 @@ namespace PortaCapena.OdooJsonRpcClient.Example
 
         #region Create
 
-
         //  [Fact(Skip = "Test for working on Odoo")]
         [Fact]
+        public async Task Can_Create_customer()
+        {
+            var name = "dupa";
+            var city = "dupa";
+            var postalCode = "dupa";
+            var vatEu = "test";
+            var address = "dupa";
+            var isCompany = true;
+
+            CompanyTypeResPartnerOdooEnum? test = CompanyTypeResPartnerOdooEnum.Company;
+
+            var model = OdooDictionaryModel.Create(() => new ResPartnerOdooModel()
+            {
+                Name = name,
+                CountryId = 20,
+                City = city,
+                Zip = postalCode,
+                //Vat = vatEu,
+                Street = address,
+                CompanyType = test ?? CompanyTypeResPartnerOdooEnum.Individual
+            });
+
+            var odooClient = new OdooClient(Config);
+
+            var products = await odooClient.CreateAsync(model);
+
+            products.Succeed.Should().BeTrue();
+        }
+
+
+        [Fact(Skip = "Test for working on Odoo")]
+        //  [Fact]
         public async Task Can_create_product()
         {
             var odooClient = new OdooClient(Config);
@@ -252,14 +301,14 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         {
             var odooClient = new OdooClient(Config);
 
-            var dictModel = OdooCreateDictionary.Create(() => new ProductProductOdooDto
+            var dictModel = OdooDictionaryModel.Create(() => new ProductProductOdooDto
             {
                 Name = "test OdooCreateDictionary",
             });
 
-            var dictModel2 = OdooCreateDictionary.Create<ProductProductOdooDto>(x => x.CombinationIndices, "create test");
+            var dictModel2 = OdooDictionaryModel.Create<ProductProductOdooDto>(x => x.CombinationIndices, "create test");
 
-            var dictModel3 = OdooCreateDictionary.Create<ProductProductOdooDto>(x => x.InvoicePolicy, InvoicingPolicyOdooEnum.DeliveredQuantities);
+            var dictModel3 = OdooDictionaryModel.Create<ProductProductOdooDto>(x => x.InvoicePolicy, InvoicingPolicyOdooEnum.DeliveredQuantities);
 
             dictModel.Add<ProductProductOdooDto>(x => x.CombinationIndices, "sadasd");
             dictModel.Add<ProductProductOdooDto>(x => x.InvoicePolicy, InvoicingPolicyOdooEnum.DeliveredQuantities);
@@ -332,7 +381,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             companyResult.Succeed.Should().BeTrue();
             var company = companyResult.Value.First();
 
-            var partnerResult = await odooClient.GetAsync<PartnerOdooDto>(OdooQuery<PartnerOdooDto>.Create().ById(9));
+            var partnerResult = await odooClient.GetAsync<ResPartnerOdooModel>(OdooQuery<ResPartnerOdooModel>.Create().ById(9));
             partnerResult.Succeed.Should().BeTrue();
             var partner = partnerResult.Value.First();
 
@@ -343,7 +392,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
 
 
 
-            var dictModel = OdooCreateDictionary.Create(() => new SaleOrderOdooModel
+            var dictModel = OdooDictionaryModel.Create(() => new SaleOrderOdooModel
             {
 
                 PricelistId = 17,
@@ -362,7 +411,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             createResult.Succeed.Should().BeTrue();
 
 
-            var lineModel = OdooCreateDictionary.Create(() => new SaleOrderLineOdooDto()
+            var lineModel = OdooDictionaryModel.Create(() => new SaleOrderLineOdooDto()
             {
                 OrderId = createResult.Value,
                 Name = "test line",
@@ -407,13 +456,13 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             var partnerResult = await odooClient.GetAsync<StockPickingTypeOdooDto>();
 
 
-            var dupa = new PurchaseOrderOdooDto
+            var dupa = new PurchaseOrderOdooModel()
             {
                 DateOrder = DateTime.Now,
                 PartnerId = 9,
                 CurrencyId = 15,
                 CompanyId = 1,
-                PickingTypeId = 1,
+                //      PickingTypeId = 1,
                 Name = "test purchase"
             };
 
@@ -444,6 +493,63 @@ namespace PortaCapena.OdooJsonRpcClient.Example
                 Console.WriteLine(e);
                 throw;
             }
+        }
+
+        public DateTime GetTestdate()
+        {
+            return DateTime.Now;
+        }
+
+        [Fact]
+        // [Fact(Skip = "Test for working on Odoo")]
+        public async Task CreatePurchaseOrderAsync()
+        {
+            var odooCompanyId = 32;
+
+            var accountTaxOdooRepository = new OdooRepository<AccountTaxOdooModel>(Config);
+            var purchaseOrderOdooRepository = new OdooRepository<PurchaseOrderOdooModel>(Config);
+            var purchaseOrderLineOdooRepository = new OdooRepository<PurchaseOrderLineOdooModel>(Config);
+
+            var odooCompanyTaxes = await accountTaxOdooRepository.Query()
+                .Where(x => x.CompanyId, OdooOperator.EqualsTo, odooCompanyId)
+                .Where(x => x.AmountType, OdooOperator.EqualsTo, TaxComputationAccountTaxOdooEnum.PercentageOfPrice)
+                .ToListAsync();
+
+            //  odooCompanyTaxes.Succeed.Should().BeTrue();
+            //   odooCompanyTaxes.Value.Should().NotBeNull().And.NotBeEmpty();
+
+            var purchaseOrderModel = OdooDictionaryModel.Create(() => new PurchaseOrderOdooModel()
+            {
+                CompanyId = odooCompanyId,
+                DateOrder = GetTestdate(),
+                PartnerId = 1,
+                CurrencyId = 1,
+                XStudioPickupAddress = "pickupAddress",
+                XStudioPickupDate = GetTestdate(),
+                State = StatusPurchaseOrderOdooEnum.PurchaseOrder
+            });
+
+            //        var orderResult = await purchaseOrderOdooRepository.CreateAsync(purchaseOrderModel);
+            //        orderResult.Succeed.Should().BeTrue();
+
+
+        //    var taxId = odooCompanyTaxes.Value.FirstOrDefault(x => x.Amount == 6);
+
+        //    taxId.Should().NotBeNull();
+
+            var model = OdooDictionaryModel.Create(() => new PurchaseOrderLineOdooModel()
+            {
+                PriceUnit = 10,
+                ProductId = 12,
+                ProductQty = 11,
+                //  OrderId = orderResult.Value,
+                State = StatusPurchaseOrderLineOdooEnum.PurchaseOrder,
+                TaxesId = new long[] {12, 11}
+            });
+
+            //       var createPurchaseOrderLineResult = await purchaseOrderLineOdooRepository.CreateAsync(model);
+
+            //        createPurchaseOrderLineResult.Succeed.Should().BeTrue();
         }
     }
 }
