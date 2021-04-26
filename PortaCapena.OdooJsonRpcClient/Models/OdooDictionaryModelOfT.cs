@@ -10,12 +10,7 @@ namespace PortaCapena.OdooJsonRpcClient.Models
         {
             TableName = OdooExtensions.GetOdooTableName<T>();
         }
-
-        private OdooDictionaryModel(string tableName)
-        {
-            TableName = tableName;
-        }
-
+ 
         public static OdooDictionaryModel<T> Create(Expression<Func<T>> expression)
         {
             return new OdooDictionaryModel<T>().Add(expression);
