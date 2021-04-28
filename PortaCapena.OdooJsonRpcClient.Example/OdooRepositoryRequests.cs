@@ -49,12 +49,12 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         }
 
         [Fact]
-        public async Task Can_get_product_with_deep_secound_where()
+        public async Task Can_get_product_with_deep_secound_level_where()
         {
             var repository = new OdooRepository<ProductProductOdooDto>(Config);
 
             var products = await repository.Query()
-                .Where<AccountAccountOdooModel, AccountAccountTypeOdooModel>(x => x.PropertyAccountIncomeId, x => x.UserTypeId, x => x.Type, OdooOperator.EqualsTo, TypeAccountAccountTypeOdooEnum.Payable)
+                .Where<AccountAccountOdooModel, AccountAccountTypeOdooModel>(x => x.PropertyAccountIncomeId, x => x.UserTypeId, x => x.Type, OdooOperator.EqualsTo, TypeAccountAccountTypeOdooEnum.Regular)
                 .ToListAsync();
 
             products.Error.Should().BeNull();
