@@ -187,7 +187,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         public async Task Get_DotNet_model_should_return_string()
         {
             var odooClient = new OdooClient(Config);
-            var tableName = "account.account.type";
+            var tableName = "account.move.line";
             var modelResult = await odooClient.GetModelAsync(tableName);
 
             modelResult.Succeed.Should().BeTrue();
