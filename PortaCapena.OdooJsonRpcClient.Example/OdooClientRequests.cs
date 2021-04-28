@@ -72,7 +72,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             var odooClient = new OdooClient(Config);
 
             var query = OdooQuery<ProductProductOdooDto>.Create()
-                .Where(x => x.Barcode, OdooOperator.EqualsTo, 1);
+                .Where(x => x.Id, OdooOperator.EqualsTo, 303);
 
             var products = await odooClient.GetAsync<ProductProductOdooDto>(query);
 
@@ -187,7 +187,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         public async Task Get_DotNet_model_should_return_string()
         {
             var odooClient = new OdooClient(Config);
-            var tableName = "res.country";
+            var tableName = "account.account";
             var modelResult = await odooClient.GetModelAsync(tableName);
 
             modelResult.Succeed.Should().BeTrue();
@@ -533,9 +533,9 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             //        orderResult.Succeed.Should().BeTrue();
 
 
-        //    var taxId = odooCompanyTaxes.Value.FirstOrDefault(x => x.Amount == 6);
+            //    var taxId = odooCompanyTaxes.Value.FirstOrDefault(x => x.Amount == 6);
 
-        //    taxId.Should().NotBeNull();
+            //    taxId.Should().NotBeNull();
 
             var model = OdooDictionaryModel.Create(() => new PurchaseOrderLineOdooModel()
             {
@@ -544,7 +544,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
                 ProductQty = 11,
                 //  OrderId = orderResult.Value,
                 State = StatusPurchaseOrderLineOdooEnum.PurchaseOrder,
-                TaxesId = new long[] {12, 11}
+                TaxesId = new long[] { 12, 11 }
             });
 
             //       var createPurchaseOrderLineResult = await purchaseOrderLineOdooRepository.CreateAsync(model);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Linq;
 using FluentAssertions;
 using Newtonsoft.Json;
@@ -136,6 +137,50 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
             filters.ReturnFields.First().Should().Be("name");
             filters.ReturnFields.Skip(1).First().Should().Be("description");
             filters.ReturnFields.Skip(2).First().Should().Be("write_date");
+        }
+
+        [Fact]
+        public void When_use_pridicate_where_with_one_forgin_key_shoud_return_correct_filters_model()
+        {
+            var filters = OdooQuery<ProductProductOdooDto>.Create()
+                    .Where<ResCompanyOdooModel>(x => x.CompanyId, x => x.CountryCode, OdooOperator.EqualsTo, "BE");
+
+            filters.Filters.Count.Should().Be(1);
+            filters.Filters[0].Should().NotBeNull();
+
+            var arr = filters.Filters[0] as ArrayList;
+            arr[0].Should().Be("company_id.country_code");
+            arr[1].Should().Be("=");
+            arr[2].Should().Be("BE");
+
+            var json = JsonConvert.SerializeObject(filters.Filters);
+            json.Should().Be("[[\"company_id.country_code\",\"=\",\"BE\"]]");
+
+            filters.ReturnFields.Count.Should().Be(0);
+            filters.Limit.Should().BeNull();
+            filters.Offset.Should().BeNull();
+        }
+
+        [Fact]
+        public void When_use_pridicate_where_with_two_forgin_key_shoud_return_correct_filters_model()
+        {
+            var filters = OdooQuery<ProductProductOdooDto>.Create()
+                .Where<ResCompanyOdooModel, AccountTaxOdooModel>(x => x.PropertyAccountExpenseId, x => x.AccountSaleTaxId, x => x.CountryCode, OdooOperator.EqualsTo, "BE");
+
+            filters.Filters.Count.Should().Be(1);
+            filters.Filters[0].Should().NotBeNull();
+
+            var arr = filters.Filters[0] as ArrayList;
+            arr[0].Should().Be("property_account_expense_id.account_sale_tax_id.country_code");
+            arr[1].Should().Be("=");
+            arr[2].Should().Be("BE");
+
+            var json = JsonConvert.SerializeObject(filters.Filters);
+            json.Should().Be("[[\"property_account_expense_id.account_sale_tax_id.country_code\",\"=\",\"BE\"]]");
+
+            filters.ReturnFields.Count.Should().Be(0);
+            filters.Limit.Should().BeNull();
+            filters.Offset.Should().BeNull();
         }
     }
 }

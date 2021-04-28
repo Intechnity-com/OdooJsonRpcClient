@@ -56,6 +56,59 @@ namespace PortaCapena.OdooJsonRpcClient.Request
             return this;
         }
 
+        public OdooQuery<T> Where<TForeignKeyLevel1>(Expression<Func<T, long>> expression, Expression<Func<TForeignKeyLevel1, object>> expressionForeignKeyLevel1, OdooOperator odooOperator, object value) where TForeignKeyLevel1 : IOdooModel, new()
+        {
+            var fields = OdooExtensions.GetOdooPropertyName<T>(OdooExpresionMapper.GetPropertyName(expression)) + '.' +
+                         OdooExtensions.GetOdooPropertyName<TForeignKeyLevel1>(OdooExpresionMapper.GetPropertyName(expressionForeignKeyLevel1));
+
+            Filters.Add(new OdooFilter { fields, odooOperator.Description(), value });
+            return this;
+        }
+        public OdooQuery<T> Where<TForeignKeyLevel1>(Expression<Func<T, long?>> expression, Expression<Func<TForeignKeyLevel1, object>> expressionForeignKeyLevel1, OdooOperator odooOperator, object value) where TForeignKeyLevel1 : IOdooModel, new()
+        {
+            var fields = OdooExtensions.GetOdooPropertyName<T>(OdooExpresionMapper.GetPropertyName(expression)) + '.' +
+                         OdooExtensions.GetOdooPropertyName<TForeignKeyLevel1>(OdooExpresionMapper.GetPropertyName(expressionForeignKeyLevel1));
+
+            Filters.Add(new OdooFilter { fields, odooOperator.Description(), value });
+            return this;
+        }
+        public OdooQuery<T> Where<TForeignKeyLevel1, TForeignKeyLevel2>(Expression<Func<T, long?>> expression, Expression<Func<TForeignKeyLevel1, long>> expressionForeignKeyLevel1, Expression<Func<TForeignKeyLevel2, object>> expressionForeignKeyLevel2, OdooOperator odooOperator, object value) where TForeignKeyLevel1 : IOdooModel, new() where TForeignKeyLevel2 : IOdooModel, new()
+        {
+            var fields = OdooExtensions.GetOdooPropertyName<T>(OdooExpresionMapper.GetPropertyName(expression)) + '.' +
+                         OdooExtensions.GetOdooPropertyName<TForeignKeyLevel1>(OdooExpresionMapper.GetPropertyName(expressionForeignKeyLevel1)) + '.' +
+                         OdooExtensions.GetOdooPropertyName<TForeignKeyLevel2>(OdooExpresionMapper.GetPropertyName(expressionForeignKeyLevel2));
+
+            Filters.Add(new OdooFilter { fields, odooOperator.Description(), value });
+            return this;
+        }
+        public OdooQuery<T> Where<TForeignKeyLevel1, TForeignKeyLevel2>(Expression<Func<T, long>> expression, Expression<Func<TForeignKeyLevel1, long?>> expressionForeignKeyLevel1, Expression<Func<TForeignKeyLevel2, object>> expressionForeignKeyLevel2, OdooOperator odooOperator, object value) where TForeignKeyLevel1 : IOdooModel, new() where TForeignKeyLevel2 : IOdooModel, new()
+        {
+            var fields = OdooExtensions.GetOdooPropertyName<T>(OdooExpresionMapper.GetPropertyName(expression)) + '.' +
+                         OdooExtensions.GetOdooPropertyName<TForeignKeyLevel1>(OdooExpresionMapper.GetPropertyName(expressionForeignKeyLevel1)) + '.' +
+                         OdooExtensions.GetOdooPropertyName<TForeignKeyLevel2>(OdooExpresionMapper.GetPropertyName(expressionForeignKeyLevel2));
+
+            Filters.Add(new OdooFilter { fields, odooOperator.Description(), value });
+            return this;
+        }
+        public OdooQuery<T> Where<TForeignKeyLevel1, TForeignKeyLevel2>(Expression<Func<T, long>> expression, Expression<Func<TForeignKeyLevel1, long>> expressionForeignKeyLevel1, Expression<Func<TForeignKeyLevel2, object>> expressionForeignKeyLevel2, OdooOperator odooOperator, object value) where TForeignKeyLevel1 : IOdooModel, new() where TForeignKeyLevel2 : IOdooModel, new()
+        {
+            var fields = OdooExtensions.GetOdooPropertyName<T>(OdooExpresionMapper.GetPropertyName(expression)) + '.' +
+                         OdooExtensions.GetOdooPropertyName<TForeignKeyLevel1>(OdooExpresionMapper.GetPropertyName(expressionForeignKeyLevel1)) + '.' +
+                         OdooExtensions.GetOdooPropertyName<TForeignKeyLevel2>(OdooExpresionMapper.GetPropertyName(expressionForeignKeyLevel2));
+
+            Filters.Add(new OdooFilter { fields, odooOperator.Description(), value });
+            return this;
+        }
+        public OdooQuery<T> Where<TForeignKeyLevel1, TForeignKeyLevel2>(Expression<Func<T, long?>> expression, Expression<Func<TForeignKeyLevel1, long?>> expressionForeignKeyLevel1, Expression<Func<TForeignKeyLevel2, object>> expressionForeignKeyLevel2, OdooOperator odooOperator, object value) where TForeignKeyLevel1 : IOdooModel, new() where TForeignKeyLevel2 : IOdooModel, new()
+        {
+            var fields = OdooExtensions.GetOdooPropertyName<T>(OdooExpresionMapper.GetPropertyName(expression)) + '.' +
+                         OdooExtensions.GetOdooPropertyName<TForeignKeyLevel1>(OdooExpresionMapper.GetPropertyName(expressionForeignKeyLevel1)) + '.' +
+                         OdooExtensions.GetOdooPropertyName<TForeignKeyLevel2>(OdooExpresionMapper.GetPropertyName(expressionForeignKeyLevel2));
+
+            Filters.Add(new OdooFilter { fields, odooOperator.Description(), value });
+            return this;
+        }
+
         public OdooQuery<T> ById(long id)
         {
             Filters.EqualTo(OdooExtensions.GetOdooPropertyName<T>(nameof(IOdooModel.Id)), id);
