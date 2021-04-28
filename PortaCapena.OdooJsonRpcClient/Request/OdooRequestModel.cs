@@ -91,3 +91,5 @@ namespace PortaCapena.OdooJsonRpcClient.Request
         }
     }
 }
+
+// https://erppeek.readthedocs.io/en/latest/api.html

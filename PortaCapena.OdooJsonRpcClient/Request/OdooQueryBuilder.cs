@@ -90,6 +90,11 @@ namespace PortaCapena.OdooJsonRpcClient.Request
             _query.ById(id);
             return this;
         }
+        public OdooQueryBuilder<T> ByIds(params long[] ids)
+        {
+            _query.ByIds(ids);
+            return this;
+        }
 
         #endregion
 

@@ -72,6 +72,7 @@ namespace PortaCapena.OdooJsonRpcClient.Request
             Filters.Add(new OdooFilter { fields, odooOperator.Description(), value });
             return this;
         }
+
         public OdooQuery<T> Where<TForeignKeyLevel1, TForeignKeyLevel2>(Expression<Func<T, long?>> expression, Expression<Func<TForeignKeyLevel1, long>> expressionForeignKeyLevel1, Expression<Func<TForeignKeyLevel2, object>> expressionForeignKeyLevel2, OdooOperator odooOperator, object value) where TForeignKeyLevel1 : IOdooModel, new() where TForeignKeyLevel2 : IOdooModel, new()
         {
             var fields = OdooExtensions.GetOdooPropertyName<T>(OdooExpresionMapper.GetPropertyName(expression)) + '.' +
@@ -109,9 +110,16 @@ namespace PortaCapena.OdooJsonRpcClient.Request
             return this;
         }
 
+
         public OdooQuery<T> ById(long id)
         {
             Filters.EqualTo(OdooExtensions.GetOdooPropertyName<T>(nameof(IOdooModel.Id)), id);
+            return this;
+        }
+        public OdooQuery<T> ByIds(params long[] ids)
+        {
+            if (ids.Any())
+                Filters.In(OdooExtensions.GetOdooPropertyName<T>(nameof(IOdooModel.Id)), ids);
             return this;
         }
 
