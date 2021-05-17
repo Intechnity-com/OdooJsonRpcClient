@@ -53,10 +53,46 @@ namespace PortaCapena.OdooJsonRpcClient.Request
             _query.Where(expression, odooOperator, value);
             return this;
         }
+        public OdooQueryBuilder<T> Where<TForeignKeyLevel1>(Expression<Func<T, long>> expression, Expression<Func<TForeignKeyLevel1, object>> expressionForeignKeyLevel1, OdooOperator odooOperator, object value) where TForeignKeyLevel1 : IOdooModel, new()
+        {
+            _query.Where(expression, expressionForeignKeyLevel1, odooOperator, value);
+            return this;
+        }
+        public OdooQueryBuilder<T> Where<TForeignKeyLevel1>(Expression<Func<T, long?>> expression, Expression<Func<TForeignKeyLevel1, object>> expressionForeignKeyLevel1, OdooOperator odooOperator, object value) where TForeignKeyLevel1 : IOdooModel, new()
+        {
+            _query.Where(expression, expressionForeignKeyLevel1, odooOperator, value);
+            return this;
+        }
+
+        public OdooQueryBuilder<T> Where<TForeignKeyLevel1, TForeignKeyLevel2>(Expression<Func<T, long>> expression, Expression<Func<TForeignKeyLevel1, long>> expressionForeignKeyLevel1, Expression<Func<TForeignKeyLevel2, object>> expressionForeignKeyLevel2, OdooOperator odooOperator, object value) where TForeignKeyLevel1 : IOdooModel, new() where TForeignKeyLevel2 : IOdooModel, new()
+        {
+            _query.Where(expression, expressionForeignKeyLevel1, expressionForeignKeyLevel2, odooOperator, value);
+            return this;
+        }
+        public OdooQueryBuilder<T> Where<TForeignKeyLevel1, TForeignKeyLevel2>(Expression<Func<T, long?>> expression, Expression<Func<TForeignKeyLevel1, long?>> expressionForeignKeyLevel1, Expression<Func<TForeignKeyLevel2, object>> expressionForeignKeyLevel2, OdooOperator odooOperator, object value) where TForeignKeyLevel1 : IOdooModel, new() where TForeignKeyLevel2 : IOdooModel, new()
+        {
+            _query.Where(expression, expressionForeignKeyLevel1, expressionForeignKeyLevel2, odooOperator, value);
+            return this;
+        }
+        public OdooQueryBuilder<T> Where<TForeignKeyLevel1, TForeignKeyLevel2>(Expression<Func<T, long>> expression, Expression<Func<TForeignKeyLevel1, long?>> expressionForeignKeyLevel1, Expression<Func<TForeignKeyLevel2, object>> expressionForeignKeyLevel2, OdooOperator odooOperator, object value) where TForeignKeyLevel1 : IOdooModel, new() where TForeignKeyLevel2 : IOdooModel, new()
+        {
+            _query.Where(expression, expressionForeignKeyLevel1, expressionForeignKeyLevel2, odooOperator, value);
+            return this;
+        }
+        public OdooQueryBuilder<T> Where<TForeignKeyLevel1, TForeignKeyLevel2>(Expression<Func<T, long?>> expression, Expression<Func<TForeignKeyLevel1, long>> expressionForeignKeyLevel1, Expression<Func<TForeignKeyLevel2, object>> expressionForeignKeyLevel2, OdooOperator odooOperator, object value) where TForeignKeyLevel1 : IOdooModel, new() where TForeignKeyLevel2 : IOdooModel, new()
+        {
+            _query.Where(expression, expressionForeignKeyLevel1, expressionForeignKeyLevel2, odooOperator, value);
+            return this;
+        }
 
         public OdooQueryBuilder<T> ById(long id)
         {
             _query.ById(id);
+            return this;
+        }
+        public OdooQueryBuilder<T> ByIds(params long[] ids)
+        {
+            _query.ByIds(ids);
             return this;
         }
 

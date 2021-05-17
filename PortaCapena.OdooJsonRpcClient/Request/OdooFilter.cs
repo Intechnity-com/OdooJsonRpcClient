@@ -69,28 +69,28 @@ namespace PortaCapena.OdooJsonRpcClient.Request
 
         public OdooFilter GreaterThan(string fieldName, object value)
         {
-            var field = new object[] { fieldName, ">", value };
+            var field = new object[] { fieldName, OdooOperator.GreaterThan.Description(), value };
             Add(field);
             return this;
         }
 
         public OdooFilter GreaterThanOrEqual(string fieldName, object value)
         {
-            var field = new object[] { fieldName, ">=", value };
+            var field = new object[] { fieldName, OdooOperator.GreaterThanOrEqualTo.Description(), value };
             Add(field);
             return this;
         }
 
         public OdooFilter LessThan(string fieldName, object value)
         {
-            var field = new object[] { fieldName, "<", value };
+            var field = new object[] { fieldName, OdooOperator.LessThan.Description(), value };
             Add(field);
             return this;
         }
 
         public OdooFilter LessThanOrEqual(string fieldName, object value)
         {
-            var field = new object[] { fieldName, "<=", value };
+            var field = new object[] { fieldName, OdooOperator.LessThanOrEqualTo.Description(), value };
             Add(field);
             return this;
         }
@@ -104,56 +104,56 @@ namespace PortaCapena.OdooJsonRpcClient.Request
 
         public OdooFilter In(string fieldName, OdooFilterValue value)
         {
-            var field = new object[] { fieldName, "in", value.ToArray() };
+            var field = new object[] { fieldName, OdooOperator.In.Description(), value.ToArray() };
             Add(field);
             return this;
         }
 
         public OdooFilter In(string fieldName, object[] values)
         {
-            var field = new object[] { fieldName, "in", values };
+            var field = new object[] { fieldName, OdooOperator.In.Description(), values };
             Add(field);
             return this;
         }
 
         public OdooFilter In(string fieldName, List<object> values)
         {
-            var field = new object[] { fieldName, "in", values.ToArray() };
+            var field = new object[] { fieldName, OdooOperator.In.Description(), values.ToArray() };
             Add(field);
             return this;
         }
 
-        public OdooFilter In(string fieldName, int[] values)
+        public OdooFilter In(string fieldName, long[] values)
         {
-            var field = new object[] { fieldName, "in", values };
+            var field = new object[] { fieldName, OdooOperator.In.Description(), values };
             Add(field);
             return this;
         }
 
         public OdooFilter NotIn(string fieldName, OdooFilterValue value)
         {
-            var field = new object[] { fieldName, "not in", value.ToArray() };
+            var field = new object[] { fieldName, OdooOperator.NotIn.Description(), value.ToArray() };
             Add(field);
             return this;
         }
 
         public OdooFilter NotIn(string fieldName, object[] values)
         {
-            var field = new object[] { fieldName, "not in", values };
+            var field = new object[] { fieldName, OdooOperator.NotIn.Description(), values };
             Add(field);
             return this;
         }
 
         public OdooFilter NotIn(string fieldName, List<object> values)
         {
-            var field = new object[] { fieldName, "not in", values.ToArray() };
+            var field = new object[] { fieldName, OdooOperator.NotIn.Description(), values.ToArray() };
             Add(field);
             return this;
         }
 
-        public OdooFilter NotIn(string fieldName, int[] values)
+        public OdooFilter NotIn(string fieldName, long[] values)
         {
-            var field = new object[] { fieldName, "not in", values };
+            var field = new object[] { fieldName, OdooOperator.NotIn.Description(), values };
             Add(field);
             return this;
         }
@@ -167,6 +167,19 @@ namespace PortaCapena.OdooJsonRpcClient.Request
 
         public OdooFilter Build()
         {
+            return this;
+        }
+
+        public OdooFilter NotBeNull(string fieldName)
+        {
+            var field = new object[] { fieldName, OdooOperator.NotEqualsTo.Description(), false };
+            Add(field);
+            return this;
+        }
+        public OdooFilter BeNull(string fieldName)
+        {
+            var field = new object[] { fieldName, OdooOperator.EqualsTo.Description(), false };
+            Add(field);
             return this;
         }
     }

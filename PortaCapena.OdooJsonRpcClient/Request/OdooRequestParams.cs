@@ -14,7 +14,7 @@ namespace PortaCapena.OdooJsonRpcClient.Request
         [JsonProperty("args")]
         public object[] Args { get; }
 
-
+      
         [JsonIgnore]
         public string Url { get; }
 
@@ -38,3 +38,5 @@ namespace PortaCapena.OdooJsonRpcClient.Request
         }
     }
 }
+
+// http://gauravsahu.github.io/odoo-client-JSON-RPC/
