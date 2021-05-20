@@ -31,22 +31,22 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
 
 
             var request4 = OdooRequestModel.SearchRead(Config, 2, "table");
-            request4.Params.Args.Length.Should().Be(5);
+            request4.Params.Args.Length.Should().Be(6);
 
 
             var query5 = new OdooQuery(){Offset = 10};
             var request5 = OdooRequestModel.SearchRead(Config, 2, "table", query5);
-            request5.Params.Args.Length.Should().Be(8);
+            request5.Params.Args.Length.Should().Be(7);
 
 
             var query6 = new OdooQuery() { Limit = 10 };
             var request6 = OdooRequestModel.SearchRead(Config, 2, "table", query6);
-            request6.Params.Args.Length.Should().Be(9);
+            request6.Params.Args.Length.Should().Be(7);
 
 
             var query7 = new OdooQuery() { Order = "id" };
             var request7 = OdooRequestModel.SearchRead(Config, 2, "table", query7);
-            request7.Params.Args.Length.Should().Be(10);
+            request7.Params.Args.Length.Should().Be(7);
 
 
             var queryTest = new OdooQuery()

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using FluentAssertions;
 using PortaCapena.OdooJsonRpcClient.Consts;
-using PortaCapena.OdooJsonRpcClient.Request;
+using PortaCapena.OdooJsonRpcClient.Models;
 using PortaCapena.OdooJsonRpcClient.Shared;
 using PortaCapena.OdooJsonRpcClient.Shared.Models;
 using Xunit;
@@ -13,7 +13,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         [Fact]
         public async Task Can_get_all_products()
         {
-            var repository = new OdooRepository<AccountAccountTypeOdooModel>(Config);
+            var repository = new OdooRepository<ProductProductOdooDto>(Config);
             var products = await repository.Query().ToListAsync();
 
             products.Error.Should().BeNull();
@@ -26,7 +26,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         public async Task Can_get_product_by_id()
         {
             var repository = new OdooRepository<ProductProductOdooDto>(Config);
-            var products = await repository.Query().ById(66).FirstOrDefaultAsync();
+            var products = await repository.Query().ById(282).ToListAsync();
 
             products.Error.Should().BeNull();
             products.Value.Should().NotBeNull();
@@ -84,6 +84,27 @@ namespace PortaCapena.OdooJsonRpcClient.Example
 
             var products = await repository.Query()
                 .SelectSimplifiedModel()
+                .FirstOrDefaultAsync();
+
+            products.Error.Should().BeNull();
+            products.Value.Should().NotBeNull();
+            products.Succeed.Should().BeTrue();
+        }
+
+
+        [Fact]
+        public async Task Can_get_product_with_selected_language()
+        {
+            var repository = new OdooRepository<ProductProductOdooDto>(Config);
+
+            var context = new OdooContext()
+            {
+                Language = "nl_BE"
+            };
+
+            var products = await repository.Query()
+                .ById(282)
+                .WithContext(context)
                 .FirstOrDefaultAsync();
 
             products.Error.Should().BeNull();

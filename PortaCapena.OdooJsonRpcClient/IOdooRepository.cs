@@ -9,16 +9,16 @@ namespace PortaCapena.OdooJsonRpcClient
     {
         OdooQueryBuilder<T> Query();
 
-        Task<OdooResult<long>> CreateAsync(IOdooCreateModel model);
-        Task<OdooResult<long>> CreateAsync(OdooDictionaryModel model);
+        Task<OdooResult<long>> CreateAsync(IOdooCreateModel model, OdooContext context = null);
+        Task<OdooResult<long>> CreateAsync(OdooDictionaryModel model, OdooContext context = null);
 
-        Task<OdooResult<bool>> UpdateAsync(IOdooCreateModel model, long id);
-        Task<OdooResult<bool>> UpdateRangeAsync(IOdooCreateModel model, long[] ids);
-        Task<OdooResult<bool>> UpdateAsync(OdooDictionaryModel model, long id);
-        Task<OdooResult<bool>> UpdateRangeAsync(OdooDictionaryModel model, long[] ids);
+        Task<OdooResult<bool>> UpdateAsync(IOdooCreateModel model, long id, OdooContext context = null);
+        Task<OdooResult<bool>> UpdateRangeAsync(IOdooCreateModel model, long[] ids, OdooContext context = null);
+        Task<OdooResult<bool>> UpdateAsync(OdooDictionaryModel model, long id, OdooContext context = null);
+        Task<OdooResult<bool>> UpdateRangeAsync(OdooDictionaryModel model, long[] ids, OdooContext context = null);
 
-        Task<OdooResult<bool>> DeleteAsync(T model);
-        Task<OdooResult<bool>> DeleteAsync(long id);
-        Task<OdooResult<bool>> DeleteRangeAsync(T[] models);
+        Task<OdooResult<bool>> DeleteAsync(T model, OdooContext context = null);
+        Task<OdooResult<bool>> DeleteAsync(long id, OdooContext context = null);
+        Task<OdooResult<bool>> DeleteRangeAsync(T[] models, OdooContext context = null);
     }
 }
