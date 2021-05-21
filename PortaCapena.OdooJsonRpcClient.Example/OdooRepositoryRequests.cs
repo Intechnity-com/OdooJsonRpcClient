@@ -159,14 +159,14 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             productWithoutLanguage.Succeed.Should().BeTrue();
             productWithoutLanguage.Value.Name.Should().NotContain("Dutch");
 
-            var product123 = await repository.Query()
+            var product3 = await repository.Query()
                 .ById(282)
                 .FirstOrDefaultAsync();
 
-            product.Error.Should().BeNull();
-            product.Value.Should().NotBeNull();
-            product.Succeed.Should().BeTrue();
-            product.Value.Name.Should().Contain("Dutch");
+            product3.Error.Should().BeNull();
+            product3.Value.Should().NotBeNull();
+            product3.Succeed.Should().BeTrue();
+            product3.Value.Name.Should().Contain("Dutch");
         }
 
         [Fact]
@@ -203,14 +203,14 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             productWithoutLanguage.Succeed.Should().BeTrue();
             productWithoutLanguage.Value.Name.Should().NotContain("Dutch");
 
-            var product123 = await repository.Query()
+            var product3 = await repository.Query()
                 .ById(282)
                 .FirstOrDefaultAsync();
 
-            product.Error.Should().BeNull();
-            product.Value.Should().NotBeNull();
-            product.Succeed.Should().BeTrue();
-            product.Value.Name.Should().Contain("Dutch");
+            product3.Error.Should().BeNull();
+            product3.Value.Should().NotBeNull();
+            product3.Succeed.Should().BeTrue();
+            product3.Value.Name.Should().Contain("Dutch");
         }
     }
 }
