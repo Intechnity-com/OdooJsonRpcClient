@@ -216,16 +216,22 @@ var id = await odooRepository.CreateAsync(model, context);
 ## Advanced queries
 
 ### Deep where
-
+Get ProductProductOdooModel where CountryCode is "BE" in ResCompanyOdooModel (CompanyId)
 ```C#
-  var products = await repository.Query()
-               .Where<ResCompanyOdooModel>(x => x.CompanyId, x => x.CountryCode, OdooOperator.EqualsTo, "BE")
+var repository = new OdooRepository<ProductProductOdooModel>(config);
+var products = await repository.Query()
+               .Where<ResCompanyOdooModel>(
+                  x => x.CompanyId, 
+                     y => y.CountryCode, OdooOperator.EqualsTo, "BE")
                .FirstOrDefaultAsync();
 ```
 
 ```C#
-  var products = await repository.Query()
-               .Where<ResCompanyOdooModel, AccountTaxOdooModel>(x => x.PropertyAccountExpenseId, x => x.AccountSaleTaxId, x => x.CountryCode, OdooOperator.EqualsTo, "BE")
+var products = await repository.Query()
+               .Where<ResCompanyOdooModel, AccountTaxOdooModel>(
+                  x => x.PropertyAccountExpenseId, 
+                     y => y.AccountSaleTaxId, 
+                        z => z.CountryCode, OdooOperator.EqualsTo, "BE")
                .FirstOrDefaultAsync();
 ```
 
