@@ -122,10 +122,10 @@ In Repository U can use `OdooQueryBuilder`.
 ```C#
 var odooClient = new OdooClient(config);
 
-var model = new OdooCreateProduct()
+var model = OdooDictionaryModel.Create(() => new ProductProductOdooModel()
 {
-     Name = "Prod test Kg",
-};
+    Name = "test name"
+});
 
 var result = await repository.CreateAsync(model);
 ```
@@ -169,6 +169,16 @@ public class OdooCreateProduct : IOdooCreateModel
 }
 ```
 
+```C#                        
+var model = new OdooCreateProduct()
+{
+     Name = "Prod test Kg",
+};
+
+var createResult = await repository.CreateAsync(model);
+```
+
+
 
 
 
@@ -187,7 +197,7 @@ if(condition)
     model.Add(x => x.CreateDate, new DateTime());
 
 
-var id = await odooRepository.CreateAsync(model);
+var createResult = await odooRepository.CreateAsync(model);
 ```
 
 
