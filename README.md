@@ -156,7 +156,7 @@ OdooRepository is a wrapper for OdooClient. This class give option for building 
 
 
 ## IOdooCreateModel
-If we create an object instance that we want to pass to odoo but do not fill all fields, they will be automatically assigned default values (Create and update methods). In this case is impossible to distinguish whether we want to set null value or not touch this property. The first solution for that is create models based on odoo model with only fields that we want to use. To that use **IOdooCreateModel** interface. To not create multiple models use **OdooDictionaryModel**.
+If we create an object instance that we want to pass to odoo but do not fill all fields, they will be automatically assigned default values (Create and update methods). In this case is impossible to distinguish whether we want to set null value or not touch this property. The first solution for that is create models based on odoo model with only fields that we want to use. To that use `IOdooCreateModel` interface. To not create multiple models use `OdooDictionaryModel`.
 
 ```C#                        
 [OdooTableName("product.product")]
@@ -202,7 +202,7 @@ var createResult = await odooRepository.CreateAsync(model);
 
 
 ## OdooContext
-Context is mainly used to send to odoo values such as **language** or **time zone**, but U can use it for more advanced requests. U can set it in **OdooConfig** for multiple usage or only once adding it to request as parameter (also in repository query).
+Context is mainly used to send to odoo values such as **language** or **time zone**, but U can use it for more advanced requests. U can set it in `OdooConfig` for multiple usage or only once adding it to request as parameter (also in repository query).
 
 ```C#  
 var context = new OdooContext("pl_PL");
@@ -212,6 +212,22 @@ var id = await odooRepository.CreateAsync(model, context);
 ``` 
 
 
+
+## Advanced queries
+
+### Deep where
+
+```C#
+  var products = await repository.Query()
+               .Where<ResCompanyOdooModel>(x => x.CompanyId, x => x.CountryCode, OdooOperator.EqualsTo, "BE")
+               .FirstOrDefaultAsync();
+```
+
+```C#
+  var products = await repository.Query()
+               .Where<ResCompanyOdooModel, AccountTaxOdooModel>(x => x.PropertyAccountExpenseId, x => x.AccountSaleTaxId, x => x.CountryCode, OdooOperator.EqualsTo, "BE")
+               .FirstOrDefaultAsync();
+```
 
 
 ## Odoo Request and Result models examples
