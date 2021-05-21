@@ -18,7 +18,7 @@ Install-Package PortaCapena.OdooJsonRpcClient
 
 
 
-## Usage
+## First steps
 
 Start your work with check version of Odoo. To this request You only need a valid url address.
 ```C#
@@ -156,7 +156,7 @@ OdooRepository is a wrapper for OdooClient. This class give option for building 
 
 
 ## IOdooCreateModel
-If we create an object instance that we want to pass to odoo but do not fill all fields, they will be automatically assigned default values (Create and update methods). In this case is impossible to distinguish whether we want to set null value or not touch this property. The first solution for that is create models based on odoo model with only fields that we want to use. To that use IOdooCreateModel interface or OdooDictionaryModel.
+If we create an object instance that we want to pass to odoo but do not fill all fields, they will be automatically assigned default values (Create and update methods). In this case is impossible to distinguish whether we want to set null value or not touch this property. The first solution for that is create models based on odoo model with only fields that we want to use. To that use **IOdooCreateModel** interface. To not create multiple models use **OdooDictionaryModel**.
 
 ```C#                        
 [OdooTableName("product.product")]
