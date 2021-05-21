@@ -18,25 +18,23 @@ namespace PortaCapena.OdooJsonRpcClient
     public sealed class OdooClient
     {
         public OdooConfig Config { get; }
-        public OdooContext Context { get; }
 
         [ThreadStatic] private static int? _userUid;
 
-        public OdooClient(OdooConfig config, OdooContext context = null)
+        public OdooClient(OdooConfig config)
         {
             Config = config;
-            Context = context ?? new OdooContext();
         }
 
         #region Get
 
         public async Task<OdooResult<T[]>> GetAsync<T>(OdooQuery query = null, OdooContext context = null) where T : IOdooModel, new()
         {
-            return await ExecuteWitrAccesDenideRetryAsync(userUid => GetAsync<T>(userUid, query, SelectContext(context , Context)));
+            return await ExecuteWitrAccesDenideRetryAsync(userUid => GetAsync<T>(userUid, query, SelectContext(context , Config.Context)));
         }
         public async Task<OdooResult<T[]>> GetAsync<T>(int userUid, OdooQuery query = null, OdooContext context = null) where T : IOdooModel, new()
         {
-            return await GetAsync<T>(Config, userUid, query, SelectContext(context , Context));
+            return await GetAsync<T>(Config, userUid, query, SelectContext(context , Config.Context));
         }
         public static async Task<OdooResult<T[]>> GetAsync<T>(OdooConfig odooConfig, int userUid, OdooQuery query = null, OdooContext context = null) where T : IOdooModel, new()
         {
@@ -51,11 +49,11 @@ namespace PortaCapena.OdooJsonRpcClient
 
         public async Task<OdooResult<long>> GetCountAsync<T>(OdooQuery query = null, OdooContext context = null) where T : IOdooModel, new()
         {
-            return await ExecuteWitrAccesDenideRetryAsync(userUid => GetCountAsync<T>(userUid, query, SelectContext(context , Context)));
+            return await ExecuteWitrAccesDenideRetryAsync(userUid => GetCountAsync<T>(userUid, query, SelectContext(context , Config.Context)));
         }
         public async Task<OdooResult<long>> GetCountAsync<T>(int userUid, OdooQuery query = null, OdooContext context = null) where T : IOdooModel, new()
         {
-            return await GetCountAsync<T>(Config, userUid, query, SelectContext(context , Context));
+            return await GetCountAsync<T>(Config, userUid, query, SelectContext(context , Config.Context));
         }
         public static async Task<OdooResult<long>> GetCountAsync<T>(OdooConfig odooConfig, int userUid, OdooQuery query = null, OdooContext context = null) where T : IOdooModel, new()
         {
@@ -70,7 +68,7 @@ namespace PortaCapena.OdooJsonRpcClient
 
         public async Task<OdooResult<long>> CreateAsync(IOdooCreateModel model, OdooContext context = null)
         {
-            return await ExecuteWitrAccesDenideRetryAsync(userUid => CreateAsync(Config, userUid, model, SelectContext(context , Context)));
+            return await ExecuteWitrAccesDenideRetryAsync(userUid => CreateAsync(Config, userUid, model, SelectContext(context , Config.Context)));
         }
         public static async Task<OdooResult<long>> CreateAsync(OdooConfig odooConfig, int userUid, IOdooCreateModel model, OdooContext context = null)
         {
@@ -80,7 +78,7 @@ namespace PortaCapena.OdooJsonRpcClient
         }
         public async Task<OdooResult<long>> CreateAsync(OdooDictionaryModel model, OdooContext context = null)
         {
-            return await ExecuteWitrAccesDenideRetryAsync(userUid => CreateAsync(Config, userUid, model, SelectContext(context , Context)));
+            return await ExecuteWitrAccesDenideRetryAsync(userUid => CreateAsync(Config, userUid, model, SelectContext(context , Config.Context)));
         }
         public static async Task<OdooResult<long>> CreateAsync(OdooConfig odooConfig, int userUid, OdooDictionaryModel model, OdooContext context = null)
         {
@@ -95,7 +93,7 @@ namespace PortaCapena.OdooJsonRpcClient
 
         public async Task<OdooResult<bool>> UpdateAsync(IOdooCreateModel model, long id, OdooContext context = null)
         {
-            return await UpdateRangeAsync(model, new[] { id }, SelectContext(context , Context));
+            return await UpdateRangeAsync(model, new[] { id }, SelectContext(context , Config.Context));
         }
         public static async Task<OdooResult<bool>> UpdateAsync(OdooConfig odooConfig, int userUid, IOdooCreateModel model, long id, OdooContext context = null)
         {
@@ -103,7 +101,7 @@ namespace PortaCapena.OdooJsonRpcClient
         }
         public async Task<OdooResult<bool>> UpdateAsync(OdooDictionaryModel model, long id, OdooContext context = null)
         {
-            return await UpdateRangeAsync(model, new[] { id }, SelectContext(context , Context));
+            return await UpdateRangeAsync(model, new[] { id }, SelectContext(context , Config.Context));
         }
         public static async Task<OdooResult<bool>> UpdateAsync(OdooConfig odooConfig, int userUid, OdooDictionaryModel model, long id, OdooContext context = null)
         {
@@ -112,7 +110,7 @@ namespace PortaCapena.OdooJsonRpcClient
 
         public async Task<OdooResult<bool>> UpdateRangeAsync(IOdooCreateModel model, long[] ids, OdooContext context = null)
         {
-            return await ExecuteWitrAccesDenideRetryAsync(userUid => UpdateRangeAsync(Config, userUid, model, ids, SelectContext(context , Context)));
+            return await ExecuteWitrAccesDenideRetryAsync(userUid => UpdateRangeAsync(Config, userUid, model, ids, SelectContext(context , Config.Context)));
         }
         public static async Task<OdooResult<bool>> UpdateRangeAsync(OdooConfig odooConfig, int userUid, IOdooCreateModel model, long[] ids, OdooContext context = null)
         {
@@ -122,7 +120,7 @@ namespace PortaCapena.OdooJsonRpcClient
         }
         public async Task<OdooResult<bool>> UpdateRangeAsync(OdooDictionaryModel model, long[] ids, OdooContext context = null)
         {
-            return await ExecuteWitrAccesDenideRetryAsync(userUid => UpdateRangeAsync(Config, userUid, model, ids, SelectContext(context , Context)));
+            return await ExecuteWitrAccesDenideRetryAsync(userUid => UpdateRangeAsync(Config, userUid, model, ids, SelectContext(context , Config.Context)));
         }
         public static async Task<OdooResult<bool>> UpdateRangeAsync(OdooConfig odooConfig, int userUid, OdooDictionaryModel model, long[] ids, OdooContext context = null)
         {
@@ -136,11 +134,11 @@ namespace PortaCapena.OdooJsonRpcClient
 
         public async Task<OdooResult<bool>> DeleteAsync(IOdooModel model, OdooContext context = null)
         {
-            return await DeleteAsync(model.OdooTableName(), model.Id, SelectContext(context , Context));
+            return await DeleteAsync(model.OdooTableName(), model.Id, SelectContext(context , Config.Context));
         }
         public async Task<OdooResult<bool>> DeleteAsync(string tableName, long id, OdooContext context = null)
         {
-            return await DeleteRangeAsync(tableName, new[] { id }, SelectContext(context , Context));
+            return await DeleteRangeAsync(tableName, new[] { id }, SelectContext(context , Config.Context));
         }
         public static async Task<OdooResult<bool>> DeleteAsync(OdooConfig odooConfig, int userUid, string tableName, long id, OdooContext context = null)
         {
@@ -153,11 +151,11 @@ namespace PortaCapena.OdooJsonRpcClient
             if (models.Any(x => !string.Equals(x.OdooTableName(), tableName)))
                 throw new ArgumentException("Models are not from the same odoo table");
 
-            return await DeleteRangeAsync(tableName, models.Select(x => x.Id).ToArray(), SelectContext(context , Context));
+            return await DeleteRangeAsync(tableName, models.Select(x => x.Id).ToArray(), SelectContext(context , Config.Context));
         }
         public async Task<OdooResult<bool>> DeleteRangeAsync(string tableName, long[] ids, OdooContext context = null)
         {
-            return await ExecuteWitrAccesDenideRetryAsync(userUid => DeleteRangeAsync(Config, userUid, tableName, ids, SelectContext(context , Context)));
+            return await ExecuteWitrAccesDenideRetryAsync(userUid => DeleteRangeAsync(Config, userUid, tableName, ids, SelectContext(context , Config.Context)));
         }
         public static async Task<OdooResult<bool>> DeleteRangeAsync(OdooConfig odooConfig, int userUid, string tableName, long[] ids, OdooContext context = null)
         {

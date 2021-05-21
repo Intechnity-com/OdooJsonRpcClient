@@ -2,8 +2,8 @@
 
 namespace PortaCapena.OdooJsonRpcClient.Tests
 {
-    public class OdooRepositoryTests : TestBase
+    public class OdooClientRequestTests : RequestTestBase
     {
-     
+
     }
 }

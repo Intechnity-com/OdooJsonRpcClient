@@ -55,15 +55,19 @@ namespace PortaCapena.OdooJsonRpcClient.Models
 
         public OdooContext(Dictionary<string, object> dict)
         {
+            if (dict == null) Clear();
+
             foreach (var keyValuePair in dict)
-                this[keyValuePair.Key] = keyValuePair.Value;
+                SetValue(keyValuePair.Key, keyValuePair.Value);
         }
 
         public OdooContext(params OdooContext[] dicts)
         {
+            if (dicts == null) Clear();
+           
             foreach (var dict in dicts)
                 foreach (var keyValuePair in dict)
-                    this[keyValuePair.Key] = keyValuePair.Value;
+                    SetValue(keyValuePair.Key, keyValuePair.Value);
         }
 
 
