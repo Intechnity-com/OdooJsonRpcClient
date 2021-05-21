@@ -19,13 +19,13 @@ using Xunit;
 
 namespace PortaCapena.OdooJsonRpcClient.Example
 {
-    public class OdooClientRequests : TestBase
+    public class OdooClientRequests : RequestTestBase
     {
 
         [Fact]
         public async Task Can_get_odoo_version()
         {
-            var odooClient = new OdooClient(Config);
+            var odooClient = new OdooClient(TestConfig);
 
             var result = await odooClient.GetVersionAsync();
 
@@ -35,9 +35,22 @@ namespace PortaCapena.OdooJsonRpcClient.Example
 
 
         [Fact]
+        public async Task Get_DotNet_model_should_return_string()
+        {
+            var odooClient = new OdooClient(TestConfig);
+            var tableName = "product.product";
+            var modelResult = await odooClient.GetModelAsync(tableName);
+
+            modelResult.Succeed.Should().BeTrue();
+
+            var model = OdooModelMapper.GetDotNetModel(tableName, modelResult.Value);
+        }
+
+
+        [Fact]
         public async Task Can_get_all_products()
         {
-            var odooClient = new OdooClient(Config);
+            var odooClient = new OdooClient(TestConfig);
 
             var products = await odooClient.GetAsync<ResCountryOdooModel>();
 
@@ -46,15 +59,13 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             products.Value.Should().NotBeNull();
             products.Value.Length.Should().BeGreaterThan(0);
             products.Succeed.Should().BeTrue();
-
-            var dupa = products.Value.Where(x => x.XStudioIsInEu == true).ToList();
         }
 
 
         [Fact]
         public async Task Can_get_all_countries()
         {
-            var odoorepository = new OdooRepository<ResCountryOdooModel>(Config);
+            var odoorepository = new OdooRepository<ResCountryOdooModel>(TestConfig);
 
             var products = await odoorepository.Query().Where(x => x.XStudioIsInEu, OdooOperator.EqualsTo, true).ToListAsync();
 
@@ -69,7 +80,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         [Fact]
         public async Task Get_product_by_Id_test()
         {
-            var odooClient = new OdooClient(Config);
+            var odooClient = new OdooClient(TestConfig);
 
             var query = OdooQuery<ProductProductOdooDto>.Create()
                 .Where(x => x.Id, OdooOperator.EqualsTo, 303);
@@ -86,7 +97,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         [Fact]
         public async Task Shoud_get_products_using_query_take()
         {
-            var odooClient = new OdooClient(Config);
+            var odooClient = new OdooClient(TestConfig);
             var query = OdooQuery<ProductProductOdooDto>.Create()
                 .Take(10);
 
@@ -101,9 +112,8 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         [Fact]
         public async Task Shoud_get_products_using_query_skip()
         {
-            var odooClient = new OdooClient(Config);
-            var query = OdooQuery<ProductProductOdooDto>.Create()
-                .Skip(5);
+            var odooClient = new OdooClient(TestConfig);
+            var query = OdooQuery<ProductProductOdooDto>.Create().Skip(5);
 
             var products = await odooClient.GetAsync<ProductProductOdooDto>(query);
 
@@ -122,7 +132,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         [Fact]
         public async Task Get_products_with_order_query()
         {
-            var odooClient = new OdooClient(Config);
+            var odooClient = new OdooClient(TestConfig);
             var query = OdooQuery<ProductProductOdooDto>.Create()
                 .OrderBy(x => x.Id);
 
@@ -141,7 +151,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         [Fact]
         public async Task Get_products_with_order_desc_query()
         {
-            var odooClient = new OdooClient(Config);
+            var odooClient = new OdooClient(TestConfig);
             var query = OdooQuery<ProductProductOdooDto>.Create()
                 .OrderByDescending(x => x.Id);
 
@@ -162,7 +172,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         [Fact]
         public async Task Should_get_products_with_selected_properties_using_query()
         {
-            var odooClient = new OdooClient(Config);
+            var odooClient = new OdooClient(TestConfig);
 
             var filters = OdooQuery<ProductProductOdooDto>.Create()
                 .Select(x => new
@@ -178,22 +188,11 @@ namespace PortaCapena.OdooJsonRpcClient.Example
 
             products.Error.Should().BeNull();
             products.Value.Should().NotBeNull();
-            products.Value.Length.Should().Be(1);
+        //    products.Value.Length.Should().Be(1);
             products.Succeed.Should().BeTrue();
         }
 
 
-        [Fact]
-        public async Task Get_DotNet_model_should_return_string()
-        {
-            var odooClient = new OdooClient(Config);
-            var tableName = "account.move.line";
-            var modelResult = await odooClient.GetModelAsync(tableName);
-
-            modelResult.Succeed.Should().BeTrue();
-
-            var model = OdooModelMapper.GetDotNetModel(tableName, modelResult.Value);
-        }
 
 
         #region Create
@@ -222,11 +221,48 @@ namespace PortaCapena.OdooJsonRpcClient.Example
                 CompanyType = test ?? CompanyTypeResPartnerOdooEnum.Individual
             });
 
-            var odooClient = new OdooClient(Config);
+            var odooClient = new OdooClient(TestConfig);
 
             var products = await odooClient.CreateAsync(model);
 
             products.Succeed.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task Can_create_update_get_and_delete_customer()
+        {
+            var model = OdooDictionaryModel.Create(() => new ResPartnerOdooModel()
+            {
+                Name = "dupa",
+                CountryId = 20,
+                City = "dupa",
+                Zip = "dupa",
+                Street = "dupa",
+                CompanyType = CompanyTypeResPartnerOdooEnum.Individual
+            });
+
+            var odooClient = new OdooClient(TestConfig);
+            var products = await odooClient.CreateAsync(model);
+
+            products.Succeed.Should().BeTrue();
+            products.Value.Should().BePositive();
+
+            model.Add(x => x.Name, "new name");
+
+            var editedCustomer = await odooClient.UpdateAsync(model, products.Value);
+            editedCustomer.Succeed.Should().BeTrue();
+
+            var query = new OdooQuery();
+            query.Filters.EqualTo("id", products.Value);
+            var customers = await odooClient.GetAsync<ResPartnerOdooModel>(query);
+
+            customers.Succeed.Should().BeTrue();
+            customers.Value.Length.Should().Be(1);
+            customers.Value.First().Name.Should().Be("new name");
+
+            var deleteResult = await odooClient.DeleteAsync(customers.Value.First());
+
+            deleteResult.Succeed.Should().BeTrue();
         }
 
 
@@ -234,7 +270,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         //  [Fact]
         public async Task Can_create_product()
         {
-            var odooClient = new OdooClient(Config);
+            var odooClient = new OdooClient(TestConfig);
 
             var model = new OdooCreateProduct()
             {
@@ -254,7 +290,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         //[Fact]
         public async Task Can_create_update_delete_product()
         {
-            var odooClient = new OdooClient(Config);
+            var odooClient = new OdooClient(TestConfig);
 
             var model = new OdooCreateProduct()
             {
@@ -299,7 +335,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         // [Fact]
         public async Task Can_create_product_from_dictionary_model()
         {
-            var odooClient = new OdooClient(Config);
+            var odooClient = new OdooClient(TestConfig);
 
             var dictModel = OdooDictionaryModel.Create(() => new ProductProductOdooDto
             {
@@ -326,7 +362,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         // [Fact]
         public async Task Can_create_product_and_delete_using_object()
         {
-            var odooClient = new OdooClient(Config);
+            var odooClient = new OdooClient(TestConfig);
 
             var model = new OdooCreateProduct()
             {
@@ -354,7 +390,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         //[Fact]
         public async Task Can_create_voucher()
         {
-            var odooClient = new OdooClient(Config);
+            var odooClient = new OdooClient(TestConfig);
 
             var model = new OdooVoucherCreateOrUpdate()
             {
@@ -375,7 +411,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         // [Fact]
         public async Task Can_create_sale_order()
         {
-            var odooClient = new OdooClient(Config);
+            var odooClient = new OdooClient(TestConfig);
 
             var companyResult = await odooClient.GetAsync<CompanyOdooDto>(OdooQuery<CompanyOdooDto>.Create().ById(1));
             companyResult.Succeed.Should().BeTrue();
@@ -430,9 +466,9 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         {
             try
             {
-                var loginResult = await OdooClient.LoginAsync(Config);
+                var loginResult = await OdooClient.LoginAsync(TestConfig);
 
-                var param = new OdooRequestParams(Config.ApiUrlJson, "object", "execute", Config.DbName, loginResult.Value, Config.Password, "sale.order", OdooOperation.OnChage,
+                var param = new OdooRequestParams(TestConfig.ApiUrlJson, "object", "execute", TestConfig.DbName, loginResult.Value, TestConfig.Password, "sale.order", OdooOperation.OnChage,
                     new Dictionary<string, int>() { { "onchange_pricelist_id", 17 } }, 135);
                 var request = new OdooRequestModel(param);
 
@@ -446,12 +482,12 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             }
         }
 
-        // [Fact(Skip = "Test for working on Odoo")]
-        [Fact]
+        [Fact(Skip = "Test for working on Odoo")]
+        //[Fact]
         public async Task Can_create_purchase_order()
         {
 
-            var odooClient = new OdooClient(Config);
+            var odooClient = new OdooClient(TestConfig);
 
             var partnerResult = await odooClient.GetAsync<StockPickingTypeOdooDto>();
 
@@ -483,9 +519,9 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             {
                 using (var client = new WebClient())
                 {
-                    client.Credentials = new NetworkCredential(Config.UserName, Config.Password);
+                    client.Credentials = new NetworkCredential(TestConfig.UserName, TestConfig.Password);
                     var json = "{\"jsonrpc\":\"2.0\",\"method\":\"GUI.ShowNotification\",\"params\":{\"title\":\"This is the title of the message\",\"message\":\"This is the body of the message\"},\"id\":1}";
-                    var response = client.UploadString(Config.ApiUrlJson, "POST", json);
+                    var response = client.UploadString(TestConfig.ApiUrlJson, "POST", json);
                 }
             }
             catch (Exception e)
@@ -506,9 +542,9 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         {
             var odooCompanyId = 32;
 
-            var accountTaxOdooRepository = new OdooRepository<AccountTaxOdooModel>(Config);
-            var purchaseOrderOdooRepository = new OdooRepository<PurchaseOrderOdooModel>(Config);
-            var purchaseOrderLineOdooRepository = new OdooRepository<PurchaseOrderLineOdooModel>(Config);
+            var accountTaxOdooRepository = new OdooRepository<AccountTaxOdooModel>(TestConfig);
+            var purchaseOrderOdooRepository = new OdooRepository<PurchaseOrderOdooModel>(TestConfig);
+            var purchaseOrderLineOdooRepository = new OdooRepository<PurchaseOrderLineOdooModel>(TestConfig);
 
             var odooCompanyTaxes = await accountTaxOdooRepository.Query()
                 .Where(x => x.CompanyId, OdooOperator.EqualsTo, odooCompanyId)

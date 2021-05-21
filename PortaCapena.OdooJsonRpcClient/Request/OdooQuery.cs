@@ -1,37 +1,43 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using PortaCapena.OdooJsonRpcClient.Models;
 
 namespace PortaCapena.OdooJsonRpcClient.Request
 {
     public class OdooQuery
     {
+        /// <summary>
+        /// Get records with condition
+        /// </summary>
         public OdooFilter Filters { get; set; }
+
+        /// <summary>
+        /// Get records with ony selected names
+        /// </summary>
         public HashSet<string> ReturnFields { get; set; }
 
-        // skip
+
+        /// <summary>
+        /// Skip records
+        /// </summary>
         public int? Offset { get; set; }
 
-        // take
+        /// <summary>
+        /// Take records
+        /// </summary>
         public int? Limit { get; set; }
 
+        /// <summary>
+        /// Order by field
+        /// "{odooPropertyName} ASC" or "{odooPropertyName} DESC";
+        /// </summary>
         public string Order { get; set; }
 
 
-        public OdooQuery()
+        public OdooQuery() : this(null) { }
+        public OdooQuery(OdooContext context)
         {
             ReturnFields = new HashSet<string>();
             Filters = new OdooFilter();
-        }
-
-
-        public object[] GetRequestFilters()
-        {
-            return Filters.Count > 0 ? Filters.ToArray() : null;
-        }
-
-        public string[] GetRequestFields()
-        {
-            return ReturnFields.Any() ? ReturnFields.ToArray() : null;
         }
     }
 }

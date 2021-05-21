@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using PortaCapena.OdooJsonRpcClient.Consts;
 using PortaCapena.OdooJsonRpcClient.Models;
-using PortaCapena.OdooJsonRpcClient.Utils;
 
 namespace PortaCapena.OdooJsonRpcClient.Request
 {
@@ -51,45 +52,82 @@ namespace PortaCapena.OdooJsonRpcClient.Request
             return new OdooRequestModel(param);
         }
 
-        public static OdooRequestModel Search(OdooConfig config, int uid, string tableName, OdooQuery query = null)
+        public static OdooRequestModel Search(OdooConfig config, int uid, string tableName, OdooQuery query = null, OdooContext context = null)
         {
-            var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute", config.DbName, uid, config.Password, tableName, OdooOperation.Search, query?.GetRequestFilters(), query?.GetRequestFields(), query?.Offset, query?.Limit, query?.Order);
+            var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute_kw", config.DbName, uid, config.Password, tableName, OdooOperation.Search, GetRequestFilters(query), MapQuery(context, query));
             return new OdooRequestModel(param);
         }
-        public static OdooRequestModel SearchRead(OdooConfig config, int uid, string tableName, OdooQuery query = null)
+        public static OdooRequestModel SearchRead(OdooConfig config, int uid, string tableName, OdooQuery query = null, OdooContext context = null)
         {
-            var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute", config.DbName, uid, config.Password, tableName, OdooOperation.SearchRead, query?.GetRequestFilters(), query?.GetRequestFields(), query?.Offset, query?.Limit, query?.Order);
+            var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute_kw", config.DbName, uid, config.Password, tableName, OdooOperation.SearchRead, GetRequestFilters(query), MapQuery(context, query));
             return new OdooRequestModel(param);
         }
-
-        public static OdooRequestModel SearchCount(OdooConfig config, int uid, string tableName, OdooQuery query = null)
+        public static OdooRequestModel Read(OdooConfig config, int uid, string tableName, long[] ids, OdooQuery query = null, OdooContext context = null)
         {
-            var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute", config.DbName, uid, config.Password, tableName, OdooOperation.SearchCount, query?.GetRequestFilters());
-            return new OdooRequestModel(param);
-        }
-
-        public static OdooRequestModel Create(OdooConfig config, int uid, string tableName, object model)
-        {
-            var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute", config.DbName, uid, config.Password, tableName, OdooOperation.Create, new [] { model }, config.Context);
-            return new OdooRequestModel(param);
-        }
-        public static OdooRequestModel Update(OdooConfig config, int uid, string tableName, long[] ids, object model)
-        {
-            var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute", config.DbName, uid, config.Password, tableName, OdooOperation.Update,  ids, model, config.Context);
-            return new OdooRequestModel(param);
-        }
-        public static OdooRequestModel Delete(OdooConfig config, int uid, string tableName, long[] ids)
-        {
-            var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute", config.DbName, uid, config.Password, tableName, OdooOperation.Delete, ids , config.Context);
+            var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute_kw", config.DbName, uid, config.Password, tableName, OdooOperation.Read, ids, MapQuery(context, query));
             return new OdooRequestModel(param);
         }
 
-        public static OdooRequestModel Metadata(OdooConfig config, int uid, string tableName, long[] ids)
+        public static OdooRequestModel SearchCount(OdooConfig config, int uid, string tableName, OdooQuery query = null, OdooContext context = null)
         {
-            var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute", config.DbName, uid, config.Password, tableName, OdooOperation.GetMetadata, new object[] { ids }, config.Context);
+            var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute_kw", config.DbName, uid, config.Password, tableName, OdooOperation.SearchCount, GetRequestFilters(query), MapQuery(context, query));
             return new OdooRequestModel(param);
+        }
+
+        public static OdooRequestModel Create(OdooConfig config, int uid, string tableName, object model, OdooContext context = null)
+        {
+            var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute_kw", config.DbName, uid, config.Password, tableName, OdooOperation.Create, new[] { model }, MapQuery(context));
+            return new OdooRequestModel(param);
+        }
+        public static OdooRequestModel Update(OdooConfig config, int uid, string tableName, long[] ids, object model, OdooContext context = null)
+        {
+            var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute_kw", config.DbName, uid, config.Password, tableName, OdooOperation.Update, new []{ids, model}, MapQuery(context));
+            return new OdooRequestModel(param);
+        }
+        public static OdooRequestModel Delete(OdooConfig config, int uid, string tableName, long[] ids, OdooContext context = null)
+        {
+            var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute_kw", config.DbName, uid, config.Password, tableName, OdooOperation.Delete, ids, MapQuery(context));
+            return new OdooRequestModel(param);
+        }
+
+        public static OdooRequestModel Metadata(OdooConfig config, int uid, string tableName, long[] ids, OdooContext context = null)
+        {
+            var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute_kw", config.DbName, uid, config.Password, tableName, OdooOperation.GetMetadata, new object[] { ids }, MapQuery(context));
+            return new OdooRequestModel(param);
+        }
+
+        private static Dictionary<string, object> MapQuery(OdooContext context, OdooQuery query = null)
+        {
+            if (query == null && (context == null || !context.Any())) return null;
+
+            var result = new Dictionary<string, object>();
+
+            if (context != null && context.Any())
+                result["context"] = context;
+
+            if (query == null) return result;
+
+            if (query.Limit.HasValue)
+                result["limit"] = query.Limit;
+
+            if (!string.IsNullOrWhiteSpace(query.Order))
+                result["order"] = query.Order;
+
+            if (query.Offset.HasValue)
+                result["offset"] = query.Offset;
+
+            if (query.ReturnFields.Any())
+                result["fields"] = query.ReturnFields.ToArray();
+
+            if (!result.Any()) return null;
+    
+            return result;
+        }
+
+        private static object[] GetRequestFilters(OdooQuery query = null)
+        {
+            return query != null && query.Filters.Count > 0 ? new object[] { query.Filters.ToArray() } : new object[] { new object[] { } };
         }
     }
 }
 
-// https://erppeek.readthedocs.io/en/latest/api.html

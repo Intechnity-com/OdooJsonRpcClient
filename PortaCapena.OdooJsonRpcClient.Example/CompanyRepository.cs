@@ -7,11 +7,11 @@ using Xunit;
 
 namespace PortaCapena.OdooJsonRpcClient.Example
 {
-    public class CompanyOdooRepository : TestBase
+    public class CompanyOdooRepository : RequestTestBase
     {
         private class CompanyRepository : OdooRepository<ResCompanyOdooModel>
         {
-            public CompanyRepository() : base(Config) { }
+            public CompanyRepository() : base(TestConfig) { }
         }
 
         [Fact]
