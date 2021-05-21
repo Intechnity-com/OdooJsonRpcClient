@@ -73,8 +73,8 @@ namespace PortaCapena.OdooJsonRpcClient
         public static async Task<OdooResult<long>> CreateAsync(OdooConfig odooConfig, int userUid, IOdooCreateModel model, OdooContext context = null)
         {
             var request = OdooRequestModel.Create(odooConfig, userUid, model.OdooTableName(), model, context);
-            var result = await CallAndDeserializeAsync<long[]>(request);
-            return result.Succeed ? result.ToResult(result.Value.FirstOrDefault()) : OdooResult<long>.FailedResult(result);
+            var result = await CallAndDeserializeAsync<long>(request);
+            return result.Succeed ? result.ToResult(result.Value) : OdooResult<long>.FailedResult(result);
         }
         public async Task<OdooResult<long>> CreateAsync(OdooDictionaryModel model, OdooContext context = null)
         {

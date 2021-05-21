@@ -44,7 +44,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         [Fact]
         public void Can_create_dictionary_with_create_instance()
         {
-            var model = OdooDictionaryModel.Create(() => new ProductProductOdooDto()
+            var model = OdooDictionaryModel.Create(() => new ProductProductOdooModel()
             {
                 Name = "test name",
             });
@@ -106,7 +106,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         [Fact]
         public void Can_create_dictionary_with_array()
         {
-            var model = OdooDictionaryModel.Create(() => new ProductProductOdooDto()
+            var model = OdooDictionaryModel.Create(() => new ProductProductOdooModel()
             {
                 ActivityIds = new long[] { 1, 2, 3 }
             });

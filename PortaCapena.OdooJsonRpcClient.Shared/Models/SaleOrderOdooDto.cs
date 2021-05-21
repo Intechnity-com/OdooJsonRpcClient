@@ -192,9 +192,6 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         [JsonProperty("activity_ids")]
         public long[] ActivityIds { get; set; }
 
-        [JsonProperty("activity_state")]
-        public ActivityStateOdooEnum? ActivityState { get; set; }
-
         // res.users
         [JsonProperty("activity_user_id")]
         public long? ActivityUserId { get; set; }
@@ -212,9 +209,7 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         [JsonProperty("activity_summary")]
         public string ActivitySummary { get; set; }
 
-        [JsonProperty("activity_exception_decoration")]
-        public ActivityExceptionDecorationOdooEnum? ActivityExceptionDecoration { get; set; }
-
+       
         [JsonProperty("activity_exception_icon")]
         public string ActivityExceptionIcon { get; set; }
 

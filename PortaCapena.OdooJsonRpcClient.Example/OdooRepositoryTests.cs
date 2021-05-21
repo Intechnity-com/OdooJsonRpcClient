@@ -13,7 +13,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         [Fact]
         public async Task Can_get_all_products()
         {
-            var repository = new OdooRepository<ProductProductOdooDto>(TestConfig);
+            var repository = new OdooRepository<ProductProductOdooModel>(TestConfig);
             var products = await repository.Query().ToListAsync();
 
             products.Error.Should().BeNull();
@@ -25,7 +25,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         [Fact]
         public async Task Can_get_product_by_id()
         {
-            var repository = new OdooRepository<ProductProductOdooDto>(TestConfig);
+            var repository = new OdooRepository<ProductProductOdooModel>(TestConfig);
             var products = await repository.Query().ById(282).ToListAsync();
 
             products.Error.Should().BeNull();
@@ -36,7 +36,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         [Fact]
         public async Task Can_get_product_with_deep_where()
         {
-            var repository = new OdooRepository<ProductProductOdooDto>(TestConfig);
+            var repository = new OdooRepository<ProductProductOdooModel>(TestConfig);
 
             var products = await repository.Query()
                  .Where<ResCurrencyOdooModel>(x => x.CurrencyId, z => z.Name, OdooOperator.EqualsTo, "Euros")
@@ -51,7 +51,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         [Fact]
         public async Task Can_get_product_with_deep_secound_level_where()
         {
-            var repository = new OdooRepository<ProductProductOdooDto>(TestConfig);
+            var repository = new OdooRepository<ProductProductOdooModel>(TestConfig);
 
             var products = await repository.Query()
                 .Where<AccountAccountOdooModel, AccountAccountTypeOdooModel>(x => x.PropertyAccountIncomeId, x => x.UserTypeId, x => x.Type, OdooOperator.EqualsTo, TypeAccountAccountTypeOdooEnum.Regular)
@@ -66,7 +66,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         [Fact]
         public async Task Can_get_products_with_where_and_select()
         {
-            var repository = new OdooRepository<ProductProductOdooDto>(TestConfig);
+            var repository = new OdooRepository<ProductProductOdooModel>(TestConfig);
             var products = await repository.Query()
                 .ById(66)
                 .Select(x => new { x.Name })
@@ -95,7 +95,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         [Fact]
         public async Task Can_get_product_with_selected_language_uning_query()
         {
-            var repository = new OdooRepository<ProductProductOdooDto>(TestConfig);
+            var repository = new OdooRepository<ProductProductOdooModel>(TestConfig);
 
             var context = new OdooContext
             {
@@ -126,7 +126,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         public async Task Can_get_product_with_selected_language_using_repository_init()
         {
             var confing = new OdooConfig(TestConfig.ApiUrl, TestConfig.DbName, TestConfig.UserName, TestConfig.Password, "nl_BE");
-            var repository = new OdooRepository<ProductProductOdooDto>(confing);
+            var repository = new OdooRepository<ProductProductOdooModel>(confing);
 
             var product = await repository.Query()
                 .ById(282)
@@ -169,7 +169,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         [Fact]
         public async Task Can_get_product_with_selected_language_using_repository_prop()
         {
-            var repository = new OdooRepository<ProductProductOdooDto>(TestConfig);
+            var repository = new OdooRepository<ProductProductOdooModel>(TestConfig);
             repository.Config.Context.Language = "nl_BE";
 
             var product = await repository.Query()
