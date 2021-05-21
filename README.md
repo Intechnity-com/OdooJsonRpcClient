@@ -98,7 +98,7 @@ public enum ActivityExceptionDecorationOdooEnum
 ## OdooRepository
 #### Read
 ```C#
-var repository = new OdooRepository<OdooProductProduct>(config);
+var repository = new OdooRepository<ProductProductOdooModel>(config);
 var products = await repository.Query().ToListAsync();
 ```
 
@@ -120,8 +120,6 @@ In Repository U can use `OdooQueryBuilder`.
 
 #### Create
 ```C#
-var odooClient = new OdooClient(config);
-
 var model = OdooDictionaryModel.Create(() => new ProductProductOdooModel()
 {
     Name = "test name"
@@ -158,7 +156,7 @@ OdooRepository is a wrapper for OdooClient. This class give option for building 
 
 
 ## IOdooCreateModel
-If we create an object instance that we want to pass to odoo but do not fill all fields, they will be automatically assigned default values (Create and update methods). In this case is impossible to distinguish whether we want to set null value or not touch this property. The first solution for that is create models based on odoo model with only fields that we want to use. To that use IOdooCreateModel interface.
+If we create an object instance that we want to pass to odoo but do not fill all fields, they will be automatically assigned default values (Create and update methods). In this case is impossible to distinguish whether we want to set null value or not touch this property. The first solution for that is create models based on odoo model with only fields that we want to use. To that use IOdooCreateModel interface or OdooDictionaryModel.
 
 ```C#                        
 [OdooTableName("product.product")]
@@ -187,15 +185,14 @@ var createResult = await repository.CreateAsync(model);
 This class is second solution for the problem of passing models with default or null values to odoo.
 
 ```C#                        
-var model = OdooDictionaryModel.Create(() => new PurchaseOrderLineOdooModel()
+var model = OdooDictionaryModel.Create(() => new ProductProductOdooModel()
 {
     Name = "test name",
-    DateOrder = new DateTime(),
+    Description = "test description",
 });
 
 if(condition)
-    model.Add(x => x.CreateDate, new DateTime());
-
+    model.Add(x => x.WriteDate, new DateTime());
 
 var createResult = await odooRepository.CreateAsync(model);
 ```
