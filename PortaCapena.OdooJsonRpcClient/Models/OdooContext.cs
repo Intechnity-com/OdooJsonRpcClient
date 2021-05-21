@@ -7,41 +7,51 @@ namespace PortaCapena.OdooJsonRpcClient.Models
         public string Language
         {
             get => TryGetValue("lang", out var result) ? result as string : default;
-            set => this["lang"] = value;
+            set => SetValue("lang", value);
         }
 
         public string Timezone
         {
             get => TryGetValue("tz", out var result) ? result as string : default;
-            set => this["tz"] = value;
+            set => SetValue("tz", value);
         }
 
         public string Tag
         {
             get => TryGetValue("tag", out var result) ? result as string : default;
-            set => this["tag"] = value;
+            set => SetValue("tag", value);
         }
 
         public string ActiveModel
         {
             get => TryGetValue("active_model", out var result) ? result as string : default;
-            set => this["active_model"] = value;
+            set => SetValue("active_model", value);
         }
 
         public bool? DefaultIsCompany
         {
             get => TryGetValue("default_is_company", out var result) ? result as bool? : default;
-            set => this["default_is_company"] = value;
+            set => SetValue("default_is_company", value);
         }
 
         public long? ForceCompany
         {
             get => TryGetValue("force_company", out var result) ? result as long? : default;
-            set => this["force_company"] = value;
+            set => SetValue("force_company", value);
         }
 
 
         public OdooContext() { }
+
+        public OdooContext(string language)
+        {
+            Language = language;
+        }
+
+        public OdooContext(string language, string timezone) : this(language)
+        {
+            Timezone = timezone;
+        }
 
         public OdooContext(Dictionary<string, object> dict)
         {
@@ -54,6 +64,15 @@ namespace PortaCapena.OdooJsonRpcClient.Models
             foreach (var dict in dicts)
                 foreach (var keyValuePair in dict)
                     this[keyValuePair.Key] = keyValuePair.Value;
+        }
+
+
+        private void SetValue(string key, object value)
+        {
+            if (value == null && ContainsKey(key))
+                Remove(key);
+            else
+                this[key] = value;
         }
     }
 }
