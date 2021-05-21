@@ -129,7 +129,12 @@ var result = await repository.CreateAsync(model);
 ```
 
 #### Update
-```C#            
+U can update only this fields that U are intrested in. For updating many records use `UpdateRangeAsync`.
+```C#           
+var model = OdooDictionaryModel.Create(() => new ProductProductOdooModel()
+{
+    CompanyId = null
+}); 
 var result = await repository.UpdateAsync(productId, model);
 ```
 
