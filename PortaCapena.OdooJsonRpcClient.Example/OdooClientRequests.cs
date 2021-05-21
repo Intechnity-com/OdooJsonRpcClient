@@ -229,7 +229,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         }
 
         [Fact]
-        public async Task Can_Create_Update_and_delete_customer()
+        public async Task Can_create_update_get_and_delete_customer()
         {
             var model = OdooDictionaryModel.Create(() => new ResPartnerOdooModel()
             {
@@ -258,6 +258,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
 
             customers.Succeed.Should().BeTrue();
             customers.Value.Length.Should().Be(1);
+            customers.Value.First().Name.Should().Be("new name");
 
             var deleteResult = await odooClient.DeleteAsync(customers.Value.First());
 

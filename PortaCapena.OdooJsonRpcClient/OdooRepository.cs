@@ -10,12 +10,13 @@ namespace PortaCapena.OdooJsonRpcClient
     {
         public string TableName { get; }
         protected readonly OdooClient OdooClient;
+        public OdooContext Context => OdooClient.Context;
 
         public OdooQueryBuilder<T> Query() => new OdooQueryBuilder<T>(OdooClient);
 
-        public OdooRepository(OdooConfig config)
+        public OdooRepository(OdooConfig config, OdooContext context = null)
         {
-            OdooClient = new OdooClient(config);
+            OdooClient = new OdooClient(config, context);
             TableName = OdooExtensions.GetOdooTableName<T>();
         }
 

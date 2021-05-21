@@ -93,23 +93,124 @@ namespace PortaCapena.OdooJsonRpcClient.Example
 
 
         [Fact]
-        public async Task Can_get_product_with_selected_language()
+        public async Task Can_get_product_with_selected_language_uning_query()
         {
             var repository = new OdooRepository<ProductProductOdooDto>(Config);
 
-            var context = new OdooContext()
+            var context = new OdooContext
             {
-                Language = "nl_BE"
+                Language = "nl_BE",
             };
 
-            var products = await repository.Query()
+            var product = await repository.Query()
                 .ById(282)
                 .WithContext(context)
                 .FirstOrDefaultAsync();
 
-            products.Error.Should().BeNull();
-            products.Value.Should().NotBeNull();
-            products.Succeed.Should().BeTrue();
+            product.Error.Should().BeNull();
+            product.Value.Should().NotBeNull();
+            product.Succeed.Should().BeTrue();
+            product.Value.Name.Should().Contain("Dutch");
+
+            var productWithoutLanguage = await repository.Query()
+                .ById(282)
+                .FirstOrDefaultAsync();
+
+            productWithoutLanguage.Error.Should().BeNull();
+            productWithoutLanguage.Value.Should().NotBeNull();
+            productWithoutLanguage.Succeed.Should().BeTrue();
+            productWithoutLanguage.Value.Name.Should().NotContain("Dutch");
+        }
+
+        [Fact]
+        public async Task Can_get_product_with_selected_language_using_repository_init()
+        {
+            var context = new OdooContext
+            {
+                Language = "nl_BE",
+            };
+            var repository = new OdooRepository<ProductProductOdooDto>(Config, context);
+
+            var product = await repository.Query()
+                .ById(282)
+                .FirstOrDefaultAsync();
+
+            product.Error.Should().BeNull();
+            product.Value.Should().NotBeNull();
+            product.Succeed.Should().BeTrue();
+            product.Value.Name.Should().Contain("Dutch");
+
+            var product2 = await repository.Query()
+                .ById(282)
+                .FirstOrDefaultAsync();
+
+            product2.Error.Should().BeNull();
+            product2.Value.Should().NotBeNull();
+            product2.Succeed.Should().BeTrue();
+            product2.Value.Name.Should().Contain("Dutch");
+
+            var productWithoutLanguage = await repository.Query()
+                .ById(282)
+                .WithContext(new OdooContext())
+                .FirstOrDefaultAsync();
+
+            productWithoutLanguage.Error.Should().BeNull();
+            productWithoutLanguage.Value.Should().NotBeNull();
+            productWithoutLanguage.Succeed.Should().BeTrue();
+            productWithoutLanguage.Value.Name.Should().NotContain("Dutch");
+
+            var product123 = await repository.Query()
+                .ById(282)
+                .FirstOrDefaultAsync();
+
+            product.Error.Should().BeNull();
+            product.Value.Should().NotBeNull();
+            product.Succeed.Should().BeTrue();
+            product.Value.Name.Should().Contain("Dutch");
+        }
+
+        [Fact]
+        public async Task Can_get_product_with_selected_language_using_repository_prop()
+        {
+            var repository = new OdooRepository<ProductProductOdooDto>(Config);
+            repository.Context.Language = "nl_BE";
+
+            var product = await repository.Query()
+                .ById(282)
+                .FirstOrDefaultAsync();
+
+            product.Error.Should().BeNull();
+            product.Value.Should().NotBeNull();
+            product.Succeed.Should().BeTrue();
+            product.Value.Name.Should().Contain("Dutch");
+
+            var product2 = await repository.Query()
+                .ById(282)
+                .FirstOrDefaultAsync();
+
+            product2.Error.Should().BeNull();
+            product2.Value.Should().NotBeNull();
+            product2.Succeed.Should().BeTrue();
+            product2.Value.Name.Should().Contain("Dutch");
+
+            var productWithoutLanguage = await repository.Query()
+                .ById(282)
+                .WithContext(new OdooContext())
+                .FirstOrDefaultAsync();
+
+            productWithoutLanguage.Error.Should().BeNull();
+            productWithoutLanguage.Value.Should().NotBeNull();
+            productWithoutLanguage.Succeed.Should().BeTrue();
+            productWithoutLanguage.Value.Name.Should().NotContain("Dutch");
+
+            var product123 = await repository.Query()
+                .ById(282)
+                .FirstOrDefaultAsync();
+
+            product.Error.Should().BeNull();
+            product.Value.Should().NotBeNull();
+            product.Succeed.Should().BeTrue();
+            product.Value.Name.Should().Contain("Dutch");
         }
     }
 }

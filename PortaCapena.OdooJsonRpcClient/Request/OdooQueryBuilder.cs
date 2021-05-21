@@ -14,7 +14,7 @@ namespace PortaCapena.OdooJsonRpcClient.Request
         private readonly OdooClient _odooClient;
         private readonly OdooQuery<T> _query;
 
-        private readonly OdooContext _odooContext = new OdooContext();
+        private OdooContext _odooContext;
 
         internal OdooQueryBuilder(OdooClient odooClient) : base()
         {
@@ -100,13 +100,12 @@ namespace PortaCapena.OdooJsonRpcClient.Request
 
         public OdooQueryBuilder<T> WithContext(OdooContext context)
         {
-            foreach (var keyValuePair in context)
-                WithContext(keyValuePair.Key, keyValuePair.Value);
-
+            _odooContext = new OdooContext(context);
             return this;
         }
         public OdooQueryBuilder<T> WithContext(string key, object value)
         {
+            _odooContext ??= new OdooContext();
             _odooContext[key] = value;
             return this;
         }

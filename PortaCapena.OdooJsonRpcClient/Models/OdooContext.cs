@@ -40,23 +40,16 @@ namespace PortaCapena.OdooJsonRpcClient.Models
             set => this["force_company"] = value;
         }
 
-        //public string ActiveIds
-        //{
-        //    get => TryGetValue("active_ids", out var result) ? result as string : default;
-        //    set => this["active_ids"] = value;
-        //}
-
-        public static OdooContext Create() => new OdooContext();
 
         public OdooContext() { }
 
-        internal OdooContext(Dictionary<string, object> dict)
+        public OdooContext(Dictionary<string, object> dict)
         {
             foreach (var keyValuePair in dict)
                 this[keyValuePair.Key] = keyValuePair.Value;
         }
 
-        internal OdooContext(params OdooContext[] dicts)
+        public OdooContext(params OdooContext[] dicts)
         {
             foreach (var dict in dicts)
                 foreach (var keyValuePair in dict)
@@ -64,9 +57,3 @@ namespace PortaCapena.OdooJsonRpcClient.Models
         }
     }
 }
-
-
-
-
-// https://stackoverflow.com/questions/46586281/alter-odoo-xmlrpc-context-to-use-a-specific-language
-// https://gist.github.com/ilyasProgrammer/cf6647356c9a3722f597f72b7685a4c3
