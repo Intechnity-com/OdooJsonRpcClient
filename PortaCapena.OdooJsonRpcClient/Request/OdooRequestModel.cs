@@ -96,7 +96,7 @@ namespace PortaCapena.OdooJsonRpcClient.Request
             return new OdooRequestModel(param);
         }
 
-        private static Dictionary<string, object> MapQuery(OdooContext context, OdooQuery query = null)
+        protected static Dictionary<string, object> MapQuery(OdooContext context, OdooQuery query = null)
         {
             if (query == null && (context == null || !context.Any())) return null;
 
@@ -124,7 +124,7 @@ namespace PortaCapena.OdooJsonRpcClient.Request
             return result;
         }
 
-        private static object[] GetRequestFilters(OdooQuery query = null)
+        protected static object[] GetRequestFilters(OdooQuery query = null)
         {
             return query != null && query.Filters.Count > 0 ? new object[] { query.Filters.ToArray() } : new object[] { new object[] { } };
         }

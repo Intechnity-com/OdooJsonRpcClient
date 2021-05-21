@@ -33,8 +33,7 @@ namespace PortaCapena.OdooJsonRpcClient.Request
         public string Order { get; set; }
 
 
-        public OdooQuery() : this(null) { }
-        public OdooQuery(OdooContext context)
+        public OdooQuery()
         {
             ReturnFields = new HashSet<string>();
             Filters = new OdooFilter();

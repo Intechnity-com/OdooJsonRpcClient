@@ -88,40 +88,14 @@ public enum ActivityExceptionDecorationOdooEnum
 
 
 
-## CRUD
-#### Read
-```C#
-var products = await odooClient.GetAsync<OdooProductProduct>();
-```
-#### Create
-```C#
-var odooClient = new OdooClient(config);
-
-var model = new OdooCreateProduct()
-{
-     Name = "Prod test Kg",
-     UomId = 3,
-     UomPoId = 3
-};
-
-var result= await odooClient.CreateAsync(model);
-```
-
-#### Update
-```C#            
-var result = await odooClient.UpdateAsync(model, productId);
-```
-
-#### Delete
-```C#                        
-var deleteProductResult = await odooClient.DeleteAsync("product.product"), createdProductId);
-```
 
 
 
 
 
-## Repository
+
+
+## OdooRepository
 #### Read
 ```C#
 var repository = new OdooRepository<OdooProductProduct>(config);
@@ -143,6 +117,7 @@ In Repository U can use `OdooQueryBuilder`.
                 .FirstOrDefaultAsync();
 ```
 
+
 #### Create
 ```C#
 var odooClient = new OdooClient(config);
@@ -150,8 +125,6 @@ var odooClient = new OdooClient(config);
 var model = new OdooCreateProduct()
 {
      Name = "Prod test Kg",
-     UomId = 3,
-     UomPoId = 3
 };
 
 var result = await repository.CreateAsync(model);
@@ -166,6 +139,71 @@ var result = await repository.UpdateAsync(productId, model);
 ```C#                        
 var deleteProductResult = await repository.DeleteAsync(productId);
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+## OdooClient
+OdooRepository is a wrapper for OdooClient. This class give option for building more advanced requests or not implemented in this library.
+
+
+
+## IOdooCreateModel
+If we create an object instance that we want to pass to odoo but do not fill all fields, they will be automatically assigned default values (Create and update methods). In this case is impossible to distinguish whether we want to set null value or not touch this property. The first solution for that is create models based on odoo model with only fields that we want to use. To that use IOdooCreateModel interface.
+
+```C#                        
+[OdooTableName("product.product")]
+public class OdooCreateProduct : IOdooCreateModel
+{
+    [JsonProperty("name")]
+    public string Name { get; set; }
+}
+```
+
+
+
+
+
+## OdooDictionaryModel
+This class is second solution for the problem of passing models with default or null values to odoo.
+
+```C#                        
+var model = OdooDictionaryModel.Create(() => new PurchaseOrderLineOdooModel()
+{
+    Name = "test name",
+    DateOrder = new DateTime(),
+});
+
+if(condition)
+    model.Add(x => x.CreateDate, new DateTime());
+
+
+var id = await odooRepository.CreateAsync(model);
+```
+
+
+
+
+
+## OdooContext
+Context is mainly used to send to odoo values such as **language** or **time zone**, but U can use it for more advanced requests. U can set it in **OdooConfig** for multiple usage or only once adding it to request as parameter (also in repository query).
+
+```C#  
+var context = new OdooContext("pl_PL");
+context.Language = "nl_BE";
+
+var id = await odooRepository.CreateAsync(model, context);
+``` 
+
 
 
 

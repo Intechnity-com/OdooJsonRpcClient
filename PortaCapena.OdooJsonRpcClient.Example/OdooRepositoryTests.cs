@@ -8,7 +8,7 @@ using Xunit;
 
 namespace PortaCapena.OdooJsonRpcClient.Example
 {
-    public class OdooRepositoryRequests : RequestTestBase
+    public class OdooRepositoryTests : RequestTestBase
     {
         [Fact]
         public async Task Can_get_all_products()

@@ -10,7 +10,7 @@ using Xunit;
 
 namespace PortaCapena.OdooJsonRpcClient.Tests
 {
-    public class OdooQueryTests
+    public class OdooQueryOfTTests
     {
         [Fact]
         public void Can_create_builder_with_static_method()
