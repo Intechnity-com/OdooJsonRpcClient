@@ -105,7 +105,7 @@ namespace PortaCapena.OdooJsonRpcClient.Request
         }
         public OdooQueryBuilder<T> WithContext(string key, object value)
         {
-            _odooContext ??= new OdooContext();
+            if (_odooContext == null) _odooContext = new OdooContext();
             _odooContext[key] = value;
             return this;
         }
