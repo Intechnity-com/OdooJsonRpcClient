@@ -20,24 +20,8 @@ namespace PortaCapena.OdooJsonRpcClient.Models
         {
             return new OdooDictionaryModel<T>().Add(expression, value);
         }
-        public static OdooDictionaryModel<T> Create(Expression<Func<T, Enum>> expression, Enum value)
-        {
-            return new OdooDictionaryModel<T>().Add(expression, value);
-        }
 
         public OdooDictionaryModel<T> Add(Expression<Func<T, object>> expression, object value)
-        {
-            Add<T>(expression, value);
-            return this;
-        }
-
-        public OdooDictionaryModel<T> Add(Expression<Func<T, Enum>> expression, Enum value)
-        {
-            Add<T>(expression, value);
-            return this;
-        }
-
-        public OdooDictionaryModel<T> Add(Expression<Func<T>> expression, object value)
         {
             Add<T>(expression, value);
             return this;

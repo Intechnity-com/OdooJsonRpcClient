@@ -17,12 +17,6 @@ namespace PortaCapena.OdooJsonRpcClient.Extensions
                 throw new ArgumentException($"Mising attribute '{nameof(OdooTableNameAttribute)}' for model '{typeof(T).Name}'");
             return attribute.Name;
         }
-        public static string OdooTableName(this IOdooAtributtesModel model)
-        {
-            if (!(model.GetType().GetCustomAttributes(typeof(OdooTableNameAttribute), true).FirstOrDefault() is OdooTableNameAttribute attribute))
-                throw new ArgumentException($"Mising attribute '{nameof(OdooTableNameAttribute)}' for model '{model.GetType().Name}'");
-            return attribute.Name;
-        }
 
         public static string GetOdooPropertyName<T>(string name) where T : IOdooAtributtesModel
         {
@@ -30,14 +24,6 @@ namespace PortaCapena.OdooJsonRpcClient.Extensions
             var attribute = property.GetCustomAttributes<JsonPropertyAttribute>();
 
             return attribute.FirstOrDefault()?.PropertyName;
-        }
-        public static string OdooPropertyName(this IOdooAtributtesModel model, string name)
-        {
-            var key = model.GetType().GetProperties().First(x => x.Name == name).GetCustomAttributes<JsonPropertyAttribute>().FirstOrDefault();
-            if (key == null)
-                throw new ArgumentException($"Mising attribute '{nameof(JsonPropertyAttribute)}' for property '{name}' in model '{model.GetType().Name}'");
-
-            return key.PropertyName;
         }
 
         public static OdooResult<TResult> ToResult<T, TResult>(this OdooResult<T> result, TResult newValue)
