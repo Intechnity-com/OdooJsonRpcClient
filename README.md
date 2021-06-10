@@ -222,14 +222,16 @@ var id = await odooRepository.CreateAsync(model, context);
 ## Advanced queries
 To make Your queries faster use `Select` method and get only fields that U are interested of. If U reduced the amount of field in your models use `SelectSimplifiedModel()`.
 
-For more advanced queries U can use `OdooFilter`
+
+### OdooFilter
+For more advanced queries U can use `OdooFilter`. To use `or` try:
 ```C#
 var products = await repository.Query()
                .Where(
                   OdooFilter.Create()
-                     .GreaterThanOrEqual("write_date", new DateTime(2020, 12, 2))
-                     .And()
-                     .EqualTo("name", "Bioboxen 610l"))
+                     .Or()
+                     .EqualTo("name", "My Company (San Francisco)")
+                     .EqualTo("name", "PL Company"))
                .ToListAsync();
 ```
 
