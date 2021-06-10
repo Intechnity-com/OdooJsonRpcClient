@@ -23,7 +23,7 @@ Install-Package PortaCapena.OdooJsonRpcClient
 Start your work with check version of Odoo. To this request You only need a valid url address.
 ```C#
 var config = new OdooConfig(
-        apiUrl: "https://odoo-api-url.com",
+        apiUrl: "https://odoo-api-url.com", //  "http://localhost:8069"
         dbName: "odoo-db-name",
         userName: "admin",
         password: "admin"
@@ -220,6 +220,7 @@ var id = await odooRepository.CreateAsync(model, context);
 
 
 ## Advanced queries
+To make Your queries faster use `Select` method and get only fields that U are interested of. If U reduced the amount of field in your models use `SelectSimplifiedModel()`.
 
 For more advanced queries U can use `OdooFilter`
 ```C#
