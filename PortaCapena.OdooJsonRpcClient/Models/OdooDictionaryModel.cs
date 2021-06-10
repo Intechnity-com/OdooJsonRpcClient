@@ -6,7 +6,6 @@ using System.Reflection;
 using Newtonsoft.Json;
 using PortaCapena.OdooJsonRpcClient.Attributes;
 using PortaCapena.OdooJsonRpcClient.Converters;
-using PortaCapena.OdooJsonRpcClient.Extensions;
 
 namespace PortaCapena.OdooJsonRpcClient.Models
 {
@@ -45,30 +44,10 @@ namespace PortaCapena.OdooJsonRpcClient.Models
         {
             return new OdooDictionaryModel<T>().Add(expression, value);
         }
-        public static OdooDictionaryModel Create<T>(Expression<Func<T, Enum>> expression, Enum value) where T : IOdooAtributtesModel, new()
-        {
-            return new OdooDictionaryModel<T>().Add(expression, value);
-        }
 
         //TODO: Rename to set / addOrUpdate ?
 
         public OdooDictionaryModel Add<T>(Expression<Func<T, object>> expression, object value) where T : IOdooAtributtesModel
-        {
-            if (TableName != null && TryGetOdooTableName(expression, out var tableName))
-                TableName = tableName;
-            this[OdooExpresionMapper.GetOdooPropertyName(expression)] = value;
-            return this;
-        }
-
-        public OdooDictionaryModel Add<T>(Expression<Func<T, Enum>> expression, Enum value) where T : IOdooAtributtesModel
-        {
-            if (TableName != null && TryGetOdooTableName(expression, out var tableName))
-                TableName = tableName;
-            this[OdooExpresionMapper.GetOdooPropertyName(expression)] = value.OdooValue();
-            return this;
-        }
-
-        public OdooDictionaryModel Add<T>(Expression<Func<T>> expression, object value) where T : IOdooAtributtesModel
         {
             if (TableName != null && TryGetOdooTableName(expression, out var tableName))
                 TableName = tableName;

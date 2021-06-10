@@ -104,6 +104,28 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         }
 
         [Fact]
+        public void Can_create_dictionary_with_call_method_with_enum_params()
+        {
+            var model = OdooDictionaryModel.Create(() => new PurchaseOrderLineOdooModel()
+            {
+                Name = TestString("123"),
+            });
+            model.Add(x => x.State, StatusPurchaseOrderOdooEnum.PurchaseOrder);
+
+            model.TableName.Should().NotBeEmpty();
+            model.Should().NotBeEmpty();
+            model.Count.Should().Be(2);
+
+            model.First().Key.Should().Be("name");
+            model.First().Value.Should().BeOfType<string>();
+            model.First().Value.Should().Be("123test");
+
+            model.Skip(1).First().Key.Should().Be("state");
+            model.Skip(1).First().Value.Should().BeOfType<StatusPurchaseOrderOdooEnum>();
+            model.Skip(1).First().Value.Should().Be(StatusPurchaseOrderOdooEnum.PurchaseOrder);
+        }
+
+        [Fact]
         public void Can_create_dictionary_with_array()
         {
             var model = OdooDictionaryModel.Create(() => new ProductProductOdooModel()

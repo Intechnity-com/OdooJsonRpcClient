@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -12,6 +13,12 @@ namespace PortaCapena.OdooJsonRpcClient.Request
 {
     public class OdooQuery<T> : OdooQuery where T : IOdooModel, new()
     {
+        public OdooQuery() : base()
+        {
+            base.Filters = new OdooFilter<T>();
+        }
+
+        public new OdooFilter<T> Filters => base.Filters as OdooFilter<T>;
 
         public static OdooQuery<T> Create()
         {
@@ -113,13 +120,12 @@ namespace PortaCapena.OdooJsonRpcClient.Request
 
         public OdooQuery<T> ById(long id)
         {
-            Filters.EqualTo(OdooExtensions.GetOdooPropertyName<T>(nameof(IOdooModel.Id)), id);
+            Filters.EqualTo(x => x.Id, id);
             return this;
         }
         public OdooQuery<T> ByIds(params long[] ids)
         {
-            if (ids.Any())
-                Filters.In(OdooExtensions.GetOdooPropertyName<T>(nameof(IOdooModel.Id)), ids);
+            if (ids.Any()) Filters.In(x => x.Id, ids);
             return this;
         }
 
