@@ -478,28 +478,35 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         }
 
         [Fact(Skip = "Test for working on Odoo")]
-        //[Fact]
+      //  [Fact]
         public async Task Can_create_purchase_order()
         {
-
             var odooClient = new OdooClient(TestConfig);
 
             var partnerResult = await odooClient.GetAsync<StockPickingTypeOdooDto>();
 
-
-            var dupa = new PurchaseOrderOdooModel()
+            var purchaseOrder = OdooDictionaryModel.Create(() => new PurchaseOrderOdooModel
             {
                 DateOrder = DateTime.Now,
                 PartnerId = 9,
                 CurrencyId = 15,
                 CompanyId = 1,
-                //      PickingTypeId = 1,
-                Name = "test purchase"
-            };
+                Name = "test purchase",
+            });
 
-            //var createResult = await odooClient.CreateAsync(dupa);
-            //createResult.Message.Should().BeNullOrEmpty();
-            //createResult.Succeed.Should().BeTrue();
+            var lines = new[] { 
+                OdooDictionaryModel.Create(() => new PurchaseOrderLineOdooModel()
+                {
+                    Name = "test purchase line",
+                })
+            };
+            purchaseOrder.Add(x => x.OrderLine, lines);
+
+            var createResult = await odooClient.CreateAsync(purchaseOrder);
+
+
+            createResult.Message.Should().BeNullOrEmpty();
+            createResult.Succeed.Should().BeTrue();
         }
 
        // [Fact(Skip = "Test for working on Odoo")]

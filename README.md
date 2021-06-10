@@ -102,10 +102,11 @@ var repository = new OdooRepository<ProductProductOdooModel>(config);
 var products = await repository.Query().ToListAsync();
 ```
 
-In Repository U can use `OdooQueryBuilder`. 
+In Repository U can use `OdooQueryBuilder` to create queries. 
 ```C#
   var products = await repository.Query()
                 .Where(x => x.Barcode, OdooOperator.EqualsTo, "barcodetest1")
+                .Where(x => x.WriteDate, OdooOperator.GreaterThanOrEqualTo, new DateTime(2020, 12, 2))
                 .Select(x => new
                 {
                     x.Name,
@@ -114,7 +115,7 @@ In Repository U can use `OdooQueryBuilder`.
                 })
                 .OrderByDescending(x => x.Id)
                 .Take(10)
-                .FirstOrDefaultAsync();
+                .ToListAsync();
 ```
 
 
@@ -219,6 +220,16 @@ var id = await odooRepository.CreateAsync(model, context);
 
 
 ## Advanced queries
+
+For more advanced queries U can use `OdooFilter`
+```C#
+await repository.Query().Where(
+OdooFilter.Create()
+         .GreaterThanOrEqual("write_date", new DateTime(2020, 12, 2))
+         .And()
+         .EqualTo("name", "Bioboxen 610l"));
+
+```
 
 ### Deep where
 Get ProductProductOdooModel where CountryCode is "BE" in ResCompanyOdooModel (CompanyId)
