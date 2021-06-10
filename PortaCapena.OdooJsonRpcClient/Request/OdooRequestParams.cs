@@ -38,5 +38,3 @@ namespace PortaCapena.OdooJsonRpcClient.Request
         }
     }
 }
-
-// http://gauravsahu.github.io/odoo-client-JSON-RPC/

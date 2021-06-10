@@ -12,7 +12,6 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
     [JsonConverter(typeof(OdooModelConverter))]
     public class ResCompanyOdooModel : IOdooModel
     {
-
         // required
         [JsonProperty("name")]
         public string Name { get; set; }

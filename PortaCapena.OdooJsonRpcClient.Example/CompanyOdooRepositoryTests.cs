@@ -1,17 +1,19 @@
 ﻿using System.Threading.Tasks;
 using FluentAssertions;
 using PortaCapena.OdooJsonRpcClient.Consts;
+using PortaCapena.OdooJsonRpcClient.Extensions;
+using PortaCapena.OdooJsonRpcClient.Request;
 using PortaCapena.OdooJsonRpcClient.Shared;
 using PortaCapena.OdooJsonRpcClient.Shared.Models;
 using Xunit;
 
 namespace PortaCapena.OdooJsonRpcClient.Example
 {
-    public class CompanyOdooRepository : TestBase
+    public class CompanyOdooRepositoryTests : RequestTestBase
     {
         private class CompanyRepository : OdooRepository<ResCompanyOdooModel>
         {
-            public CompanyRepository() : base(Config) { }
+            public CompanyRepository() : base(TestConfig) { }
         }
 
         [Fact]
@@ -20,6 +22,44 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             var repo = new CompanyRepository();
 
             var result = await repo.Query().ToListAsync();
+
+            result.Error.Should().BeNull();
+            result.Succeed.Should().BeTrue();
+            result.Value.Should().NotBeNull().And.NotBeEmpty();
+        }
+
+        [Fact]
+        public async Task Get_With_filter()
+        {
+            var repo = new CompanyRepository();
+
+            var filter = OdooFilter.Create()
+                .Or()
+                .EqualTo("name", "My Company (San Francisco)")
+                .EqualTo("name", "PL Company");
+
+            var result = await repo.Query()
+                .Where(filter)
+                .ToListAsync();
+
+            result.Error.Should().BeNull();
+            result.Succeed.Should().BeTrue();
+            result.Value.Should().NotBeNull().And.NotBeEmpty();
+        }
+
+        [Fact]
+        public async Task Get_With_filter_of_t()
+        {
+            var repo = new CompanyRepository();
+
+            var filter = OdooFilter<ResCompanyOdooModel>.Create()
+                .Or()
+                .EqualTo(x => x.Name, "My Company (San Francisco)")
+                .EqualTo(x => x.Name, "PL Company");
+
+            var result = await repo.Query()
+                .Where(filter)
+                .ToListAsync();
 
             result.Error.Should().BeNull();
             result.Succeed.Should().BeTrue();
@@ -56,7 +96,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         {
             var repo = new CompanyRepository();
 
-            var result = await repo.Query().Where(x => x.Name, OdooOperator.EqualsTo, "My Company").FirstOrDefaultAsync();
+            var result = await repo.Query().Where(x => x.Name, OdooOperator.EqualsTo, "My Company (San Francisco)").FirstOrDefaultAsync();
 
             result.Error.Should().BeNull();
             result.Succeed.Should().BeTrue();

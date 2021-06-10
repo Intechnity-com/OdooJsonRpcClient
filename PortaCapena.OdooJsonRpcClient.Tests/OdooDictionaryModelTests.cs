@@ -7,7 +7,7 @@ using Xunit;
 
 namespace PortaCapena.OdooJsonRpcClient.Tests
 {
-    public class OdooCommandModelTests
+    public class OdooDictionaryModelTests
     {
         [Fact]
         public void Can_create_simple_dictionary()
@@ -44,9 +44,9 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         [Fact]
         public void Can_create_dictionary_with_create_instance()
         {
-            var model = OdooDictionaryModel.Create(() => new PurchaseOrderLineOdooModel()
+            var model = OdooDictionaryModel.Create(() => new ProductProductOdooModel()
             {
-              DateOrder = new DateTime(),
+                Name = "test name",
             });
             model.Add(x => x.CreateDate, new DateTime());
 
@@ -54,8 +54,8 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
             model.Should().NotBeEmpty();
             model.Count.Should().Be(2);
 
-            model.First().Key.Should().Be("date_order");
-            model.First().Value.Should().Be(new DateTime());
+            model.First().Key.Should().Be("name");
+            model.First().Value.Should().Be("test name");
 
             model.Skip(1).First().Key.Should().Be("create_date");
             model.Skip(1).First().Value.Should().Be(new DateTime());
@@ -104,23 +104,45 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         }
 
         [Fact]
-        public void Can_create_dictionary_with_array()
+        public void Can_create_dictionary_with_call_method_with_enum_params()
         {
             var model = OdooDictionaryModel.Create(() => new PurchaseOrderLineOdooModel()
             {
-                AnalyticTagIds = new long[]{1, 2, 3}
+                Name = TestString("123"),
             });
-            model.Add(x => x.InvoiceLines, new long[] { 4, 5, 6 });
+            model.Add(x => x.State, StatusPurchaseOrderOdooEnum.PurchaseOrder);
 
             model.TableName.Should().NotBeEmpty();
             model.Should().NotBeEmpty();
             model.Count.Should().Be(2);
 
-            model.First().Key.Should().Be("analytic_tag_ids");
+            model.First().Key.Should().Be("name");
+            model.First().Value.Should().BeOfType<string>();
+            model.First().Value.Should().Be("123test");
+
+            model.Skip(1).First().Key.Should().Be("state");
+            model.Skip(1).First().Value.Should().BeOfType<StatusPurchaseOrderOdooEnum>();
+            model.Skip(1).First().Value.Should().Be(StatusPurchaseOrderOdooEnum.PurchaseOrder);
+        }
+
+        [Fact]
+        public void Can_create_dictionary_with_array()
+        {
+            var model = OdooDictionaryModel.Create(() => new ProductProductOdooModel()
+            {
+                ActivityIds = new long[] { 1, 2, 3 }
+            });
+            model.Add(x => x.MessageFollowerIds, new long[] { 4, 5, 6 });
+
+            model.TableName.Should().NotBeEmpty();
+            model.Should().NotBeEmpty();
+            model.Count.Should().Be(2);
+
+            model.First().Key.Should().Be("activity_ids");
             model.First().Value.Should().BeOfType<long[]>().And.NotBeNull();
             model.First().Value.Should().BeEquivalentTo(new long[] { 1, 2, 3 });
 
-            model.Skip(1).First().Key.Should().Be("invoice_lines");
+            model.Skip(1).First().Key.Should().Be("message_follower_ids");
             model.Skip(1).First().Value.Should().BeOfType<long[]>().And.NotBeNull();
             model.Skip(1).First().Value.Should().BeEquivalentTo(new long[] { 4, 5, 6 });
         }

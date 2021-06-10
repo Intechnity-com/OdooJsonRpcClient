@@ -6,7 +6,6 @@ using System.Reflection;
 using Newtonsoft.Json;
 using PortaCapena.OdooJsonRpcClient.Attributes;
 using PortaCapena.OdooJsonRpcClient.Converters;
-using PortaCapena.OdooJsonRpcClient.Extensions;
 
 namespace PortaCapena.OdooJsonRpcClient.Models
 {
@@ -45,32 +44,14 @@ namespace PortaCapena.OdooJsonRpcClient.Models
         {
             return new OdooDictionaryModel<T>().Add(expression, value);
         }
-        public static OdooDictionaryModel Create<T>(Expression<Func<T, Enum>> expression, Enum value) where T : IOdooAtributtesModel, new()
-        {
-            return new OdooDictionaryModel<T>().Add(expression, value);
-        }
+
+        //TODO: Rename to set / addOrUpdate ?
 
         public OdooDictionaryModel Add<T>(Expression<Func<T, object>> expression, object value) where T : IOdooAtributtesModel
         {
             if (TableName != null && TryGetOdooTableName(expression, out var tableName))
                 TableName = tableName;
-            Add(OdooExpresionMapper.GetOdooPropertyName(expression), value);
-            return this;
-        }
-
-        public OdooDictionaryModel Add<T>(Expression<Func<T, Enum>> expression, Enum value) where T : IOdooAtributtesModel
-        {
-            if (TableName != null && TryGetOdooTableName(expression, out var tableName))
-                TableName = tableName;
-            Add(OdooExpresionMapper.GetOdooPropertyName(expression), value.OdooValue());
-            return this;
-        }
-
-        public OdooDictionaryModel Add<T>(Expression<Func<T>> expression, object value) where T : IOdooAtributtesModel
-        {
-            if (TableName != null && TryGetOdooTableName(expression, out var tableName))
-                TableName = tableName;
-            Add(OdooExpresionMapper.GetOdooPropertyName(expression), value);
+            this[OdooExpresionMapper.GetOdooPropertyName(expression)] = value;
             return this;
         }
 
@@ -102,41 +83,41 @@ namespace PortaCapena.OdooJsonRpcClient.Models
                         switch (memberExp.Expression)
                         {
                             case ConstantExpression constantExpression:
-                            {
-                                var value = constantExpression.Value;
-                                Add(odooName, value);
-                                continue;
-                            }
+                                {
+                                    var value = constantExpression.Value;
+                                    this[odooName] = value;
+                                    continue;
+                                }
                             case MemberExpression memberExpr:
-                            {
-                                var value = Expression.Lambda(memberExpr).Compile().DynamicInvoke();
-                                Add(odooName, value);
-                                continue;
-                            }
+                                {
+                                    var value = Expression.Lambda(memberExpr).Compile().DynamicInvoke();
+                                    this[odooName] = value;
+                                    continue;
+                                }
                             case UnaryExpression unaryExpression:
-                            {
-                                var value = Expression.Lambda(unaryExpression).Compile().DynamicInvoke();
-                                Add(odooName, value);
-                                continue;
-                            }
+                                {
+                                    var value = Expression.Lambda(unaryExpression).Compile().DynamicInvoke();
+                                    this[odooName] = value;
+                                    continue;
+                                }
                             case MethodCallExpression methodCallExpression:
-                            {
-                                var value = Expression.Lambda(methodCallExpression).Compile().DynamicInvoke();
-                                Add(odooName, value);
-                                continue;
-                            }
+                                {
+                                    var value = Expression.Lambda(methodCallExpression).Compile().DynamicInvoke();
+                                    this[odooName] = value;
+                                    continue;
+                                }
                             case NewExpression memberInitExpression:
-                            {
-                                var value = Expression.Lambda(memberInitExpression).Compile().DynamicInvoke();
-                                Add(odooName, value);
-                                continue;
-                            }
+                                {
+                                    var value = Expression.Lambda(memberInitExpression).Compile().DynamicInvoke();
+                                    this[odooName] = value;
+                                    continue;
+                                }
                             case NewArrayExpression newArrayExpression:
-                            {
-                                var value = Expression.Lambda(newArrayExpression).Compile().DynamicInvoke();
-                                Add(odooName, value);
-                                continue;
-                            }
+                                {
+                                    var value = Expression.Lambda(newArrayExpression).Compile().DynamicInvoke();
+                                    this[odooName] = value;
+                                    continue;
+                                }
                         }
                     }
                 }

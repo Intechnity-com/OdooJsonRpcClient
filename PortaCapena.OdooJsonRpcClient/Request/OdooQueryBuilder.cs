@@ -14,6 +14,8 @@ namespace PortaCapena.OdooJsonRpcClient.Request
         private readonly OdooClient _odooClient;
         private readonly OdooQuery<T> _query;
 
+        private OdooContext _odooContext;
+
         internal OdooQueryBuilder(OdooClient odooClient) : base()
         {
             _odooClient = odooClient;
@@ -96,6 +98,18 @@ namespace PortaCapena.OdooJsonRpcClient.Request
             return this;
         }
 
+        public OdooQueryBuilder<T> WithContext(OdooContext context)
+        {
+            _odooContext = new OdooContext(context);
+            return this;
+        }
+        public OdooQueryBuilder<T> WithContext(string key, object value)
+        {
+            if (_odooContext == null) _odooContext = new OdooContext();
+            _odooContext[key] = value;
+            return this;
+        }
+
         #endregion
 
         #region Skip
@@ -141,7 +155,7 @@ namespace PortaCapena.OdooJsonRpcClient.Request
 
         public async Task<OdooResult<T[]>> ToListAsync()
         {
-            return await _odooClient.GetAsync<T>(_query);
+            return await _odooClient.GetAsync<T>(_query, _odooContext);
         }
 
         public async Task<OdooResult<T>> FirstAsync()
@@ -167,7 +181,7 @@ namespace PortaCapena.OdooJsonRpcClient.Request
 
         public async Task<OdooResult<long>> CountAsync()
         {
-            return await _odooClient.GetCountAsync<T>(_query);
+            return await _odooClient.GetCountAsync<T>(_query, _odooContext);
         }
         public async Task<OdooResult<bool>> AnyAsync()
         {

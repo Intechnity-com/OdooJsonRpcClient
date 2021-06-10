@@ -10,12 +10,12 @@ using Xunit;
 
 namespace PortaCapena.OdooJsonRpcClient.Tests
 {
-    public class OdooQueryTests
+    public class OdooQueryOfTTests
     {
         [Fact]
         public void Can_create_builder_with_static_method()
         {
-            var filters = OdooQuery<ProductProductOdooDto>.Create();
+            var filters = OdooQuery<ProductProductOdooModel>.Create();
 
             filters.Should().NotBeNull();
             filters.Filters.Count.Should().Be(0);
@@ -28,7 +28,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         [Fact]
         public void When_use_select_shoud_return_filds_with_odoo_prop_names()
         {
-            var filters = OdooQuery<ProductProductOdooDto>.Create()
+            var filters = OdooQuery<ProductProductOdooModel>.Create()
                 .Select(x => new
                 {
                     x.Name,
@@ -47,7 +47,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         [Fact]
         public void When_use_pridicate_where_shoud_return_correct_filters_model()
         {
-            var filters = OdooQuery<ProductProductOdooDto>.Create()
+            var filters = OdooQuery<ProductProductOdooModel>.Create()
                 .Where(x => x.Id, OdooOperator.EqualsTo, 10);
 
             filters.Filters.Count.Should().Be(1);
@@ -64,7 +64,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         [Fact]
         public void When_use_pridicate_where_with_two_times_shoud_return_correct_filters_model()
         {
-            var filters = OdooQuery<ProductProductOdooDto>.Create()
+            var filters = OdooQuery<ProductProductOdooModel>.Create()
                 .Where(x => x.WriteDate, OdooOperator.GreaterThanOrEqualTo, new DateTime(2020, 12, 2))
                 .Where(x => x.Name, OdooOperator.EqualsTo, "Bioboxen 610l")
                 ;
@@ -84,7 +84,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         public void When_use_where_with_OdooFilter_param_shoud_return_correct_filters_model()
         {
 
-            var filters = OdooQuery<ProductProductOdooDto>.Create()
+            var filters = OdooQuery<ProductProductOdooModel>.Create()
                 .Where(OdooFilter.Create().GreaterThanOrEqual("write_date", new DateTime(2020, 12, 2)))
                 .Where(OdooFilter.Create().EqualTo("name", "Bioboxen 610l"));
 
@@ -102,7 +102,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         [Fact]
         public void When_use_where_with_complex_OdooFilter_param_shoud_return_correct_filters_model()
         {
-            var filters = OdooQuery<ProductProductOdooDto>.Create()
+            var filters = OdooQuery<ProductProductOdooModel>.Create()
                 .Where(OdooFilter.Create()
                     .GreaterThanOrEqual("write_date", new DateTime(2020, 12, 2))
                     .And()
@@ -120,7 +120,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         [Fact]
         public void When_use_select_with_anymous_model_shoud_return_correct_filters_model()
         {
-            var filters = OdooQuery<ProductProductOdooDto>.Create()
+            var filters = OdooQuery<ProductProductOdooModel>.Create()
                 .Select(x => new
                 {
                     x.Name,
@@ -142,7 +142,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         [Fact]
         public void When_use_pridicate_where_with_one_forgin_key_shoud_return_correct_filters_model()
         {
-            var filters = OdooQuery<ProductProductOdooDto>.Create()
+            var filters = OdooQuery<ProductProductOdooModel>.Create()
                     .Where<ResCompanyOdooModel>(x => x.CompanyId, x => x.CountryCode, OdooOperator.EqualsTo, "BE");
 
             filters.Filters.Count.Should().Be(1);
@@ -164,7 +164,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
         [Fact]
         public void When_use_pridicate_where_with_two_forgin_key_shoud_return_correct_filters_model()
         {
-            var filters = OdooQuery<ProductProductOdooDto>.Create()
+            var filters = OdooQuery<ProductProductOdooModel>.Create()
                 .Where<ResCompanyOdooModel, AccountTaxOdooModel>(x => x.PropertyAccountExpenseId, x => x.AccountSaleTaxId, x => x.CountryCode, OdooOperator.EqualsTo, "BE");
 
             filters.Filters.Count.Should().Be(1);
