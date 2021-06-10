@@ -105,7 +105,7 @@ var products = await repository.Query().ToListAsync();
 In Repository U can use `OdooQueryBuilder` to create queries. 
 ```C#
   var products = await repository.Query()
-                .Where(x => x.Barcode, OdooOperator.EqualsTo, "barcodetest1")
+                .Where(x => x.Name, OdooOperator.EqualsTo, "test product name")
                 .Where(x => x.WriteDate, OdooOperator.GreaterThanOrEqualTo, new DateTime(2020, 12, 2))
                 .Select(x => new
                 {
@@ -123,7 +123,7 @@ In Repository U can use `OdooQueryBuilder` to create queries.
 ```C#
 var model = OdooDictionaryModel.Create(() => new ProductProductOdooModel()
 {
-    Name = "test name"
+    Name = "test product name"
 });
 
 var result = await repository.CreateAsync(model);
@@ -134,7 +134,7 @@ U can update only this fields that U are intrested in. For updating many records
 ```C#           
 var model = OdooDictionaryModel.Create(() => new ProductProductOdooModel()
 {
-    CompanyId = null
+    Name = "test product name updated"
 }); 
 var result = await repository.UpdateAsync(productId, model);
 ```
@@ -223,12 +223,13 @@ var id = await odooRepository.CreateAsync(model, context);
 
 For more advanced queries U can use `OdooFilter`
 ```C#
-await repository.Query().Where(
-OdooFilter.Create()
-         .GreaterThanOrEqual("write_date", new DateTime(2020, 12, 2))
-         .And()
-         .EqualTo("name", "Bioboxen 610l"));
-
+var products = await repository.Query()
+               .Where(
+                  OdooFilter.Create()
+                     .GreaterThanOrEqual("write_date", new DateTime(2020, 12, 2))
+                     .And()
+                     .EqualTo("name", "Bioboxen 610l"))
+               .ToListAsync();
 ```
 
 ### Deep where
