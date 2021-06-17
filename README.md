@@ -34,7 +34,7 @@ var versionResult = await odooClient.GetVersionAsync();
 
 ```
 
-If you have the correct url, now try use login method. (There is no need to use this method later. Logging is going on in the background e.g. `OdooClient`, `OdooRepository`)
+When U can connect to odoo, try use login method. (There is no need to use this method later. Logging is going on in the background e.g. `OdooClient`, `OdooRepository`)
 ```C#
 var loginResult = await odooClient.LoginAsync();
 ```
