@@ -20,7 +20,7 @@ Install-Package PortaCapena.OdooJsonRpcClient
 
 ## First steps
 
-Start your work with check version of Odoo. To this request You only need a valid url address.
+Start your work with check version of Odoo. To this request You need only a valid url address.
 ```C#
 var config = new OdooConfig(
         apiUrl: "https://odoo-api-url.com", //  "http://localhost:8069"
@@ -34,7 +34,7 @@ var versionResult = await odooClient.GetVersionAsync();
 
 ```
 
-In next step try to login.
+If you have the correct url, now try use login method. (There is no need to use this method later. Logging is going on in the background e.g. `OdooClient`, `OdooRepository`)
 ```C#
 var loginResult = await odooClient.LoginAsync();
 ```

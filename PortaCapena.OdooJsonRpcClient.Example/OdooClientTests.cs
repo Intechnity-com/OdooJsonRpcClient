@@ -178,14 +178,14 @@ namespace PortaCapena.OdooJsonRpcClient.Example
                     x.Description,
                     x.WriteDate
                 })
-                .Where(x => x.Name, OdooOperator.EqualsTo, "Bioboxen 610l")
+               // .Where(x => x.Name, OdooOperator.EqualsTo, "Bioboxen 610l")
                 .Where(x => x.WriteDate, OdooOperator.GreaterThanOrEqualTo, new DateTime(2020, 12, 2));
 
             var products = await odooClient.GetAsync<ProductProductOdooModel>(filters);
 
             products.Error.Should().BeNull();
             products.Value.Should().NotBeNull();
-        //    products.Value.Length.Should().Be(1);
+            products.Value.Length.Should().BeGreaterThan(0);
             products.Succeed.Should().BeTrue();
         }
 
