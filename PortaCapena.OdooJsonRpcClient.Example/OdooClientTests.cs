@@ -64,14 +64,12 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         {
             var odoorepository = new OdooRepository<ResCountryOdooModel>(TestConfig);
 
-            var products = await odoorepository.Query().Where(x => x.XStudioIsInEu, OdooOperator.EqualsTo, true).ToListAsync();
+            var products = await odoorepository.Query().ToListAsync();
 
             products.Error.Should().BeNull();
             products.Value.Should().NotBeNull();
             products.Value.Length.Should().BeGreaterThan(0);
             products.Succeed.Should().BeTrue();
-
-            var dupa = products.Value.Where(x => x.XStudioIsInEu == true).ToList();
         }
 
         [Fact]
@@ -80,7 +78,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             var odooClient = new OdooClient(TestConfig);
 
             var query = OdooQuery<ProductProductOdooModel>.Create()
-                .Where(x => x.Id, OdooOperator.EqualsTo, 303);
+                .Where(x => x.Id, OdooOperator.EqualsTo, 1);
 
             var products = await odooClient.GetAsync<ProductProductOdooModel>(query);
 

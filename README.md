@@ -224,14 +224,20 @@ To make Your queries faster use `Select` method and get only fields that U are i
 
 
 ### OdooFilter
-For more advanced queries U can use `OdooFilter`. To use `or` try:
+For more advanced queries U can use `OdooFilter` or OdooFilterOfT. To use `or` try:
 ```C#
+var filter = OdooFilter<ResCompanyOdooModel>.Create()
+                .Or()
+                .EqualTo(x => x.Name, "My Company (San Francisco)")
+                .EqualTo(x => x.Name, "PL Company");    
+
+var filter = OdooFilter.Create()
+                .Or()
+                .EqualTo("name", "My Company (San Francisco)")
+                .EqualTo("name", "PL Company");
+
 var products = await repository.Query()
-               .Where(
-                  OdooFilter.Create()
-                     .Or()
-                     .EqualTo("name", "My Company (San Francisco)")
-                     .EqualTo("name", "PL Company"))
+               .Where(filter)
                .ToListAsync();
 ```
 

@@ -48,7 +48,8 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             products.Value.Should().NotBeEmpty();
         }
 
-        [Fact]
+        [Fact(Skip = "Test for working on Odoo")]
+        //   [Fact]
         public async Task Can_get_product_with_deep_secound_level_where()
         {
             var repository = new OdooRepository<ProductProductOdooModel>(TestConfig);
@@ -68,7 +69,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         {
             var repository = new OdooRepository<ProductProductOdooModel>(TestConfig);
             var products = await repository.Query()
-                .ById(66)
+                .ById(1)
                 .Select(x => new { x.Name })
                 .FirstOrDefaultAsync();
 
@@ -77,22 +78,8 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             products.Succeed.Should().BeTrue();
         }
 
-        [Fact]
-        public async Task Can_get_all_OdooVoucher()
-        {
-            var repository = new OdooRepository<CouponProgramOdooDto>(TestConfig);
-
-            var products = await repository.Query()
-                .SelectSimplifiedModel()
-                .FirstOrDefaultAsync();
-
-            products.Error.Should().BeNull();
-            products.Value.Should().NotBeNull();
-            products.Succeed.Should().BeTrue();
-        }
-
-
-        [Fact]
+        [Fact(Skip = "Test for working on Odoo")]
+        //   [Fact]
         public async Task Can_get_product_with_selected_language_uning_query()
         {
             var repository = new OdooRepository<ProductProductOdooModel>(TestConfig);
@@ -122,7 +109,8 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             productWithoutLanguage.Value.Name.Should().NotContain("Dutch");
         }
 
-        [Fact]
+        [Fact(Skip = "Test for working on Odoo")]
+        //   [Fact]
         public async Task Can_get_product_with_selected_language_using_repository_init()
         {
             var confing = new OdooConfig(TestConfig.ApiUrl, TestConfig.DbName, TestConfig.UserName, TestConfig.Password, "nl_BE");
@@ -166,7 +154,8 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             product3.Value.Name.Should().Contain("Dutch");
         }
 
-        [Fact]
+        [Fact(Skip = "Test for working on Odoo")]
+        //   [Fact]
         public async Task Can_get_product_with_selected_language_using_repository_prop()
         {
             var repository = new OdooRepository<ProductProductOdooModel>(TestConfig);
