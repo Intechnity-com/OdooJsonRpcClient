@@ -1,5 +1,8 @@
 # PortaCapena.OdooJsonRpcClient
 
+[![NuGet package](https://img.shields.io/nuget/v/PortaCapena.OdooJsonRpcClient?color=blue&logo=NuGet&label=NuGet%20Package)](https://www.nuget.org/packages/PortaCapena.OdooJsonRpcClient)
+[![Nuget](https://img.shields.io/nuget/dt/PortaCapena.OdooJsonRpcClient?logo=NuGet&label=Downloads)](https://www.nuget.org/packages/PortaCapena.OdooJsonRpcClient)
+
 OdooJsonRpcClient is a C# library (.NET Standard) for communication with Odoo.
 
 [Porta Capena - Odoo Partner](https://www.odoo.com/partners/porta-capena-3710126)
