@@ -40,6 +40,12 @@ namespace PortaCapena.OdooJsonRpcClient.Models
             set => SetValue("force_company", value);
         }
 
+        public long[] AllowedCompanyIds
+        {
+            get => TryGetValue("allowed_company_ids", out var result) ? result as long[] : default;
+            set => SetValue("allowed_company_ids", value);
+        }
+
 
         public OdooContext() { }
 
