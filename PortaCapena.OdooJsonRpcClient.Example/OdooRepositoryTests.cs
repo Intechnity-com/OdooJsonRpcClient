@@ -117,7 +117,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             var repository = new OdooRepository<ProductProductOdooModel>(confing);
 
             var product = await repository.Query()
-                .ById(282)
+                .ById(23)
                 .FirstOrDefaultAsync();
 
             product.Error.Should().BeNull();
@@ -126,7 +126,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             product.Value.Name.Should().Contain("Dutch");
 
             var product2 = await repository.Query()
-                .ById(282)
+                .ById(23)
                 .FirstOrDefaultAsync();
 
             product2.Error.Should().BeNull();
@@ -198,5 +198,24 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             product3.Succeed.Should().BeTrue();
             product3.Value.Name.Should().Contain("Dutch");
         }
+
+
+
+        [Fact]
+        public async Task Can_get_AccountPaymentTermOdooModel_by_id()
+        {
+            var repository = new OdooRepository<ResPartnerOdooModel>(TestConfig);
+            var context = new OdooContext() {ForceCompany = 3}; // 1 My Company (San Francisco), 2 PL Company, 3 My Company (Chicago) // default My Company (San Francisco)
+            var products = await repository.Query().ById(14)
+                .WithContext(context)
+                .FirstOrDefaultAsync();
+
+            products.Error.Should().BeNull();
+            products.Value.Should().NotBeNull();
+            products.Succeed.Should().BeTrue();
+
+            var dupa = products.Value.PropertyPaymentTermId;  // 7
+        }
+
     }
 }

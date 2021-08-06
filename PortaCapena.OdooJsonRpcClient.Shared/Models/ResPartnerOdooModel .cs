@@ -52,6 +52,10 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         [JsonProperty("tz_offset")]
         public string TzOffset { get; set; }
 
+        // res.users
+        [JsonProperty("user_id")]
+        public long? UserId { get; set; }
+
         [JsonProperty("vat")]
         public string Vat { get; set; }
 
@@ -114,8 +118,14 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         [JsonProperty("partner_longitude")]
         public double? PartnerLongitude { get; set; }
 
+        [JsonProperty("email")]
+        public string Email { get; set; }
+
         [JsonProperty("email_formatted")]
         public string EmailFormatted { get; set; }
+
+        [JsonProperty("phone")]
+        public string Phone { get; set; }
 
         [JsonProperty("mobile")]
         public string Mobile { get; set; }
@@ -164,14 +174,40 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         [JsonProperty("self")]
         public long? Self { get; set; }
 
-        [JsonProperty("street_name")]
-        public string StreetName { get; set; }
+        [JsonProperty("image_1920")]
+        public string Image1920 { get; set; }
 
-        [JsonProperty("street_number")]
-        public string StreetNumber { get; set; }
+        [JsonProperty("image_1024")]
+        public string Image1024 { get; set; }
 
-        [JsonProperty("street_number2")]
-        public string StreetNumber2 { get; set; }
+        [JsonProperty("image_512")]
+        public string Image512 { get; set; }
+
+        [JsonProperty("image_256")]
+        public string Image256 { get; set; }
+
+        [JsonProperty("image_128")]
+        public string Image128 { get; set; }
+
+        [JsonProperty("id")]
+        public long Id { get; set; }
+
+        // res.users
+        [JsonProperty("create_uid")]
+        public long? CreateUid { get; set; }
+
+        [JsonProperty("create_date")]
+        public DateTime? CreateDate { get; set; }
+
+        // res.users
+        [JsonProperty("write_uid")]
+        public long? WriteUid { get; set; }
+
+        [JsonProperty("write_date")]
+        public DateTime? WriteDate { get; set; }
+
+        [JsonProperty("__last_update")]
+        public DateTime? LastUpdate { get; set; }
 
         [JsonProperty("im_status")]
         public string ImStatus { get; set; }
@@ -259,25 +295,9 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         [JsonProperty("message_bounce")]
         public int? MessageBounce { get; set; }
 
-        [JsonProperty("email")]
-        public string Email { get; set; }
-
-        [JsonProperty("phone")]
-        public string Phone { get; set; }
-
         // mail.channel
         [JsonProperty("channel_ids")]
         public long[] ChannelIds { get; set; }
-
-        // res.users
-        [JsonProperty("user_id")]
-        public long? UserId { get; set; }
-
-        [JsonProperty("contact_address_complete")]
-        public string ContactAddressComplete { get; set; }
-
-        [JsonProperty("image_medium")]
-        public string ImageMedium { get; set; }
 
         [JsonProperty("signup_token")]
         public string SignupToken { get; set; }
@@ -313,9 +333,6 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         // crm.team
         [JsonProperty("team_id")]
         public long? TeamId { get; set; }
-
-        [JsonProperty("ocn_token")]
-        public string OcnToken { get; set; }
 
         [JsonProperty("partner_gid")]
         public int? PartnerGid { get; set; }
@@ -407,11 +424,19 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         [JsonProperty("customer_rank")]
         public int? CustomerRank { get; set; }
 
-        [JsonProperty("online_partner_vendor_name")]
-        public string OnlinePartnerVendorName { get; set; }
+        // stock.location
+        [JsonProperty("property_stock_customer")]
+        public long? PropertyStockCustomer { get; set; }
 
-        [JsonProperty("online_partner_bank_account")]
-        public string OnlinePartnerBankAccount { get; set; }
+        // stock.location
+        [JsonProperty("property_stock_supplier")]
+        public long? PropertyStockSupplier { get; set; }
+
+        [JsonProperty("picking_warn")]
+        public StockPickingResPartnerOdooEnum? PickingWarn { get; set; }
+
+        [JsonProperty("picking_warn_msg")]
+        public string PickingWarnMsg { get; set; }
 
         // payment.token
         [JsonProperty("payment_token_ids")]
@@ -442,8 +467,12 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         [JsonProperty("reminder_date_before_receipt")]
         public int? ReminderDateBeforeReceipt { get; set; }
 
-        [JsonProperty("online_partner_information")]
-        public string OnlinePartnerInformation { get; set; }
+        // purchase.order.line
+        [JsonProperty("purchase_line_ids")]
+        public long[] PurchaseLineIds { get; set; }
+
+        [JsonProperty("on_time_rate")]
+        public double? OnTimeRate { get; set; }
 
         [JsonProperty("sale_order_count")]
         public int? SaleOrderCount { get; set; }
@@ -457,102 +486,6 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
 
         [JsonProperty("sale_warn_msg")]
         public string SaleWarnMsg { get; set; }
-
-        [JsonProperty("payment_next_action_date")]
-        public DateTime? PaymentNextActionDate { get; set; }
-
-        // account.move.line
-        [JsonProperty("unreconciled_aml_ids")]
-        public long[] UnreconciledAmlIds { get; set; }
-
-        // account.move
-        [JsonProperty("unpaid_invoices")]
-        public long[] UnpaidInvoices { get; set; }
-
-        [JsonProperty("total_due")]
-        public decimal? TotalDue { get; set; }
-
-        [JsonProperty("total_overdue")]
-        public decimal? TotalOverdue { get; set; }
-
-        [JsonProperty("followup_status")]
-        public FollowUpStatusResPartnerOdooEnum? FollowupStatus { get; set; }
-
-        // account_followup.followup.line
-        [JsonProperty("followup_level")]
-        public long? FollowupLevel { get; set; }
-
-        // res.users
-        [JsonProperty("payment_responsible_id")]
-        public long? PaymentResponsibleId { get; set; }
-
-        [JsonProperty("citizen_identification")]
-        public string CitizenIdentification { get; set; }
-
-        [JsonProperty("form_file")]
-        public string FormFile { get; set; }
-
-        [JsonProperty("image_1920")]
-        public string Image1920 { get; set; }
-
-        [JsonProperty("image_1024")]
-        public string Image1024 { get; set; }
-
-        [JsonProperty("image_512")]
-        public string Image512 { get; set; }
-
-        [JsonProperty("image_256")]
-        public string Image256 { get; set; }
-
-        [JsonProperty("image_128")]
-        public string Image128 { get; set; }
-
-        [JsonProperty("id")]
-        public long Id { get; set; }
-
-        // res.users
-        [JsonProperty("create_uid")]
-        public long? CreateUid { get; set; }
-
-        [JsonProperty("create_date")]
-        public DateTime? CreateDate { get; set; }
-
-        // res.users
-        [JsonProperty("write_uid")]
-        public long? WriteUid { get; set; }
-
-        [JsonProperty("write_date")]
-        public DateTime? WriteDate { get; set; }
-
-        [JsonProperty("__last_update")]
-        public DateTime? LastUpdate { get; set; }
-
-        [JsonProperty("x_studio_fenix_update_2")]
-        public bool? XStudioFenixUpdate2 { get; set; }
-
-        [JsonProperty("x_studio_fenix_update_1")]
-        public bool? XStudioFenixUpdate1 { get; set; }
-
-        [JsonProperty("x_studio_fenix_update")]
-        public bool? XStudioFenixUpdate { get; set; }
-
-        [JsonProperty("x_studio_field_diferent_company")]
-        public string XStudioFieldDiferentCompany { get; set; }
-
-        [JsonProperty("x_studio_exact_debtor_id")]
-        public string XStudioExactDebtorId { get; set; }
-
-        [JsonProperty("x_studio_paper_invoice")]
-        public bool? XStudioPaperInvoice { get; set; }
-
-        [JsonProperty("x_studio_exact_creditor_id")]
-        public string XStudioExactCreditorId { get; set; }
-
-        [JsonProperty("x_studio_should_send_to_exact")]
-        public bool? XStudioShouldSendToExact { get; set; }
-
-        [JsonProperty("x_studio_fenix_iban_1")]
-        public string XStudioFenixIban1 { get; set; }
     }
 
 
@@ -560,14 +493,8 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
     [JsonConverter(typeof(StringEnumConverter))]
     public enum LanguageResPartnerOdooEnum
     {
-        [EnumMember(Value = "nl_BE")]
-        DutchBENederlandsBE = 1,
-
         [EnumMember(Value = "en_US")]
-        EnglishUS = 2,
-
-        [EnumMember(Value = "fr_BE")]
-        FrenchBEFranAisBE = 3,
+        EnglishUS = 1,
     }
 
 
@@ -1948,6 +1875,7 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         [EnumMember(Value = "GMT-0")]
         GMT0 = 457,
 
+
         [EnumMember(Value = "Greenwich")]
         Greenwich = 459,
 
@@ -2332,6 +2260,7 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         [EnumMember(Value = "Etc/GMT-9")]
         EtcGMT9 = 586,
 
+      
         [EnumMember(Value = "Etc/Greenwich")]
         EtcGreenwich = 588,
 
@@ -2442,6 +2371,21 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
 
     // Selecting the "Warning" option will notify user with the message, Selecting "Blocking Message" will throw an exception with the message and block the flow. The Message has to be written in the next field.
     [JsonConverter(typeof(StringEnumConverter))]
+    public enum StockPickingResPartnerOdooEnum
+    {
+        [EnumMember(Value = "no-message")]
+        NoMessage = 1,
+
+        [EnumMember(Value = "warning")]
+        Warning = 2,
+
+        [EnumMember(Value = "block")]
+        BlockingMessage = 3,
+    }
+
+
+    // Selecting the "Warning" option will notify user with the message, Selecting "Blocking Message" will throw an exception with the message and block the flow. The Message has to be written in the next field.
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum PurchaseOrderResPartnerOdooEnum
     {
         [EnumMember(Value = "no-message")]
@@ -2467,20 +2411,6 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
 
         [EnumMember(Value = "block")]
         BlockingMessage = 3,
-    }
-
-
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum FollowUpStatusResPartnerOdooEnum
-    {
-        [EnumMember(Value = "in_need_of_action")]
-        InNeedOfAction = 1,
-
-        [EnumMember(Value = "with_overdue_invoices")]
-        WithOverdueInvoices = 2,
-
-        [EnumMember(Value = "no_action_needed")]
-        NoActionNeeded = 3,
     }
 
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace PortaCapena.OdooJsonRpcClient.Models
 {
@@ -38,6 +39,12 @@ namespace PortaCapena.OdooJsonRpcClient.Models
         {
             get => TryGetValue("force_company", out var result) ? result as long? : default;
             set => SetValue("force_company", value);
+        }
+
+        public long? AllowedCompanyId
+        {
+            get => TryGetValue("allowed_company_ids", out var result) ? (result as long[])?.FirstOrDefault() : default;
+            set => SetValue("allowed_company_ids", value.HasValue ? new long[] { value.Value } : default);
         }
 
 
