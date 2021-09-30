@@ -13,7 +13,7 @@
 
         public OdooConfig(string apiUrl, string dbName, string userName, string password)
         {
-            this.ApiUrl = apiUrl;
+            this.ApiUrl = apiUrl.TrimEnd(new[] { '/' });
             this.DbName = dbName;
             this.UserName = userName;
             this.Password = password;

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using FluentAssertions;
 using PortaCapena.OdooJsonRpcClient.Models;
 using Xunit;
