@@ -62,6 +62,15 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                     result = ConvertToDotNetEnum(nullableType, value);
                     return true;
 
+                case JTokenType.String when dotnetType == typeof(string[]):
+                    if (!value.HasValues)
+                    {
+                        result = Activator.CreateInstance(dotnetType, 0);
+                        return true;
+                    }
+                    result = value.ToObject(dotnetType);
+                    return true;
+
                 case JTokenType.Array when dotnetType.IsArray:
                     if (!value.HasValues)
                     {

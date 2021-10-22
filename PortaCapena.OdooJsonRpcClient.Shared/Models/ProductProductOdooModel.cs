@@ -12,6 +12,7 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
     [JsonConverter(typeof(OdooModelConverter))]
     public class ProductProductOdooModel : IOdooModel
     {
+
         // mail.activity
         [JsonProperty("activity_ids")]
         public long[] ActivityIds { get; set; }
@@ -19,14 +20,81 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         [JsonProperty("activity_state")]
         public ActivityStateProductProductOdooEnum? ActivityState { get; set; }
 
+        // res.users
+        [JsonProperty("activity_user_id")]
+        public long? ActivityUserId { get; set; }
+
+        // mail.activity.type
+        [JsonProperty("activity_type_id")]
+        public long? ActivityTypeId { get; set; }
+
+        [JsonProperty("activity_type_icon")]
+        public string ActivityTypeIcon { get; set; }
+
         [JsonProperty("activity_date_deadline")]
         public DateTime? ActivityDateDeadline { get; set; }
+
+        [JsonProperty("my_activity_date_deadline")]
+        public DateTime? MyActivityDateDeadline { get; set; }
+
+        [JsonProperty("activity_summary")]
+        public string ActivitySummary { get; set; }
 
         [JsonProperty("activity_exception_decoration")]
         public ActivityExceptionDecorationProductProductOdooEnum? ActivityExceptionDecoration { get; set; }
 
         [JsonProperty("activity_exception_icon")]
         public string ActivityExceptionIcon { get; set; }
+
+        [JsonProperty("message_is_follower")]
+        public bool? MessageIsFollower { get; set; }
+
+        // mail.followers
+        [JsonProperty("message_follower_ids")]
+        public long[] MessageFollowerIds { get; set; }
+
+        // res.partner
+        [JsonProperty("message_partner_ids")]
+        public long[] MessagePartnerIds { get; set; }
+
+        // mail.message
+        [JsonProperty("message_ids")]
+        public long[] MessageIds { get; set; }
+
+        [JsonProperty("has_message")]
+        public bool? HasMessage { get; set; }
+
+        [JsonProperty("message_unread")]
+        public bool? MessageUnread { get; set; }
+
+        [JsonProperty("message_unread_counter")]
+        public int? MessageUnreadCounter { get; set; }
+
+        [JsonProperty("message_needaction")]
+        public bool? MessageNeedaction { get; set; }
+
+        [JsonProperty("message_needaction_counter")]
+        public int? MessageNeedactionCounter { get; set; }
+
+        [JsonProperty("message_has_error")]
+        public bool? MessageHasError { get; set; }
+
+        [JsonProperty("message_has_error_counter")]
+        public int? MessageHasErrorCounter { get; set; }
+
+        [JsonProperty("message_attachment_count")]
+        public int? MessageAttachmentCount { get; set; }
+
+        // ir.attachment
+        [JsonProperty("message_main_attachment_id")]
+        public long? MessageMainAttachmentId { get; set; }
+
+        // mail.message
+        [JsonProperty("website_message_ids")]
+        public long[] WebsiteMessageIds { get; set; }
+
+        [JsonProperty("message_has_sms_error")]
+        public bool? MessageHasSmsError { get; set; }
 
         [JsonProperty("price")]
         public double? Price { get; set; }
@@ -60,6 +128,10 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         // product.template.attribute.value
         [JsonProperty("product_template_attribute_value_ids")]
         public long[] ProductTemplateAttributeValueIds { get; set; }
+
+        // product.template.attribute.value
+        [JsonProperty("product_template_variant_value_ids")]
+        public long[] ProductTemplateVariantValueIds { get; set; }
 
         [JsonProperty("combination_indices")]
         public string CombinationIndices { get; set; }
@@ -119,56 +191,31 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         [JsonProperty("can_image_1024_be_zoomed")]
         public bool? CanImage1024BeZoomed { get; set; }
 
-        [JsonProperty("message_is_follower")]
-        public bool? MessageIsFollower { get; set; }
+        [JsonProperty("id")]
+        public long Id { get; set; }
 
-        // mail.followers
-        [JsonProperty("message_follower_ids")]
-        public long[] MessageFollowerIds { get; set; }
+        [JsonProperty("__last_update")]
+        public DateTime? LastUpdate { get; set; }
 
-        // res.partner
-        [JsonProperty("message_partner_ids")]
-        public long[] MessagePartnerIds { get; set; }
+        [JsonProperty("display_name")]
+        public string DisplayName { get; set; }
 
-        // mail.channel
-        [JsonProperty("message_channel_ids")]
-        public long[] MessageChannelIds { get; set; }
+        // res.users
+        [JsonProperty("create_uid")]
+        public long? CreateUid { get; set; }
 
-        // mail.message
-        [JsonProperty("message_ids")]
-        public long[] MessageIds { get; set; }
+        [JsonProperty("create_date")]
+        public DateTime? CreateDate { get; set; }
 
-        [JsonProperty("message_unread")]
-        public bool? MessageUnread { get; set; }
+        // res.users
+        [JsonProperty("write_uid")]
+        public long? WriteUid { get; set; }
 
-        [JsonProperty("message_unread_counter")]
-        public int? MessageUnreadCounter { get; set; }
+        [JsonProperty("write_date")]
+        public DateTime? WriteDate { get; set; }
 
-        [JsonProperty("message_needaction")]
-        public bool? MessageNeedaction { get; set; }
-
-        [JsonProperty("message_needaction_counter")]
-        public int? MessageNeedactionCounter { get; set; }
-
-        [JsonProperty("message_has_error")]
-        public bool? MessageHasError { get; set; }
-
-        [JsonProperty("message_has_error_counter")]
-        public int? MessageHasErrorCounter { get; set; }
-
-        [JsonProperty("message_attachment_count")]
-        public int? MessageAttachmentCount { get; set; }
-
-        // ir.attachment
-        [JsonProperty("message_main_attachment_id")]
-        public long? MessageMainAttachmentId { get; set; }
-
-        // mail.message
-        [JsonProperty("website_message_ids")]
-        public long[] WebsiteMessageIds { get; set; }
-
-        [JsonProperty("message_has_sms_error")]
-        public bool? MessageHasSmsError { get; set; }
+        [JsonProperty("purchased_product_qty")]
+        public double? PurchasedProductQty { get; set; }
 
         [JsonProperty("sales_count")]
         public double? SalesCount { get; set; }
@@ -200,6 +247,12 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         [JsonProperty("orderpoint_ids")]
         public long[] OrderpointIds { get; set; }
 
+        [JsonProperty("nbr_moves_in")]
+        public int? NbrMovesIn { get; set; }
+
+        [JsonProperty("nbr_moves_out")]
+        public int? NbrMovesOut { get; set; }
+
         [JsonProperty("nbr_reordering_rules")]
         public int? NbrReorderingRules { get; set; }
 
@@ -212,6 +265,16 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         // stock.putaway.rule
         [JsonProperty("putaway_rule_ids")]
         public long[] PutawayRuleIds { get; set; }
+
+        // stock.storage.category.capacity
+        [JsonProperty("storage_category_capacity_ids")]
+        public long[] StorageCategoryCapacityIds { get; set; }
+
+        [JsonProperty("show_on_hand_qty_status_button")]
+        public bool? ShowOnHandQtyStatusButton { get; set; }
+
+        [JsonProperty("show_forecasted_qty_status_button")]
+        public bool? ShowForecastedQtyStatusButton { get; set; }
 
         [JsonProperty("value_svl")]
         public double? ValueSvl { get; set; }
@@ -229,49 +292,9 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         [JsonProperty("cost_method")]
         public CostingMethodProductProductOdooEnum? CostMethod { get; set; }
 
-        // res.users
-        [JsonProperty("activity_user_id")]
-        public long? ActivityUserId { get; set; }
-
-        // mail.activity.type
-        [JsonProperty("activity_type_id")]
-        public long? ActivityTypeId { get; set; }
-
-        [JsonProperty("activity_type_icon")]
-        public string ActivityTypeIcon { get; set; }
-
-        [JsonProperty("activity_summary")]
-        public string ActivitySummary { get; set; }
-
-        [JsonProperty("purchased_product_qty")]
-        public double? PurchasedProductQty { get; set; }
-
         // purchase.order.line
         [JsonProperty("purchase_order_line_ids")]
         public long[] PurchaseOrderLineIds { get; set; }
-
-        [JsonProperty("id")]
-        public long Id { get; set; }
-
-        [JsonProperty("display_name")]
-        public string DisplayName { get; set; }
-
-        // res.users
-        [JsonProperty("create_uid")]
-        public long? CreateUid { get; set; }
-
-        [JsonProperty("create_date")]
-        public DateTime? CreateDate { get; set; }
-
-        // res.users
-        [JsonProperty("write_uid")]
-        public long? WriteUid { get; set; }
-
-        [JsonProperty("write_date")]
-        public DateTime? WriteDate { get; set; }
-
-        [JsonProperty("__last_update")]
-        public DateTime? LastUpdate { get; set; }
 
         // required
         [JsonProperty("name")]
@@ -288,6 +311,13 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
 
         [JsonProperty("description_sale")]
         public string DescriptionSale { get; set; }
+
+        // required
+        [JsonProperty("detailed_type")]
+        public ProductTypeProductProductOdooEnum DetailedType { get; set; }
+
+        [JsonProperty("type")]
+        public TypeProductProductOdooEnum? Type { get; set; }
 
         // product.category
         // required
@@ -372,9 +402,18 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         [JsonProperty("has_configurable_attributes")]
         public bool? HasConfigurableAttributes { get; set; }
 
+        [JsonProperty("product_tooltip")]
+        public string ProductTooltip { get; set; }
+
+        [JsonProperty("priority")]
+        public FavoriteProductProductOdooEnum? Priority { get; set; }
+
         // account.tax
         [JsonProperty("taxes_id")]
         public long[] TaxesId { get; set; }
+
+        [JsonProperty("tax_string")]
+        public string TaxString { get; set; }
 
         // account.tax
         [JsonProperty("supplier_taxes_id")]
@@ -387,6 +426,24 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         // account.account
         [JsonProperty("property_account_expense_id")]
         public long? PropertyAccountExpenseId { get; set; }
+
+        // account.account.tag
+        [JsonProperty("account_tag_ids")]
+        public long[] AccountTagIds { get; set; }
+
+        // account.account
+        [JsonProperty("property_account_creditor_price_difference")]
+        public long? PropertyAccountCreditorPriceDifference { get; set; }
+
+        [JsonProperty("purchase_method")]
+        public ControlPolicyProductProductOdooEnum? PurchaseMethod { get; set; }
+
+        // required
+        [JsonProperty("purchase_line_warn")]
+        public PurchaseOrderLineWarningProductProductOdooEnum PurchaseLineWarn { get; set; }
+
+        [JsonProperty("purchase_line_warn_msg")]
+        public string PurchaseLineWarnMsg { get; set; }
 
         [JsonProperty("service_type")]
         public TrackServiceProductProductOdooEnum? ServiceType { get; set; }
@@ -410,13 +467,12 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         [JsonProperty("invoice_policy")]
         public InvoicingPolicyProductProductOdooEnum? InvoicePolicy { get; set; }
 
+        [JsonProperty("service_to_purchase")]
+        public bool? ServiceToPurchase { get; set; }
+
         // res.users
         [JsonProperty("responsible_id")]
         public long? ResponsibleId { get; set; }
-
-        // required
-        [JsonProperty("type")]
-        public ProductTypeProductProductOdooEnum Type { get; set; }
 
         // stock.location
         [JsonProperty("property_stock_production")]
@@ -454,29 +510,12 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         public bool? HasAvailableRouteIds { get; set; }
 
         // stock.location.route
-        [JsonProperty("route_from_categ_ids")]
-        public long[] RouteFromCategIds { get; set; }
-
-        // account.account
-        [JsonProperty("property_account_creditor_price_difference")]
-        public long? PropertyAccountCreditorPriceDifference { get; set; }
-
-        [JsonProperty("purchase_method")]
-        public ControlPolicyProductProductOdooEnum? PurchaseMethod { get; set; }
-
-        // required
-        [JsonProperty("purchase_line_warn")]
-        public PurchaseOrderLineWarningProductProductOdooEnum PurchaseLineWarn { get; set; }
-
-        [JsonProperty("purchase_line_warn_msg")]
-        public string PurchaseLineWarnMsg { get; set; }
-
-        // stock.location.route
         [JsonProperty("route_ids")]
         public long[] RouteIds { get; set; }
 
-        [JsonProperty("service_to_purchase")]
-        public bool? ServiceToPurchase { get; set; }
+        // stock.location.route
+        [JsonProperty("route_from_categ_ids")]
+        public long[] RouteFromCategIds { get; set; }
     }
 
 
@@ -542,6 +581,76 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
     }
 
 
+    // A storable product is a product for which you manage stock. The Inventory app has to be installed.
+    // A consumable product is a product for which stock is not managed.
+    // A service is a non-material product you provide.
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum ProductTypeProductProductOdooEnum
+    {
+        [EnumMember(Value = "consu")]
+        Consumable = 1,
+
+        [EnumMember(Value = "service")]
+        Service = 2,
+
+        [EnumMember(Value = "product")]
+        StorableProduct = 3,
+    }
+
+
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum TypeProductProductOdooEnum
+    {
+        [EnumMember(Value = "consu")]
+        Consumable = 1,
+
+        [EnumMember(Value = "service")]
+        Service = 2,
+
+        [EnumMember(Value = "product")]
+        StorableProduct = 3,
+    }
+
+
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum FavoriteProductProductOdooEnum
+    {
+        [EnumMember(Value = "0")]
+        Normal = 1,
+
+        [EnumMember(Value = "1")]
+        Favorite = 2,
+    }
+
+
+    // On ordered quantities: Control bills based on ordered quantities.
+    // On received quantities: Control bills based on received quantities.
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum ControlPolicyProductProductOdooEnum
+    {
+        [EnumMember(Value = "purchase")]
+        OnOrderedQuantities = 1,
+
+        [EnumMember(Value = "receive")]
+        OnReceivedQuantities = 2,
+    }
+
+
+    // Selecting the "Warning" option will notify user with the message, Selecting "Blocking Message" will throw an exception with the message and block the flow. The Message has to be written in the next field.
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum PurchaseOrderLineWarningProductProductOdooEnum
+    {
+        [EnumMember(Value = "no-message")]
+        NoMessage = 1,
+
+        [EnumMember(Value = "warning")]
+        Warning = 2,
+
+        [EnumMember(Value = "block")]
+        BlockingMessage = 3,
+    }
+
+
     // Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.
     // Timesheets on contract: Invoice based on the tracked hours on the related timesheet.
     // Create a task and track hours: Create a task on the sales order validation and track the work hours.
@@ -596,23 +705,6 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
     }
 
 
-    // A storable product is a product for which you manage stock. The Inventory app has to be installed.
-    // A consumable product is a product for which stock is not managed.
-    // A service is a non-material product you provide.
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum ProductTypeProductProductOdooEnum
-    {
-        [EnumMember(Value = "consu")]
-        Consumable = 1,
-
-        [EnumMember(Value = "service")]
-        Service = 2,
-
-        [EnumMember(Value = "product")]
-        StorableProduct = 3,
-    }
-
-
     // Ensure the traceability of a storable product in your warehouse.
     [JsonConverter(typeof(StringEnumConverter))]
     public enum TrackingProductProductOdooEnum
@@ -625,34 +717,6 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
 
         [EnumMember(Value = "none")]
         NoTracking = 3,
-    }
-
-
-    // On ordered quantities: Control bills based on ordered quantities.
-    // On received quantities: Control bills based on received quantities.
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum ControlPolicyProductProductOdooEnum
-    {
-        [EnumMember(Value = "purchase")]
-        OnOrderedQuantities = 1,
-
-        [EnumMember(Value = "receive")]
-        OnReceivedQuantities = 2,
-    }
-
-
-    // Selecting the "Warning" option will notify user with the message, Selecting "Blocking Message" will throw an exception with the message and block the flow. The Message has to be written in the next field.
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum PurchaseOrderLineWarningProductProductOdooEnum
-    {
-        [EnumMember(Value = "no-message")]
-        NoMessage = 1,
-
-        [EnumMember(Value = "warning")]
-        Warning = 2,
-
-        [EnumMember(Value = "block")]
-        BlockingMessage = 3,
     }
 
 }
