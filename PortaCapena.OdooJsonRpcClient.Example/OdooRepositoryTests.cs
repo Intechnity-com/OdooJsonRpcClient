@@ -76,6 +76,16 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         }
 
         [Fact]
+        public async Task Can_get_first_or_default_product_by_id()
+        {
+            var repository = new OdooRepository<ProductProductOdooModel>(TestConfig);
+            var result = await repository.Query().ById(5).FirstOrDefaultAsync();
+
+            result.Succeed.Should().BeTrue();
+            result.Error.Should().BeNull();
+        }
+
+        [Fact]
         public async Task Can_get_product_by_id()
         {
             var repository = new OdooRepository<ProductProductOdooModel>(TestConfig);

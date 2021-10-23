@@ -5,7 +5,7 @@ using PortaCapena.OdooJsonRpcClient.Converters;
 namespace PortaCapena.OdooJsonRpcClient.Models
 {
     [JsonConverter(typeof(OdooModelConverter))]
-    public class OdooPropertyInfo
+    public class OdooPropertyInfo : IOdooAtributtesModel
     {
         [JsonProperty("type")]
         public string Type { get; set; }
@@ -29,7 +29,7 @@ namespace PortaCapena.OdooJsonRpcClient.Models
         public bool Readonly { get; set; }
 
         [JsonProperty("required")]
-        public bool ResultRequired { get; set; }
+        public bool Required { get; set; }
 
         [JsonProperty("searchable")]
         public bool Searchable { get; set; }

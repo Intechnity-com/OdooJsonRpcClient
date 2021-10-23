@@ -30,44 +30,11 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             result.Succeed.Should().BeTrue();
         }
 
-
         [Fact]
         public async Task Get_DotNet_model_should_return_string()
         {
             var odooClient = new OdooClient(TestConfig);
             var tableName = "product.product";
-            var modelResult = await odooClient.GetModelAsync(tableName);
-
-            modelResult.Succeed.Should().BeTrue();
-
-            var model = OdooModelMapper.GetDotNetModel(tableName, modelResult.Value);
-        }
-
-        [Theory]
-        [InlineData("account.account")]
-        [InlineData("account.account.type")]
-        [InlineData("account.move.line")]
-        [InlineData("account.move")]
-        [InlineData("account.payment.term")]
-        [InlineData("account.tax")]
-        [InlineData("res.company")]
-        [InlineData("coupon.program")]
-        [InlineData("product.pricelist")]
-        [InlineData("product.product")]
-        [InlineData("product.template")]
-        [InlineData("purchase.order.line")]
-        [InlineData("purchase.order")]
-        [InlineData("res.country")]
-        [InlineData("res.currency")]
-        [InlineData("res.partner.bank")]
-        [InlineData("res.partner")]
-        [InlineData("sale.order.line")]
-        [InlineData("sale.order")]
-        [InlineData("stock.picking.type")]
-        [InlineData("stock.production.lot")]
-        public async Task Get_DotNet_model_multiple_should_return_string(string tableName)
-        {
-            var odooClient = new OdooClient(TestConfig);
             var modelResult = await odooClient.GetModelAsync(tableName);
 
             modelResult.Succeed.Should().BeTrue();
@@ -81,7 +48,6 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             var odooClient = new OdooClient(TestConfig);
 
             var products = await odooClient.GetAsync<ProductProductOdooModel>();
-
 
             products.Error.Should().BeNull();
             products.Value.Should().NotBeNull();
@@ -289,6 +255,39 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             var deleteResult = await odooClient.DeleteAsync(customers.Value.First());
 
             deleteResult.Succeed.Should().BeTrue();
+        }
+
+
+        [Theory]
+        [InlineData("account.account")]
+        [InlineData("account.account.type")]
+        [InlineData("account.move.line")]
+        [InlineData("account.move")]
+        [InlineData("account.payment.term")]
+        [InlineData("account.tax")]
+        [InlineData("res.company")]
+        [InlineData("coupon.program")]
+        [InlineData("product.pricelist")]
+        [InlineData("product.product")]
+        [InlineData("product.template")]
+        [InlineData("purchase.order.line")]
+        [InlineData("purchase.order")]
+        [InlineData("res.country")]
+        [InlineData("res.currency")]
+        [InlineData("res.partner.bank")]
+        [InlineData("res.partner")]
+        [InlineData("sale.order.line")]
+        [InlineData("sale.order")]
+        [InlineData("stock.picking.type")]
+        [InlineData("stock.production.lot")]
+        public async Task Get_DotNet_model_multiple_should_return_string(string tableName)
+        {
+            var odooClient = new OdooClient(TestConfig);
+            var modelResult = await odooClient.GetModelAsync(tableName);
+
+            modelResult.Succeed.Should().BeTrue();
+
+            var model = OdooModelMapper.GetDotNetModel(tableName, modelResult.Value);
         }
 
 
