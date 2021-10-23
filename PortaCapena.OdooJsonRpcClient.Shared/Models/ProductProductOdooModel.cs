@@ -214,12 +214,6 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         [JsonProperty("write_date")]
         public DateTime? WriteDate { get; set; }
 
-        [JsonProperty("purchased_product_qty")]
-        public double? PurchasedProductQty { get; set; }
-
-        [JsonProperty("sales_count")]
-        public double? SalesCount { get; set; }
-
         // stock.quant
         [JsonProperty("stock_quant_ids")]
         public long[] StockQuantIds { get; set; }
@@ -291,6 +285,12 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
 
         [JsonProperty("cost_method")]
         public CostingMethodProductProductOdooEnum? CostMethod { get; set; }
+
+        [JsonProperty("sales_count")]
+        public double? SalesCount { get; set; }
+
+        [JsonProperty("purchased_product_qty")]
+        public double? PurchasedProductQty { get; set; }
 
         // purchase.order.line
         [JsonProperty("purchase_order_line_ids")]
@@ -431,45 +431,6 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         [JsonProperty("account_tag_ids")]
         public long[] AccountTagIds { get; set; }
 
-        // account.account
-        [JsonProperty("property_account_creditor_price_difference")]
-        public long? PropertyAccountCreditorPriceDifference { get; set; }
-
-        [JsonProperty("purchase_method")]
-        public ControlPolicyProductProductOdooEnum? PurchaseMethod { get; set; }
-
-        // required
-        [JsonProperty("purchase_line_warn")]
-        public PurchaseOrderLineWarningProductProductOdooEnum PurchaseLineWarn { get; set; }
-
-        [JsonProperty("purchase_line_warn_msg")]
-        public string PurchaseLineWarnMsg { get; set; }
-
-        [JsonProperty("service_type")]
-        public TrackServiceProductProductOdooEnum? ServiceType { get; set; }
-
-        // required
-        [JsonProperty("sale_line_warn")]
-        public SalesOrderLineProductProductOdooEnum SaleLineWarn { get; set; }
-
-        [JsonProperty("sale_line_warn_msg")]
-        public string SaleLineWarnMsg { get; set; }
-
-        [JsonProperty("expense_policy")]
-        public ReInvoiceExpensesProductProductOdooEnum? ExpensePolicy { get; set; }
-
-        [JsonProperty("visible_expense_policy")]
-        public bool? VisibleExpensePolicy { get; set; }
-
-        [JsonProperty("visible_qty_configurator")]
-        public bool? VisibleQtyConfigurator { get; set; }
-
-        [JsonProperty("invoice_policy")]
-        public InvoicingPolicyProductProductOdooEnum? InvoicePolicy { get; set; }
-
-        [JsonProperty("service_to_purchase")]
-        public bool? ServiceToPurchase { get; set; }
-
         // res.users
         [JsonProperty("responsible_id")]
         public long? ResponsibleId { get; set; }
@@ -516,6 +477,45 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
         // stock.location.route
         [JsonProperty("route_from_categ_ids")]
         public long[] RouteFromCategIds { get; set; }
+
+        [JsonProperty("service_type")]
+        public TrackServiceProductProductOdooEnum? ServiceType { get; set; }
+
+        // required
+        [JsonProperty("sale_line_warn")]
+        public SalesOrderLineProductProductOdooEnum SaleLineWarn { get; set; }
+
+        [JsonProperty("sale_line_warn_msg")]
+        public string SaleLineWarnMsg { get; set; }
+
+        [JsonProperty("expense_policy")]
+        public ReInvoiceExpensesProductProductOdooEnum? ExpensePolicy { get; set; }
+
+        [JsonProperty("visible_expense_policy")]
+        public bool? VisibleExpensePolicy { get; set; }
+
+        [JsonProperty("visible_qty_configurator")]
+        public bool? VisibleQtyConfigurator { get; set; }
+
+        [JsonProperty("invoice_policy")]
+        public InvoicingPolicyProductProductOdooEnum? InvoicePolicy { get; set; }
+
+        // account.account
+        [JsonProperty("property_account_creditor_price_difference")]
+        public long? PropertyAccountCreditorPriceDifference { get; set; }
+
+        [JsonProperty("purchase_method")]
+        public ControlPolicyProductProductOdooEnum? PurchaseMethod { get; set; }
+
+        // required
+        [JsonProperty("purchase_line_warn")]
+        public PurchaseOrderLineWarningProductProductOdooEnum PurchaseLineWarn { get; set; }
+
+        [JsonProperty("purchase_line_warn_msg")]
+        public string PurchaseLineWarnMsg { get; set; }
+
+        [JsonProperty("service_to_purchase")]
+        public bool? ServiceToPurchase { get; set; }
     }
 
 
@@ -623,31 +623,18 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
     }
 
 
-    // On ordered quantities: Control bills based on ordered quantities.
-    // On received quantities: Control bills based on received quantities.
+    // Ensure the traceability of a storable product in your warehouse.
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum ControlPolicyProductProductOdooEnum
+    public enum TrackingProductProductOdooEnum
     {
-        [EnumMember(Value = "purchase")]
-        OnOrderedQuantities = 1,
+        [EnumMember(Value = "serial")]
+        ByUniqueSerialNumber = 1,
 
-        [EnumMember(Value = "receive")]
-        OnReceivedQuantities = 2,
-    }
+        [EnumMember(Value = "lot")]
+        ByLots = 2,
 
-
-    // Selecting the "Warning" option will notify user with the message, Selecting "Blocking Message" will throw an exception with the message and block the flow. The Message has to be written in the next field.
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum PurchaseOrderLineWarningProductProductOdooEnum
-    {
-        [EnumMember(Value = "no-message")]
-        NoMessage = 1,
-
-        [EnumMember(Value = "warning")]
-        Warning = 2,
-
-        [EnumMember(Value = "block")]
-        BlockingMessage = 3,
+        [EnumMember(Value = "none")]
+        NoTracking = 3,
     }
 
 
@@ -705,18 +692,31 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
     }
 
 
-    // Ensure the traceability of a storable product in your warehouse.
+    // On ordered quantities: Control bills based on ordered quantities.
+    // On received quantities: Control bills based on received quantities.
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum TrackingProductProductOdooEnum
+    public enum ControlPolicyProductProductOdooEnum
     {
-        [EnumMember(Value = "serial")]
-        ByUniqueSerialNumber = 1,
+        [EnumMember(Value = "purchase")]
+        OnOrderedQuantities = 1,
 
-        [EnumMember(Value = "lot")]
-        ByLots = 2,
+        [EnumMember(Value = "receive")]
+        OnReceivedQuantities = 2,
+    }
 
-        [EnumMember(Value = "none")]
-        NoTracking = 3,
+
+    // Selecting the "Warning" option will notify user with the message, Selecting "Blocking Message" will throw an exception with the message and block the flow. The Message has to be written in the next field.
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum PurchaseOrderLineWarningProductProductOdooEnum
+    {
+        [EnumMember(Value = "no-message")]
+        NoMessage = 1,
+
+        [EnumMember(Value = "warning")]
+        Warning = 2,
+
+        [EnumMember(Value = "block")]
+        BlockingMessage = 3,
     }
 
 }
