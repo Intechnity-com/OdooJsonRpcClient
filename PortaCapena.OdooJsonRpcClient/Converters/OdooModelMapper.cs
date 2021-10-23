@@ -62,10 +62,6 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                     result = ConvertToDotNetEnum(nullableType, value);
                     return true;
 
-                case JTokenType.String when dotnetType == typeof(string[]):
-                    result = new string[] { value.ToString() };
-                    return true;
-
                 case JTokenType.Array when dotnetType.IsArray:
                     if (!value.HasValues)
                     {
@@ -79,6 +75,13 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                 case JTokenType.Array when !dotnetType.IsArray:
                     if (!value.HasValues)
                         return false;
+
+                    if (dotnetType == typeof(string) && value.Children().All(x => x.Type == JTokenType.String))
+                    {
+                        var stringArray = value.ToObject(typeof(string[])) as string[];
+                        result = string.Join(".", stringArray);
+                        return true;
+                    }
 
                     if (value.Count() > 2 || dotnetType != typeof(long) && dotnetType != typeof(long?) && dotnetType != typeof(int) && dotnetType != typeof(int?) || value.First.Type != JTokenType.Integer)
                         throw new Exception($"Not implemented json mapping '${value.Parent}'");

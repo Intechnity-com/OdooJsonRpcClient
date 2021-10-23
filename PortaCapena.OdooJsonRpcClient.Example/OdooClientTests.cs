@@ -75,7 +75,6 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             var model = OdooModelMapper.GetDotNetModel(tableName, modelResult.Value);
         }
 
-
         [Fact]
         public async Task Can_get_all_products()
         {

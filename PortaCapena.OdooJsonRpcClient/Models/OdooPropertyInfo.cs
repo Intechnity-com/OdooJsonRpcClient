@@ -10,6 +10,9 @@ namespace PortaCapena.OdooJsonRpcClient.Models
         [JsonProperty("type")]
         public string Type { get; set; }
 
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
         [JsonProperty("change_default")]
         public bool ChangeDefault { get; set; }
 
@@ -63,7 +66,7 @@ namespace PortaCapena.OdooJsonRpcClient.Models
         public string RelationField { get; set; }
 
         [JsonProperty("related")]
-        public string[] Related { get; set; }
+        public string Related { get; set; }
 
         [JsonProperty("group_operator")]
         public string GroupOperator { get; set; }

@@ -1,7 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Reflection;
+using System.Threading.Tasks;
 using FluentAssertions;
 using PortaCapena.OdooJsonRpcClient.Consts;
 using PortaCapena.OdooJsonRpcClient.Models;
+using PortaCapena.OdooJsonRpcClient.Request;
+using PortaCapena.OdooJsonRpcClient.Result;
 using PortaCapena.OdooJsonRpcClient.Shared;
 using PortaCapena.OdooJsonRpcClient.Shared.Models;
 using Xunit;
@@ -10,6 +14,55 @@ namespace PortaCapena.OdooJsonRpcClient.Example
 {
     public class OdooRepositoryTests : RequestTestBase
     {
+        [Theory]
+        [InlineData(typeof(ProductProductOdooModel))]
+        [InlineData(typeof(AccountAccountOdooModel))]
+        [InlineData(typeof(AccountAccountTypeOdooModel))]
+        [InlineData(typeof(AccountMoveLineOdooModel))]
+        [InlineData(typeof(AccountMoveOdooModel))]
+        [InlineData(typeof(AccountPaymentTermOdooModel))]
+        [InlineData(typeof(AccountTaxOdooModel))]
+        [InlineData(typeof(CompanyOdooDto))]
+        [InlineData(typeof(CouponProgramOdooDto))]
+        [InlineData(typeof(ProductPriceListOdooDto))]
+        [InlineData(typeof(ProductTemplateOdooDto))]
+        [InlineData(typeof(PurchaseOrderLineOdooModel))]
+        [InlineData(typeof(PurchaseOrderOdooModel))]
+        [InlineData(typeof(ResCompanyOdooModel))]
+        [InlineData(typeof(ResCountryOdooModel))]
+        [InlineData(typeof(ResCurrencyOdooModel))]
+        [InlineData(typeof(ResPartnerBankOdooModel))]
+        [InlineData(typeof(ResPartnerOdooModel))]
+        [InlineData(typeof(SaleOrderLineOdooDto))]
+        [InlineData(typeof(SaleOrderOdooModel))]
+        [InlineData(typeof(StockPickingTypeOdooModel))]
+        [InlineData(typeof(StockProductionLotOdooDto))]
+        public async Task Can_get_lists(Type type)
+        {
+            // arrange
+            var repositoryType = typeof(OdooRepository<>).MakeGenericType(new[] { type });
+            var queryBuilderType = typeof(OdooQueryBuilder<>).MakeGenericType(new[] { type });
+
+            var repository = Activator.CreateInstance(repositoryType, new object[] { TestConfig });
+
+            // act
+            var query = repositoryType.GetMethod("Query").Invoke(repository, null);
+
+            dynamic awaitable = queryBuilderType.GetMethod("ToListAsync").Invoke(query, null);
+
+            await awaitable;
+            var dynamicItems = awaitable.GetAwaiter().GetResult();
+
+            var resultType = typeof(OdooResult<>).MakeGenericType(new[] { type.MakeArrayType() });
+            var items = Convert.ChangeType(dynamicItems, resultType);
+
+            // assert
+            Assert.True(dynamicItems.Succeed, "result.Succeed");
+            Assert.Null(dynamicItems.Error);
+            Assert.NotNull(dynamicItems.Value);
+            Assert.NotEmpty(dynamicItems.Value);
+        }
+
         [Fact]
         public async Task Can_get_all_products()
         {
@@ -205,7 +258,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         public async Task Can_get_AccountPaymentTermOdooModel_by_id()
         {
             var repository = new OdooRepository<ResPartnerOdooModel>(TestConfig);
-            var context = new OdooContext() {ForceCompany = 3}; // 1 My Company (San Francisco), 2 PL Company, 3 My Company (Chicago) // default My Company (San Francisco)
+            var context = new OdooContext() { ForceCompany = 3 }; // 1 My Company (San Francisco), 2 PL Company, 3 My Company (Chicago) // default My Company (San Francisco)
             var products = await repository.Query().ById(14)
                 .WithContext(context)
                 .FirstOrDefaultAsync();
