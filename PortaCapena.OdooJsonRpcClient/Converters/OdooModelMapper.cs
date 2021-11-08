@@ -76,6 +76,13 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                     if (!value.HasValues)
                         return false;
 
+                    if (dotnetType == typeof(string) && value.Children().All(x => x.Type == JTokenType.String))
+                    {
+                        var stringArray = value.ToObject(typeof(string[])) as string[];
+                        result = string.Join(".", stringArray);
+                        return true;
+                    }
+
                     if (value.Count() > 2 || dotnetType != typeof(long) && dotnetType != typeof(long?) && dotnetType != typeof(int) && dotnetType != typeof(int?) || value.First.Type != JTokenType.Integer)
                         throw new Exception($"Not implemented json mapping '${value.Parent}'");
 
@@ -88,7 +95,7 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
         }
 
 
-        public static string GetDotNetModel(string tableName, Dictionary<string, OdooPropertyInfo> properties)
+        public static string GetDotNetModel(string tableName, Dictionary<string, OdooPropertyInfo> properties, bool addSummary = true)
         {
             var builder = new StringBuilder();
             builder.AppendLine($"[OdooTableName(\"{tableName}\")]");
@@ -99,10 +106,22 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
             foreach (var property in properties)
             {
                 builder.AppendLine(string.Empty);
-                if (!string.IsNullOrEmpty(property.Value.Relation))
-                    builder.AppendLine($"// {property.Value.Relation}");
-                if (property.Value.ResultRequired)
-                    builder.AppendLine("// required");
+
+                if (addSummary)
+                {
+                    builder.AppendLine($"/// <summary>");
+
+                    var relationField = !string.IsNullOrEmpty(property.Value.RelationField) ? $" ({property.Value.RelationField})" : string.Empty;
+                    var relation = !string.IsNullOrEmpty(property.Value.Relation) ? $"- {property.Value.Relation}{relationField}" : string.Empty;
+                    builder.AppendLine($"/// {property.Key} - {property.Value.Type} {relation} <br />");
+
+                    builder.AppendLine($"/// Required: {property.Value.ResultRequired}, {nameof(property.Value.Readonly)}: {property.Value.Readonly}, {nameof(property.Value.Store)}: {property.Value.Store}, {nameof(property.Value.Sortable)}: {property.Value.Sortable} <br />");
+
+                    if (!string.IsNullOrEmpty(property.Value.Help))
+                        builder.AppendLine($"/// {nameof(property.Value.Help)}: {property.Value.Help.Replace("\n", "; ")} <br />");
+
+                    builder.AppendLine($"/// </summary>");
+                }
 
                 builder.AppendLine($"[JsonProperty(\"{property.Key}\")]");
                 builder.AppendLine($"public {ConvertToDotNetPropertyTypeName(property, tableName)} {ConvertOdooNameToDotNet(property.Key)} {{ get; set; }}");
@@ -116,8 +135,15 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                 builder.AppendLine(string.Empty);
                 builder.AppendLine(string.Empty);
 
-                if (!string.IsNullOrEmpty(property.Value.Help))
-                    builder.AppendLine("// " + property.Value.Help.Replace("\n", "\n // "));
+                if (addSummary)
+                {
+                    builder.AppendLine($"/// <summary>");
+
+                    if (!string.IsNullOrEmpty(property.Value.Help))
+                        builder.AppendLine($"/// {nameof(property.Value.Help)}: {property.Value.Help.Replace("\n", " <br />\n /// ")}");
+
+                    builder.AppendLine($"/// </summary>");
+                }
 
                 builder.AppendLine($"[JsonConverter(typeof(StringEnumConverter))]");
                 builder.AppendLine($"public enum {ConvertOdooNameToDotNet(property.Value.String)}{ConvertOdooNameToDotNet(tableName)}{OdooEnumSuffix}");
