@@ -29,7 +29,7 @@ namespace PortaCapena.OdooJsonRpcClient.Models
         public bool Readonly { get; set; }
 
         [JsonProperty("required")]
-        public bool Required { get; set; }
+        public bool ResultRequired { get; set; }
 
         [JsonProperty("searchable")]
         public bool Searchable { get; set; }

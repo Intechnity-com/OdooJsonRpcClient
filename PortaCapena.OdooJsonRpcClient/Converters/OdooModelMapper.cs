@@ -115,7 +115,7 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                     var relation = !string.IsNullOrEmpty(property.Value.Relation) ? $"- {property.Value.Relation}{relationField}" : string.Empty;
                     builder.AppendLine($"/// {property.Key} - {property.Value.Type} {relation} <br />");
 
-                    builder.AppendLine($"/// Required: {property.Value.Required}, {nameof(property.Value.Readonly)}: {property.Value.Readonly}, {nameof(property.Value.Store)}: {property.Value.Store}, {nameof(property.Value.Sortable)}: {property.Value.Sortable} <br />");
+                    builder.AppendLine($"/// Required: {property.Value.ResultRequired}, {nameof(property.Value.Readonly)}: {property.Value.Readonly}, {nameof(property.Value.Store)}: {property.Value.Store}, {nameof(property.Value.Sortable)}: {property.Value.Sortable} <br />");
 
                     if (!string.IsNullOrEmpty(property.Value.Help))
                         builder.AppendLine($"/// {nameof(property.Value.Help)}: {property.Value.Help.Replace("\n", "; ")} <br />");
@@ -135,8 +135,15 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                 builder.AppendLine(string.Empty);
                 builder.AppendLine(string.Empty);
 
-                if (!string.IsNullOrEmpty(property.Value.Help))
-                    builder.AppendLine("// " + property.Value.Help.Replace("\n", "\n // "));
+                if (addSummary)
+                {
+                    builder.AppendLine($"/// <summary>");
+
+                    if (!string.IsNullOrEmpty(property.Value.Help))
+                        builder.AppendLine($"/// {nameof(property.Value.Help)}: {property.Value.Help.Replace("\n", " <br />\n /// ")}");
+
+                    builder.AppendLine($"/// </summary>");
+                }
 
                 builder.AppendLine($"[JsonConverter(typeof(StringEnumConverter))]");
                 builder.AppendLine($"public enum {ConvertOdooNameToDotNet(property.Value.String)}{ConvertOdooNameToDotNet(tableName)}{OdooEnumSuffix}");
@@ -165,40 +172,40 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                 case OdooValueTypeEnum.Char:
                     return "string";
                 case OdooValueTypeEnum.Selection:
-                    return $"{ConvertOdooNameToDotNet(property.Value.String)}{ConvertOdooNameToDotNet(tableName)}{OdooEnumSuffix}{(property.Value.Required ? "" : "?")}";
+                    return $"{ConvertOdooNameToDotNet(property.Value.String)}{ConvertOdooNameToDotNet(tableName)}{OdooEnumSuffix}{(property.Value.ResultRequired ? "" : "?")}";
                 case OdooValueTypeEnum.Text:
                     return "string";
                 case OdooValueTypeEnum.Html:
                     return "string";
 
                 case OdooValueTypeEnum.Boolean:
-                    return property.Value.Required ? "bool" : "bool?";
+                    return property.Value.ResultRequired ? "bool" : "bool?";
 
                 case OdooValueTypeEnum.Monetary:
-                    return property.Value.Required ? "decimal" : "decimal?";
+                    return property.Value.ResultRequired ? "decimal" : "decimal?";
 
                 case OdooValueTypeEnum.Float:
-                    return property.Value.Required ? "double" : "double?";
+                    return property.Value.ResultRequired ? "double" : "double?";
                 case OdooValueTypeEnum.Integer:
                     if (property.Key.ToString().ToLower() == "id")
                         return "long";
-                    return property.Value.Required ? "int" : "int?";
+                    return property.Value.ResultRequired ? "int" : "int?";
 
                 case OdooValueTypeEnum.Date:
-                    return property.Value.Required ? "DateTime" : "DateTime?";
+                    return property.Value.ResultRequired ? "DateTime" : "DateTime?";
                 case OdooValueTypeEnum.Datetime:
-                    return property.Value.Required ? "DateTime" : "DateTime?";
+                    return property.Value.ResultRequired ? "DateTime" : "DateTime?";
 
                 case OdooValueTypeEnum.Many2One:
-                    return property.Value.Required ? "long" : "long?";
+                    return property.Value.ResultRequired ? "long" : "long?";
                 case OdooValueTypeEnum.Many2OneReference:
-                    return property.Value.Required ? "long" : "long?";
+                    return property.Value.ResultRequired ? "long" : "long?";
                 case OdooValueTypeEnum.Many2Many:
                     return "long[]";
                 case OdooValueTypeEnum.One2Many:
                     return "long[]";
                 case OdooValueTypeEnum.One2One:
-                    return property.Value.Required ? "long" : "long?";
+                    return property.Value.ResultRequired ? "long" : "long?";
 
                 case OdooValueTypeEnum.Reference:
                     return ConvertOdooNameToDotNet(property.Value.RelationField) + OdooModelSuffix;
