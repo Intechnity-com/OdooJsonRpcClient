@@ -17,10 +17,16 @@ namespace PortaCapena.OdooJsonRpcClient
 {
     public sealed class OdooClient
     {
-        private static HttpClient _client = new HttpClient();
+        private static HttpClient _client;
         public OdooConfig Config { get; }
 
         [ThreadStatic] private static int? _userUid;
+        
+        static OdooClient() {
+            _client = new HttpClient();
+            _client.DefaultRequestHeaders.Accept.Clear();
+            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        }
 
         public OdooClient(OdooConfig config)
         {
@@ -256,8 +262,6 @@ namespace PortaCapena.OdooJsonRpcClient
             var json = JsonConvert.SerializeObject(requestModel, new IsoDateTimeConverter { DateTimeFormat = OdooConsts.DateTimeFormat });
             var data = new StringContent(json, Encoding.UTF8, "application/json");
 
-            _client.DefaultRequestHeaders.Accept.Clear();
-            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             var result = await _client.PostAsync(requestModel.Params.Url, data);
             return result;
         }
