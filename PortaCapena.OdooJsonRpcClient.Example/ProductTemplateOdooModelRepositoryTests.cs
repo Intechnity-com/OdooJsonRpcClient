@@ -82,7 +82,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             resultInNL.Value.Name.Should().NotBe("Acoustic Bloc Screens");
             resultInNL.Value.Name.Should().Be("Akoestische blokschermen");
 
-            repo.Config.Context.Language = "nl_NL";
+            repo.Config.Context.Language = "en_US";
 
             var resultInEn = await repo.Query().ById(result.Value.Id).FirstOrDefaultAsync();
 
@@ -90,8 +90,8 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             resultInEn.Succeed.Should().BeTrue();
             resultInEn.Value.Should().NotBeNull();
 
-            result.Value.Name.Should().Be("Acoustic Bloc Screens");
-            result.Value.Name.Should().NotBe("Akoestische blokschermen");
+            resultInEn.Value.Name.Should().Be("Acoustic Bloc Screens");
+            resultInEn.Value.Name.Should().NotBe("Akoestische blokschermen");
         }
 
         //[Fact]
@@ -136,8 +136,8 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             resultInEn.Succeed.Should().BeTrue();
             resultInEn.Value.Should().NotBeNull();
 
-            result.Value.Name.Should().Be("Acoustic Bloc Screens");
-            result.Value.Name.Should().NotBe("Akoestische blokschermen");
+            resultInEn.Value.Name.Should().Be("Acoustic Bloc Screens");
+            resultInEn.Value.Name.Should().NotBe("Akoestische blokschermen");
         }
     }
 }
