@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -21,11 +23,68 @@ namespace PortaCapena.OdooJsonRpcClient
         public OdooConfig Config { get; }
 
         [ThreadStatic] private static int? _userUid;
-        
-        static OdooClient() {
-            _client = new HttpClient();
+
+        /// <summary>
+        /// Can be set to false, if server certificate shall not be validated.
+        /// Useful for test systems without valid SSL certificate
+        /// </summary>
+        public static bool ValidateServerCertificate { get; set; } = true;
+
+        private static string basicAuthenticationUsernamePassword;
+        /// <summary>
+        /// Username and Password for Basic Authentication (htaccess).
+        /// Syntax: username:password
+        /// </summary>
+        public static string BasicAuthenticationUsernamePassword
+        {
+            get => basicAuthenticationUsernamePassword;
+            set
+            {
+                basicAuthenticationUsernamePassword = value;
+                InitializeHttpClient();
+            }
+        }
+
+        static OdooClient()
+        {
+            InitializeHttpClient();
+        }
+
+        private static void InitializeHttpClient()
+        {
+            var handler = new HttpClientHandler
+            {
+                AllowAutoRedirect = false,
+                ClientCertificateOptions = ClientCertificateOption.Manual
+            };
+
+            handler.ServerCertificateCustomValidationCallback = ServerCertificateValidation;
+
+            _client = new HttpClient(handler);
+
+            if (!string.IsNullOrEmpty(BasicAuthenticationUsernamePassword))
+            {
+                var byteArray = Encoding.ASCII.GetBytes(BasicAuthenticationUsernamePassword);
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+            }
+
             _client.DefaultRequestHeaders.Accept.Clear();
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        }
+
+        private static bool ServerCertificateValidation(HttpRequestMessage httpRequestMessage, X509Certificate2 x509Certificate2,
+            X509Chain x509Chain, SslPolicyErrors sslPolicyErrors)
+        {
+            if (!ValidateServerCertificate)
+            {
+                return true;
+            }
+
+            if (sslPolicyErrors == SslPolicyErrors.None)
+            {
+                return true;
+            }
+            return false;
         }
 
         public OdooClient(OdooConfig config)
