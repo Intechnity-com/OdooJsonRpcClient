@@ -1,8 +1,10 @@
 # PortaCapena.OdooJsonRpcClient
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/patricoos/PortaCapena.OdooJsonRpcClient/blob/master/LICENSE)
 [![NuGet package](https://img.shields.io/nuget/v/PortaCapena.OdooJsonRpcClient?color=blue&logo=NuGet&label=NuGet%20Package)](https://www.nuget.org/packages/PortaCapena.OdooJsonRpcClient)
 [![Nuget](https://img.shields.io/nuget/dt/PortaCapena.OdooJsonRpcClient?logo=NuGet&label=Downloads)](https://www.nuget.org/packages/PortaCapena.OdooJsonRpcClient)
-![example workflow](https://github.com/patricoos/PortaCapena.OdooJsonRpcClient/actions/workflows/pr_build.yml/badge.svg)
+[![example workflow](https://github.com/patricoos/PortaCapena.OdooJsonRpcClient/actions/workflows/pr_build.yml/badge.svg)](https://github.com/patricoos/PortaCapena.OdooJsonRpcClient/actions/workflows/pr_build.yml)
+[![example workflow](https://github.com/patricoos/PortaCapena.OdooJsonRpcClient/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/patricoos/PortaCapena.OdooJsonRpcClient/actions/workflows/codeql-analysis.yml)
 
 OdooJsonRpcClient is a C# library (.NET Standard) for communication with Odoo.
 

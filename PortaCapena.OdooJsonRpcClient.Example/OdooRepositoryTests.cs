@@ -25,7 +25,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         [InlineData(typeof(CompanyOdooDto))]
         [InlineData(typeof(CouponProgramOdooDto))]
         [InlineData(typeof(ProductPriceListOdooDto))]
-        [InlineData(typeof(ProductTemplateOdooDto))]
+        [InlineData(typeof(ProductTemplateOdooModel))]
         [InlineData(typeof(PurchaseOrderLineOdooModel))]
         [InlineData(typeof(PurchaseOrderOdooModel))]
         [InlineData(typeof(ResCompanyOdooModel))]

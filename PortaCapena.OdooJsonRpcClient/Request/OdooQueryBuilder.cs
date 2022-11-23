@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using PortaCapena.OdooJsonRpcClient.Consts;
 using PortaCapena.OdooJsonRpcClient.Extensions;
@@ -153,40 +154,40 @@ namespace PortaCapena.OdooJsonRpcClient.Request
         #endregion
 
 
-        public async Task<OdooResult<T[]>> ToListAsync()
+        public async Task<OdooResult<T[]>> ToListAsync(CancellationToken cancellationToken = default)
         {
-            return await _odooClient.GetAsync<T>(_query, _odooContext);
+            return await _odooClient.GetAsync<T>(_query, _odooContext, cancellationToken);
         }
 
-        public async Task<OdooResult<T>> FirstAsync()
+        public async Task<OdooResult<T>> FirstAsync(CancellationToken cancellationToken = default)
         {
             Take(1);
-            var result = await ToListAsync();
+            var result = await ToListAsync(cancellationToken);
             return result.Succeed ? result.ToResult(result.Value.First()) : OdooResult<T>.FailedResult(result);
         }
 
-        public async Task<OdooResult<T>> FirstOrDefaultAsync()
+        public async Task<OdooResult<T>> FirstOrDefaultAsync(CancellationToken cancellationToken = default)
         {
             Take(1);
-            var result = await ToListAsync();
+            var result = await ToListAsync(cancellationToken);
             return result.Succeed ? result.ToResult(result.Value.FirstOrDefault()) : OdooResult<T>.FailedResult(result);
         }
 
-        public async Task<OdooResult<T>> SingleAsync()
+        public async Task<OdooResult<T>> SingleAsync(CancellationToken cancellationToken = default)
         {
             Take(2);
-            var result = await ToListAsync();
+            var result = await ToListAsync(cancellationToken);
             return result.Succeed ? result.ToResult(result.Value.Single()) : OdooResult<T>.FailedResult(result);
         }
 
-        public async Task<OdooResult<long>> CountAsync()
+        public async Task<OdooResult<long>> CountAsync(CancellationToken cancellationToken = default)
         {
-            return await _odooClient.GetCountAsync<T>(_query, _odooContext);
+            return await _odooClient.GetCountAsync<T>(_query, _odooContext, cancellationToken);
         }
-        public async Task<OdooResult<bool>> AnyAsync()
+        public async Task<OdooResult<bool>> AnyAsync(CancellationToken cancellationToken = default)
         {
             Take(1);
-            var result = await ToListAsync();
+            var result = await ToListAsync(cancellationToken);
             return result.Succeed ? result.ToResult(result.Value.Any()) : OdooResult<bool>.FailedResult(result);
         }
     }
