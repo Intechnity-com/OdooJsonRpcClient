@@ -22,7 +22,7 @@ jobs:
       with:
         label: Unit Test Coverage
         color: brightgreen
-        path: PortaCapena.OdooJsonRpcClient.Tests/TestResults/coverage.opencover.xml
+        path: TestResults/coverage.opencover.xml
         gist-filename: code-coverage.json
         gist-id: 54596b8c061e5c3c25b3072822a105a0
         gist-auth-token: ${{ secrets.GIST_AUTH_TOKEN }}       
