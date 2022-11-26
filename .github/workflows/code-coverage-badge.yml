@@ -14,8 +14,8 @@ jobs:
       run: dotnet restore   
     - name: Build
       run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test  -p:CollectCoverage=true -p:CoverletOutput=TestResults/ -p:CoverletOutputFormat=opencover --no-build --verbosity normal PortaCapena.OdooJsonRpcClient.Tests/
+    - name: Run Unit Tests
+      run: dotnet test -p:CollectCoverage=true -p:CoverletOutput=TestResults/ -p:CoverletOutputFormat=opencover --no-build --verbosity normal  PortaCapena.OdooJsonRpcClient.Tests/
     - name: Create Test Coverage Badge
       uses: simon-k/dotnet-code-coverage-badge@v1.0.0
       id: create_coverage_badge
@@ -24,7 +24,7 @@ jobs:
         color: brightgreen
         path: PortaCapena.OdooJsonRpcClient.Tests/TestResults/coverage.opencover.xml
         gist-filename: code-coverage.json
-        gist-id: 1234567890abcdef1234567890abcdef
+        gist-id: 54596b8c061e5c3c25b3072822a105a0
         gist-auth-token: ${{ secrets.GIST_AUTH_TOKEN }}       
     - name: Print code coverage
       run: echo "Code coverage percentage ${{steps.create_coverage_badge.outputs.percentage}}%"
