@@ -45,7 +45,7 @@ jobs:
            fi
       
     - name: Test 
-      run: dotnet test PortaCapena.OdooJsonRpcClient.Tests/PortaCapena.OdooJsonRpcClient.Tests.csproj --configuration $config --no-build --no-restore  --logger:"liquid.md;LogFileName=${{github.workspace}}/${{env.file_name}};Title=${{env.title}};" --collect:"XPlat Code Coverage" --results-directory ./coverage
+      run: dotnet test PortaCapena.OdooJsonRpcClient.Tests/PortaCapena.OdooJsonRpcClient.Tests.csproj --configuration $config --no-build --no-restore  --logger:"liquid.md;LogFileName=${{github.workspace}}/${{env.file_name}};Title=${{env.title}};" --collect:"XPlat Code Coverage" --settings runsettings.xml --results-directory ./coverage
 
 # upload report as build artifact
     - name: Upload a Build Artifact
