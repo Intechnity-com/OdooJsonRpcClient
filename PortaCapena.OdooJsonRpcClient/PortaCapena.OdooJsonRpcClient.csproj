@@ -1,15 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Patryk Bujalla</Authors>
-    <Company>Porta Capena</Company>
+    <Company>Patryk Bujalla</Company>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/patricoos/PortaCapena.OdooJsonRpcClient</PackageProjectUrl>
     <PackageIcon>ic_project.png</PackageIcon>
     <PackageIconUrl />
     <RepositoryUrl>https://github.com/patricoos/PortaCapena.OdooJsonRpcClient</RepositoryUrl>
-    <Copyright>Porta Capena</Copyright>
+    <Copyright>Patryk Bujalla</Copyright>
     <PackageTags>Odoo JsonRpc Client</PackageTags>
     <Description>JsonRpc Odoo Client</Description>
     <Version>1.0.3</Version>
