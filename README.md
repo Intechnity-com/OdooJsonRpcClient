@@ -55,7 +55,7 @@ var modelResult = await odooClient.GetModelAsync(tableName);
 var model = OdooModelMapper.GetDotNetModel(tableName, modelResult.Value);
 ```
 Method `GetModelAsync` returns model with odoo specification.
-Method `GetDotNetModel()` from class `OdooModelMapper` returns string of class declaration that U can create and paste to Your project.
+Method `GetDotNetModel()` from class `OdooModelMapper` returns string of class declaration that U can create and paste to Your project. Please don't use the models used in the example project. Models are different depending on odoo version and added extensions.
 
 ```
 [OdooTableName("product.product")]
