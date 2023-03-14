@@ -143,7 +143,7 @@ var model = OdooDictionaryModel.Create(() => new ProductProductOdooModel()
 {
     Name = "test product name updated"
 }); 
-var result = await repository.UpdateAsync(productId, model);
+var result = await repository.UpdateAsync(model, productId);
 ```
 
 #### Delete
