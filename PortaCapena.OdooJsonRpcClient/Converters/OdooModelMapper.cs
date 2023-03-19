@@ -219,7 +219,13 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
         {
             odooName = odooName.Replace("+", "Plus");
             var odooNameCleaned = Regex.Replace(odooName, "[^A-Za-z0-9-]", "_");
-            var dotnetKeys = odooNameCleaned.Split('_', '-', '.', ',', ' ', ':', ';', '/', '\\', '*', '+', '(', ')', '[', ']').Select(x => CultureInfo.InvariantCulture.TextInfo.ToTitleCase(x));
+            var dotnetKeys = odooNameCleaned
+                .Split('_', '-', '.', ',', ' ', ':', ';', '/', '\\', '*', '+', '(', ')', '[', ']')
+                .Select(x => CultureInfo.InvariantCulture.TextInfo.ToTitleCase(x))
+                .Where(x => !string.IsNullOrEmpty(x))
+                .ToList();
+            if (dotnetKeys.Count == 0)
+                dotnetKeys.Add("None");
             return string.Join(string.Empty, dotnetKeys);
         }
 
