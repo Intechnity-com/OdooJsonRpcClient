@@ -24,17 +24,17 @@ namespace PortaCapena.OdooJsonRpcClient.Models
             this.Timeout = timeout;
         }
 
-        public OdooConfig(string apiUrl, string dbName, string userName, string password, OdooContext context) : this(apiUrl, dbName, userName, password)
+        public OdooConfig(string apiUrl, string dbName, string userName, string password, OdooContext context, TimeSpan timeout = default(TimeSpan)) : this(apiUrl, dbName, userName, password, timeout)
         {
             this.Context = new OdooContext(context);
         }
 
-        public OdooConfig(string apiUrl, string dbName, string userName, string password, string language) : this(apiUrl, dbName, userName, password)
+        public OdooConfig(string apiUrl, string dbName, string userName, string password, string language, TimeSpan timeout = default(TimeSpan)) : this(apiUrl, dbName, userName, password, timeout)
         {
             this.Context = new OdooContext(language);
         }
 
-        public OdooConfig(string apiUrl, string dbName, string userName, string password, string language, string timezone) : this(apiUrl, dbName, userName, password)
+        public OdooConfig(string apiUrl, string dbName, string userName, string password, string language, string timezone, TimeSpan timeout = default(TimeSpan)) : this(apiUrl, dbName, userName, password, timeout)
         {
             this.Context = new OdooContext(language, timezone);
         }
