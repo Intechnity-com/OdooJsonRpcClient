@@ -91,6 +91,7 @@ namespace PortaCapena.OdooJsonRpcClient
         public OdooClient(OdooConfig config)
         {
             Config = config;
+            _client.Timeout = config.Timeout;
         }
 
         #region Get
