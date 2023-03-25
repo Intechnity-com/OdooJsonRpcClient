@@ -97,13 +97,17 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
 
         public static string GetDotNetModel(string tableName, Dictionary<string, OdooPropertyInfo> properties, bool addSummary = true)
         {
+            var existing = new Dictionary<string, bool>();
+
             var builder = new StringBuilder();
             builder.AppendLine($"[OdooTableName(\"{tableName}\")]");
             builder.AppendLine($"[JsonConverter(typeof({nameof(OdooModelConverter)}))]");
-            builder.AppendLine($"public class {ConvertOdooNameToDotNet(tableName)}{OdooModelSuffix} : IOdooModel");
+            builder.AppendLine($"public partial class {ConvertOdooNameToDotNet(tableName, existing)}{OdooModelSuffix} : IOdooModel");
             builder.AppendLine("{");
 
-            foreach (var property in properties)
+
+            existing.Clear();
+            foreach (var property in properties.OrderBy(p => p.Value.Name))
             {
                 builder.AppendLine(string.Empty);
 
@@ -124,7 +128,7 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                 }
 
                 builder.AppendLine($"[JsonProperty(\"{property.Key}\")]");
-                builder.AppendLine($"public {ConvertToDotNetPropertyTypeName(property, tableName)} {ConvertOdooNameToDotNet(property.Key)} {{ get; set; }}");
+                builder.AppendLine($"public {ConvertToDotNetTypeName(property, tableName)}{ConvertToDotNetNullable(property.Value)} {ConvertOdooNameToDotNet(property.Key, existing)} {{ get; set; }}");
             }
             builder.AppendLine("}");
 
@@ -132,6 +136,9 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
 
             foreach (var property in selectionsProps)
             {
+                existing.Clear();
+
+
                 builder.AppendLine(string.Empty);
                 builder.AppendLine(string.Empty);
 
@@ -146,9 +153,10 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                 }
 
                 builder.AppendLine($"[JsonConverter(typeof(StringEnumConverter))]");
-                builder.AppendLine($"public enum {ConvertOdooNameToDotNet(property.Value.String)}{ConvertOdooNameToDotNet(tableName)}{OdooEnumSuffix}");
+                builder.AppendLine($"public enum {ConvertToDotNetTypeName(property, tableName)}");
                 builder.AppendLine("{");
 
+                existing.Clear();
                 for (int i = 0; i < property.Value.Selection.Length; i++)
                 {
                     string[] item = property.Value.Selection[i];
@@ -156,14 +164,15 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                     if (i != 0)
                         builder.AppendLine(string.Empty);
                     builder.AppendLine($"[EnumMember(Value = \"{item[0]}\")]");
-                    builder.AppendLine($"{ConvertOdooNameToDotNet(item[1])} = {i + 1},");
+                    builder.AppendLine($"{ConvertOdooNameToDotNet(item[1], existing)} = {i + 1},");
                 }
                 builder.AppendLine("}");
             }
             return builder.ToString();
         }
 
-        public static string ConvertToDotNetPropertyTypeName(KeyValuePair<string, OdooPropertyInfo> property, string tableName)
+       
+        public static string ConvertToDotNetTypeName(KeyValuePair<string, OdooPropertyInfo> property, string tableName)
         {
             switch (property.Value.PropertyValueType)
             {
@@ -172,40 +181,40 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                 case OdooValueTypeEnum.Char:
                     return "string";
                 case OdooValueTypeEnum.Selection:
-                    return $"{ConvertOdooNameToDotNet(property.Value.String)}{ConvertOdooNameToDotNet(tableName)}{OdooEnumSuffix}{(property.Value.ResultRequired ? "" : "?")}";
+                    return $"{ConvertOdooNameToDotNet(property.Value.Name)}{ConvertOdooNameToDotNet(tableName)}{OdooEnumSuffix}";
                 case OdooValueTypeEnum.Text:
                     return "string";
                 case OdooValueTypeEnum.Html:
                     return "string";
 
                 case OdooValueTypeEnum.Boolean:
-                    return property.Value.ResultRequired ? "bool" : "bool?";
+                    return "bool";
 
                 case OdooValueTypeEnum.Monetary:
-                    return property.Value.ResultRequired ? "decimal" : "decimal?";
+                    return "decimal";
 
                 case OdooValueTypeEnum.Float:
-                    return property.Value.ResultRequired ? "double" : "double?";
+                    return "double";
                 case OdooValueTypeEnum.Integer:
-                    if (property.Key.ToString().ToLower() == "id")
+                    if (property.Key.Equals("id", StringComparison.InvariantCultureIgnoreCase))
                         return "long";
-                    return property.Value.ResultRequired ? "int" : "int?";
+                    return "int";
 
                 case OdooValueTypeEnum.Date:
-                    return property.Value.ResultRequired ? "DateTime" : "DateTime?";
+                    return "DateTime";
                 case OdooValueTypeEnum.Datetime:
-                    return property.Value.ResultRequired ? "DateTime" : "DateTime?";
+                    return "DateTime";
 
                 case OdooValueTypeEnum.Many2One:
-                    return property.Value.ResultRequired ? "long" : "long?";
+                    return "long";
                 case OdooValueTypeEnum.Many2OneReference:
-                    return property.Value.ResultRequired ? "long" : "long?";
+                    return "long";
                 case OdooValueTypeEnum.Many2Many:
                     return "long[]";
                 case OdooValueTypeEnum.One2Many:
                     return "long[]";
                 case OdooValueTypeEnum.One2One:
-                    return property.Value.ResultRequired ? "long" : "long?";
+                    return "long";
 
                 case OdooValueTypeEnum.Reference:
                     return ConvertOdooNameToDotNet(property.Value.RelationField) + OdooModelSuffix;
@@ -215,12 +224,48 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
             }
         }
 
-        public static string ConvertOdooNameToDotNet(string odooName)
+        public static string ConvertToDotNetNullable(OdooPropertyInfo value)
         {
-            odooName = odooName.Replace("+", "Plus");
+            if (false
+                // required field should not be nullable
+                || value.ResultRequired
+                // id are mandatory even if they're not marked as required
+                || value.Name.Equals("id", StringComparison.InvariantCultureIgnoreCase)
+                // one2many and many2many are array even if there are zero relations
+                || value.PropertyValueType == OdooValueTypeEnum.Many2Many
+                || value.PropertyValueType == OdooValueTypeEnum.One2Many
+            )
+            {
+                return "";
+            }
+            else
+                return "?";
+        }
+
+        public static string ConvertOdooNameToDotNet(string odooName, IDictionary<string, bool> existing = null)
+        {
             var odooNameCleaned = Regex.Replace(odooName, "[^A-Za-z0-9-]", "_");
-            var dotnetKeys = odooNameCleaned.Split('_', '-', '.', ',', ' ', ':', ';', '/', '\\', '*', '+', '(', ')', '[', ']').Select(x => CultureInfo.InvariantCulture.TextInfo.ToTitleCase(x));
-            return string.Join(string.Empty, dotnetKeys);
+            var dotnetKeys = odooNameCleaned
+                .Split('_', '-', '.', ',', ' ', ':', ';', '/', '\\', '*', '+', '(', ')', '[', ']')
+                .Select(x => CultureInfo.InvariantCulture.TextInfo.ToTitleCase(x))
+                .Where(x => !string.IsNullOrEmpty(x))
+                .ToList();
+            if (dotnetKeys.Count == 0)
+                dotnetKeys.Add("None");
+            var result = string.Join(string.Empty, dotnetKeys);
+
+            if (existing == null) existing = new Dictionary<string, bool>();
+
+            int i = 1;
+            string dedupResult;
+            do
+            {
+                dedupResult = $"{result}{(i < 2 ? "" : i.ToString())}";
+                i++;
+            } while (existing.ContainsKey(dedupResult));
+
+            existing[dedupResult] = true;
+            return dedupResult;
         }
 
         public static object ConvertToDotNetEnum(Type type, JToken value)
