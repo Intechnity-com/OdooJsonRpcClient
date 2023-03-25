@@ -89,6 +89,7 @@ namespace PortaCapena.OdooJsonRpcClient.Models
                 case "boolean":
                     return OdooValueTypeEnum.Boolean;
                 case "char":
+                case "json":
                     return OdooValueTypeEnum.Char;
                 case "date":
                     return OdooValueTypeEnum.Date;
