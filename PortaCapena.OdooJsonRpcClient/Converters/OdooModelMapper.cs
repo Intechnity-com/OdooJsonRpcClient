@@ -52,11 +52,15 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                     result = DateTime.Parse(stringTime);
                     return true;
 
+                // Enum part accept both string and integer to avoid issue #54
                 case JTokenType.String when dotnetType.IsEnum:
+                case JTokenType.Integer when dotnetType.IsEnum:
                     result = ConvertToDotNetEnum(dotnetType, value.ToString());
                     return true;
 
                 case JTokenType.String when dotnetType.IsGenericType && dotnetType.GetGenericTypeDefinition() == typeof(Nullable<>) &&
+                                            dotnetType.GenericTypeArguments.Length == 1 && dotnetType.GenericTypeArguments[0].IsEnum:
+                case JTokenType.Integer when dotnetType.IsGenericType && dotnetType.GetGenericTypeDefinition() == typeof(Nullable<>) &&
                                             dotnetType.GenericTypeArguments.Length == 1 && dotnetType.GenericTypeArguments[0].IsEnum:
                     var nullableType = Nullable.GetUnderlyingType(dotnetType);
                     result = ConvertToDotNetEnum(nullableType, value);
