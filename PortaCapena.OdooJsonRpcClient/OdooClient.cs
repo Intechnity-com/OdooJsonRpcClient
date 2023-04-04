@@ -91,6 +91,8 @@ namespace PortaCapena.OdooJsonRpcClient
         public OdooClient(OdooConfig config)
         {
             Config = config;
+            if (config.Timeout != default(TimeSpan))
+                _client.Timeout = config.Timeout;
         }
 
         #region Get
@@ -274,9 +276,9 @@ namespace PortaCapena.OdooJsonRpcClient
 
         #region Version
 
-        public async Task<OdooResult<OdooVersion>> GetVersionAsync()
+        public async Task<OdooResult<OdooVersion>> GetVersionAsync(CancellationToken cancellationToken = default)
         {
-            return await GetVersionAsync(Config);
+            return await GetVersionAsync(Config, cancellationToken);
         }
         public static async Task<OdooResult<OdooVersion>> GetVersionAsync(OdooConfig odooConfig, CancellationToken cancellationToken = default)
         {
