@@ -12,7 +12,10 @@
     <Copyright>Patryk Bujalla</Copyright>
     <PackageTags>Odoo JsonRpc Client</PackageTags>
     <Description>JsonRpc Odoo Client</Description>
-    <Version>1.0.3</Version>
+    <Version>1.0.20</Version>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,6 +25,8 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+    <None Include="README.md" Pack="true" PackagePath=""/>
+    <None Include="LICENSE.md" Pack="true" PackagePath=""/>
   </ItemGroup>
 
   <ItemGroup>
