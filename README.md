@@ -207,6 +207,18 @@ if(condition)
 var createResult = await odooRepository.CreateAsync(model);
 ```
 
+or 
+```C#                        
+ var model2 = new OdooDictionaryModel("res.partner") {
+                { "name", "test name" },
+                { "country_id", 20 },
+                { "city", "test city" },
+                { "zip", "12345" },
+                { "street", "test address" },
+                { "company_type", "company" },
+            };
+var createResult = await odooRepository.CreateAsync(model);
+```
 
 
 
