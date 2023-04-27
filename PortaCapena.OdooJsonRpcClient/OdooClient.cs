@@ -112,6 +112,20 @@ namespace PortaCapena.OdooJsonRpcClient
             return await CallAndDeserializeAsync<T[]>(request, cancellationToken);
         }
 
+        public async Task<OdooResult<OdooDictionaryModel[]>> GetAsync(string tableName, OdooQuery query = null, OdooContext context = null, CancellationToken cancellationToken = default)
+        {
+            return await ExecuteWitrAccesDenideRetryAsync(userUid => GetAsync(tableName, userUid, query, SelectContext(context, Config.Context), cancellationToken));
+        }
+        public async Task<OdooResult<OdooDictionaryModel[]>> GetAsync(string tableName, int userUid, OdooQuery query = null, OdooContext context = null, CancellationToken cancellationToken = default)
+        {
+            return await GetAsync(tableName, Config, userUid, query, SelectContext(context, Config.Context), cancellationToken);
+        }
+        public static async Task<OdooResult<OdooDictionaryModel[]>> GetAsync(string tableName, OdooConfig odooConfig, int userUid, OdooQuery query = null, OdooContext context = null, CancellationToken cancellationToken = default)
+        {
+            var request = OdooRequestModel.SearchRead(odooConfig, userUid, tableName, query, context);
+            return await CallAndDeserializeAsync<OdooDictionaryModel[]>(request, cancellationToken);
+        }
+
         #endregion
 
         #region Count 
