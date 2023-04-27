@@ -217,7 +217,9 @@ or
                 { "street", "test address" },
                 { "company_type", "company" },
             };
-var createResult = await odooRepository.CreateAsync(model);
+var odooClient = new OdooClient(TestConfig);
+
+var createResult = await odooClient.CreateAsync(model2);
 ```
 
 
