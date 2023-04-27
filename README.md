@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Intechnity-com/OdooJsonRpcClient/blob/master/LICENSE.md)
 [![NuGet package](https://img.shields.io/nuget/v/PortaCapena.OdooJsonRpcClient?color=blue&logo=NuGet&label=NuGet%20Package)](https://www.nuget.org/packages/PortaCapena.OdooJsonRpcClient)
 [![Nuget](https://img.shields.io/nuget/dt/PortaCapena.OdooJsonRpcClient?logo=NuGet&label=Downloads)](https://www.nuget.org/packages/PortaCapena.OdooJsonRpcClient)
-[![example workflow](https://github.com/Intechnity-com/OdooJsonRpcClient/actions/workflows/pr_build.yml/badge.svg)](https://github.com/Intechnity-com/PortaCapena.OdooJsonRpcClient/actions/workflows/pr_build.yml)
+[![example workflow](https://github.com/Intechnity-com/OdooJsonRpcClient/actions/workflows/pr_build.yml/badge.svg)](https://github.com/Intechnity-com/OdooJsonRpcClient/actions/workflows/pr_build.yml)
 [![example workflow](https://github.com/Intechnity-com/OdooJsonRpcClient/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/Intechnity-com/OdooJsonRpcClient/actions/workflows/codeql-analysis.yml)
 ![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/patricoos/54596b8c061e5c3c25b3072822a105a0/raw/code-coverage.json)
 
@@ -207,6 +207,20 @@ if(condition)
 var createResult = await odooRepository.CreateAsync(model);
 ```
 
+or 
+```C#                        
+ var model2 = new OdooDictionaryModel("res.partner") {
+                { "name", "test name" },
+                { "country_id", 20 },
+                { "city", "test city" },
+                { "zip", "12345" },
+                { "street", "test address" },
+                { "company_type", "company" },
+            };
+var odooClient = new OdooClient(TestConfig);
+
+var createResult = await odooClient.CreateAsync(model2);
+```
 
 
 
