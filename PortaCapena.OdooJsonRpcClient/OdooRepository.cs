@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using PortaCapena.OdooJsonRpcClient.Extensions;
 using PortaCapena.OdooJsonRpcClient.Models;
 using PortaCapena.OdooJsonRpcClient.Request;
@@ -58,6 +59,10 @@ namespace PortaCapena.OdooJsonRpcClient
         public async Task<OdooResult<bool>> DeleteRangeAsync(T[] models, OdooContext context = null)
         {
             return await OdooClient.DeleteRangeAsync(models as IOdooModel[], context);
+        }
+        public async Task<OdooResult<Dictionary<string, object>>> UpdateProductQuantity(long id, OdooContext context = null)
+        {
+            return await OdooClient.ChangeProductQuantity(id, context);
         }
     }
 }
