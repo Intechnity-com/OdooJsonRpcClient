@@ -36,6 +36,7 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                     return true;
 
                 case JTokenType.Integer when dotnetType == typeof(int) || dotnetType == typeof(int?) || dotnetType == typeof(long) || dotnetType == typeof(long?):
+                case JTokenType.Integer when dotnetType == typeof(float)|| dotnetType == typeof(float?) || dotnetType == typeof(double) || dotnetType == typeof(double?):
                 case JTokenType.Float:
                     result = value.ToObject(dotnetType);
                     return true;
