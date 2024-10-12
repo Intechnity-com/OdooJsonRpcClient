@@ -119,7 +119,10 @@ namespace PortaCapena.OdooJsonRpcClient.Models
                     return OdooValueTypeEnum.One2One;
                 case "monetary":
                     return OdooValueTypeEnum.Monetary;
-
+                case "properties":
+                    return OdooValueTypeEnum.Properties;
+                case "properties_definition":
+                    return OdooValueTypeEnum.PropertiesDefinition;
             }
             throw new Exception($"Cannot unmarshal Enum '{nameof(OdooValueTypeEnum)}' - '{value}'");
         }
@@ -147,6 +150,8 @@ namespace PortaCapena.OdooJsonRpcClient.Models
 
         Selection,
         Text,
-        Html
+        Html,
+        PropertiesDefinition,
+        Properties
     };
 }

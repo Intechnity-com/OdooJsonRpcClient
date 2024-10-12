@@ -214,6 +214,11 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                 case OdooValueTypeEnum.Reference:
                     return ConvertOdooNameToDotNet(property.Value.RelationField) + OdooModelSuffix;
 
+                case OdooValueTypeEnum.Properties:
+                    return "string";
+                case OdooValueTypeEnum.PropertiesDefinition:
+                    return "string";
+
                 default:
                     throw new ArgumentException($"Not expected Property Value Type: '{property.Value.PropertyValueType}'");
             }
