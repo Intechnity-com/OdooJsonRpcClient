@@ -170,6 +170,29 @@ namespace PortaCapena.OdooJsonRpcClient
             return result.Succeed ? result.ToResult(result.Value) : OdooResult<long>.FailedResult(result);
         }
 
+        public async Task<OdooResult<long[]>> CreateAsync(IEnumerable<IOdooCreateModel> models, OdooContext context = null, CancellationToken cancellationToken = default)
+        {
+            return await ExecuteWitrAccesDenideRetryAsync(userUid => CreateAsync(Config, userUid, models, SelectContext(context, Config.Context), cancellationToken));
+        }
+        public static async Task<OdooResult<long[]>> CreateAsync(OdooConfig odooConfig, int userUid, IEnumerable<IOdooCreateModel> models, OdooContext context = null, CancellationToken cancellationToken = default)
+        {
+            var request = OdooRequestModel.Create(odooConfig, userUid, models.First().OdooTableName(), models, context);
+            var result = await CallAndDeserializeAsync<long[]>(request, cancellationToken);
+            return result.Succeed ? result.ToResult(result.Value) : OdooResult<long[]>.FailedResult(result);
+        }
+        public async Task<OdooResult<long[]>> CreateAsync(IEnumerable<OdooDictionaryModel> models, OdooContext context = null, CancellationToken cancellationToken = default)
+        {
+            return await ExecuteWitrAccesDenideRetryAsync(userUid => CreateAsync(Config, userUid, models, SelectContext(context, Config.Context), cancellationToken));
+        }
+        public static async Task<OdooResult<long[]>> CreateAsync(OdooConfig odooConfig, int userUid, IEnumerable<OdooDictionaryModel> models, OdooContext context = null, CancellationToken cancellationToken = default)
+        {
+            var request = OdooRequestModel.Create(odooConfig, userUid, GetTableName(models.First()), models, context);
+            var result = await CallAndDeserializeAsync<long[]>(request, cancellationToken);
+            return result.Succeed ? result.ToResult(result.Value) : OdooResult<long[]>.FailedResult(result);
+        }
+
+
+
         #endregion
 
         #region  Update
