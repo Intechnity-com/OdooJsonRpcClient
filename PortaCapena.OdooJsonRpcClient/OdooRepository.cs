@@ -68,5 +68,9 @@ namespace PortaCapena.OdooJsonRpcClient
         {
             return await OdooClient.DeleteRangeAsync(models as IOdooModel[], context);
         }
+        public async Task<OdooResult<object>> ActionAsync(string action, object args, OdooContext context = null)
+        {
+            return await OdooClient.ActionAsync(TableName, action, args, context);
+        }
     }
 }
