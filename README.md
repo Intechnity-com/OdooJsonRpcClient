@@ -287,7 +287,7 @@ These custom handlers can be used for logging odoo requests and responses, addin
 When configuring the client, you can add multiple handlers. The order in which you add them is the order in which they will be executed.
 
 ```C#
-OdooClientHttp.Configure(opt =>
+OdooHttpClient.Configure(opt =>
 {
    opt.AddHttpMessageHandler(new LoggingHandler());
    //you can add more custom handlers like so

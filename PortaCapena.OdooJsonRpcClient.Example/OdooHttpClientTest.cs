@@ -10,12 +10,22 @@ using Xunit;
 
 namespace PortaCapena.OdooJsonRpcClient.Example;
 
-public class OdooClientHttpTest : RequestTestBase, IDisposable
+public class OdooHttpClientTest : RequestTestBase, IDisposable
 {
-    // teardown
+    // Tear down
     public void Dispose()
     {
-        OdooClientHttp.ClearHttpMessageHandlers();
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposing)
+        {
+            return;
+        }
+        OdooHttpClient.ClearHttpMessageHandlers();
         InitializeHttpClient();
     }
     
@@ -23,7 +33,7 @@ public class OdooClientHttpTest : RequestTestBase, IDisposable
     public async Task Can_call_custom_http_message_handler()
     {
         var customHandler = new TestMessageHandler();
-        OdooClientHttp.Configure(f =>
+        OdooHttpClient.Configure(f =>
         {
             f.AddHttpMessageHandler(customHandler);
         });
@@ -44,7 +54,7 @@ public class OdooClientHttpTest : RequestTestBase, IDisposable
         var uotExecutionOrder = new List<int>();
         var firstHandler = new TestMessageHandler(1, uotExecutionOrder);
         var secondHandler = new TestMessageHandler(2, uotExecutionOrder);
-        OdooClientHttp.Configure(f =>
+        OdooHttpClient.Configure(f =>
         {
             f.AddHttpMessageHandler(firstHandler);
             f.AddHttpMessageHandler(secondHandler);

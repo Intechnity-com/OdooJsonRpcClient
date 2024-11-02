@@ -43,7 +43,7 @@ namespace PortaCapena.OdooJsonRpcClient.Configurations
                 ClientCertificateOptions = ClientCertificateOption.Manual,
                 ServerCertificateCustomValidationCallback = ServerCertificateValidation
             };
-            return OdooClientHttp.ChainClientHandler(handler);
+            return OdooHttpClient.ChainClientHandler(handler);
         }
 
         private static bool ServerCertificateValidation(
