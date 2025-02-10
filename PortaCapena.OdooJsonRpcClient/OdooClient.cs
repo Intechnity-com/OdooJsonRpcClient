@@ -358,5 +358,19 @@ namespace PortaCapena.OdooJsonRpcClient
         {
             return paramContext ?? mainContext;
         }
+
+        public async Task<OdooResult<T>> ExecuteMethod<T>(IOdooModel model, string methodName, params object[] parameters)
+        {
+            var tableName = model.OdooTableName();
+
+            var loginResult = await GetCurrentUserUidOrLoginAsync();
+
+            var requestParams = new OdooRequestParams(Config.ApiUrlJson, "object", "execute_kw", Config.DbName, loginResult.Value, Config.Password, tableName, methodName, parameters);
+            var requestModel = new OdooRequestModel(requestParams);
+
+            return await CallAndDeserializeAsync<T>(requestModel);
+        }
+
+
     }
 }
