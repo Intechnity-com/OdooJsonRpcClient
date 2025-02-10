@@ -55,12 +55,12 @@ namespace PortaCapena.OdooJsonRpcClient.Models
 
         public static OdooDictionaryModel Create<T>(Expression<Func<T, object>> expression, object value) where T : IOdooAtributtesModel, new()
         {
-            return new OdooDictionaryModel<T>().Add(expression, value);
+            return new OdooDictionaryModel<T>().AddOrUpdate(expression, value);
         }
 
         //TODO: Rename to set / addOrUpdate ?
 
-        public OdooDictionaryModel Add<T>(Expression<Func<T, object>> expression, object value) where T : IOdooAtributtesModel
+        public OdooDictionaryModel AddOrUpdate<T>(Expression<Func<T, object>> expression, object value) where T : IOdooAtributtesModel
         {
             if (TableName != null && TryGetOdooTableName(expression, out var tableName))
                 TableName = tableName;
