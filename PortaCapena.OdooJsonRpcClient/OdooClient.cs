@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Security;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
@@ -359,15 +360,23 @@ namespace PortaCapena.OdooJsonRpcClient
             return paramContext ?? mainContext;
         }
 
-        public async Task<OdooResult<T>> ExecuteMethod<T>(IOdooModel model, string methodName, params object[] parameters)
-        {
-            var tableName = model.OdooTableName();
-            var loginResult = await GetCurrentUserUidOrLoginAsync();
-            var requestParams = new OdooRequestParams(Config.ApiUrlJson, "object", "execute_kw", Config.DbName, loginResult.Value, Config.Password, tableName, methodName, parameters);
-            var requestModel = new OdooRequestModel(requestParams);
-            return await CallAndDeserializeAsync<T>(requestModel);
-        }
 
+
+        public async Task<OdooResult<U>> ExecuteMethod<T, U>(string methodName, object[] parameters, OdooContext context = null, CancellationToken cancellationToken = default) where T : IOdooModel, new() where U : IOdooMethodResult, new()
+        {
+            return await ExecuteWitrAccesDenideRetryAsync(userUid => ExecuteMethod<T, U>(userUid, methodName, parameters, SelectContext(context, Config.Context), cancellationToken));
+        }
+        public async Task<OdooResult<U>> ExecuteMethod<T, U>(int userUid, string methodName, object[] parameters, OdooContext context = null, CancellationToken cancellationToken = default) where T : IOdooModel, new() where U : IOdooMethodResult, new()
+        {
+            return await ExecuteMethod<T, U>(Config, userUid, methodName, parameters, SelectContext(context, Config.Context), cancellationToken);
+        }
+        public static async Task<OdooResult<U>> ExecuteMethod<T, U>(OdooConfig odooConfig, int userUid, string methodName, object[] parameters, OdooContext context = null, CancellationToken cancellationToken = default) where T : IOdooModel, new() where U : IOdooMethodResult, new()
+        {
+            var tableName = OdooExtensions.GetOdooTableName<T>();
+            var requestParams = new OdooRequestParams(odooConfig.ApiUrlJson, "object", "execute_kw", odooConfig.DbName, userUid, odooConfig.Password, tableName, methodName, parameters);
+            var requestModel = new OdooRequestModel(requestParams);
+            return await CallAndDeserializeAsync<U>(requestModel);
+        }
 
     }
 }
