@@ -11,6 +11,19 @@ namespace PortaCapena.OdooJsonRpcClient.Models
 {
     public class OdooDictionaryModel : Dictionary<string, object>
     {
+
+        public OdooRecordsListStructure GetRecord()
+        {
+            OdooRecordsListStructure odooRecordsListStructure = new OdooRecordsListStructure();
+
+            foreach (var key in this.Keys)
+            {
+
+                odooRecordsListStructure.Add(key, this[key]);
+            }
+            return odooRecordsListStructure;
+        }
+
         public string TableName { get; internal set; }
 
         public OdooDictionaryModel() { }
