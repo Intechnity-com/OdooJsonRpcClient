@@ -201,6 +201,17 @@ namespace PortaCapena.OdooJsonRpcClient
             var result = await CallAndDeserializeAsync<object>(request, cancellationToken);
             return result.Succeed ? result.ToResult(result.Value) : OdooResult<object>.FailedResult(result);
         }
+        public async Task<OdooResult<object>> ActionCollectionAsync(string tableName, string action, object param, OdooContext context = null, CancellationToken cancellationToken = default)
+        {
+            return await ExecuteWitrAccesDenideRetryAsync(userUid => ActionCollectionAsync(Config, userUid, tableName, action, param, SelectContext(context, Config.Context), cancellationToken));
+        }
+        public static async Task<OdooResult<object>> ActionCollectionAsync(OdooConfig odooConfig, int userUid, string tableName, string action, object model
+            , OdooContext context = null, CancellationToken cancellationToken = default)
+        {
+            var request = OdooRequestModel.ActionCollection(odooConfig, userUid, tableName, action, model, context);
+            var result = await CallAndDeserializeAsync<object>(request, cancellationToken);
+            return result.Succeed ? result.ToResult(result.Value) : OdooResult<object>.FailedResult(result);
+        }
 
 
 
