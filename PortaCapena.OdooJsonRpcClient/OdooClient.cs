@@ -48,6 +48,7 @@ namespace PortaCapena.OdooJsonRpcClient
 
         static OdooClient()
         {
+            System.Net.ServicePointManager.Expect100Continue = false;
             InitializeHttpClient();
         }
 
