@@ -108,7 +108,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             result.Value.Name.Should().Be("Acoustic Bloc Screens");
             result.Value.Name.Should().NotBe("Akoestische blokschermen");
 
-            var model = OdooDictionaryModel.Create<ProductProductOdooModel>().Add(x => x.Name, "Product new name NL");
+            var model = OdooDictionaryModel.Create<ProductProductOdooModel>().AddOrUpdate(x => x.Name, "Product new name NL");
 
             repo.Config.Context.Language = "nl_BE";
 

@@ -262,7 +262,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             products.Succeed.Should().BeTrue();
             products.Value.Should().BePositive();
 
-            model.Add(x => x.Name, "new name");
+            model.AddOrUpdate(x => x.Name, "new name");
 
             var editedCustomer = await odooClient.UpdateAsync(model, products.Value);
             editedCustomer.Succeed.Should().BeTrue();
@@ -392,8 +392,8 @@ namespace PortaCapena.OdooJsonRpcClient.Example
 
             var dictModel3 = OdooDictionaryModel.Create<ProductProductOdooModel>(x => x.InvoicePolicy, InvoicingPolicyProductProductOdooEnum.DeliveredQuantities);
 
-            dictModel.Add<ProductProductOdooModel>(x => x.CombinationIndices, "sadasd");
-            dictModel.Add<ProductProductOdooModel>(x => x.InvoicePolicy, InvoicingPolicyProductProductOdooEnum.DeliveredQuantities);
+            dictModel.AddOrUpdate<ProductProductOdooModel>(x => x.CombinationIndices, "sadasd");
+            dictModel.AddOrUpdate<ProductProductOdooModel>(x => x.InvoicePolicy, InvoicingPolicyProductProductOdooEnum.DeliveredQuantities);
 
             var createResult = await odooClient.CreateAsync(dictModel);
             createResult.Succeed.Should().BeTrue();
@@ -551,7 +551,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
                     Name = "test purchase line",
                 })
             };
-            purchaseOrder.Add(x => x.OrderLine, lines);
+            purchaseOrder.AddOrUpdate(x => x.OrderLine, lines);
 
             var createResult = await odooClient.CreateAsync(purchaseOrder);
 

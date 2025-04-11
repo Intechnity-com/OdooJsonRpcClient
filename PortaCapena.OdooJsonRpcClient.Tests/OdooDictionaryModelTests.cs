@@ -48,7 +48,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
             {
                 Name = "test name",
             });
-            model.Add(x => x.CreateDate, new DateTime());
+            model.AddOrUpdate(x => x.CreateDate, new DateTime());
 
             model.TableName.Should().NotBeEmpty();
             model.Should().NotBeEmpty();
@@ -68,7 +68,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
             {
                 Name = TestString(),
             });
-            model.Add(x => x.DisplayName, TestString());
+            model.AddOrUpdate(x => x.DisplayName, TestString());
 
             model.TableName.Should().NotBeEmpty();
             model.Should().NotBeEmpty();
@@ -88,7 +88,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
             {
                 Name = TestString("123"),
             });
-            model.Add(x => x.DisplayName, TestString("456"));
+            model.AddOrUpdate(x => x.DisplayName, TestString("456"));
 
             model.TableName.Should().NotBeEmpty();
             model.Should().NotBeEmpty();
@@ -110,7 +110,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
             {
                 Name = TestString("123"),
             });
-            model.Add(x => x.State, StatusPurchaseOrderOdooEnum.PurchaseOrder);
+            model.AddOrUpdate(x => x.State, StatusPurchaseOrderOdooEnum.PurchaseOrder);
 
             model.TableName.Should().NotBeEmpty();
             model.Should().NotBeEmpty();
@@ -132,7 +132,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
             {
                 ActivityIds = new long[] { 1, 2, 3 }
             });
-            model.Add(x => x.MessageFollowerIds, new long[] { 4, 5, 6 });
+            model.AddOrUpdate(x => x.MessageFollowerIds, new long[] { 4, 5, 6 });
 
             model.TableName.Should().NotBeEmpty();
             model.Should().NotBeEmpty();

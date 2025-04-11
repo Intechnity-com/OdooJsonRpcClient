@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Security;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
@@ -348,6 +349,26 @@ namespace PortaCapena.OdooJsonRpcClient
 
         #endregion
 
+        #region Execute Odoo Method
+        public async Task<OdooResult<U>> ExecuteMethod<T, U>(string methodName, object[] parameters, OdooContext context = null, CancellationToken cancellationToken = default) where T : IOdooModel, new() where U : IOdooMethodResult, new()
+        {
+            return await ExecuteWitrAccesDenideRetryAsync(userUid => ExecuteMethod<T, U>(userUid, methodName, parameters, SelectContext(context, Config.Context), cancellationToken));
+        }
+        public async Task<OdooResult<U>> ExecuteMethod<T, U>(int userUid, string methodName, object[] parameters, OdooContext context = null, CancellationToken cancellationToken = default) where T : IOdooModel, new() where U : IOdooMethodResult, new()
+        {
+            return await ExecuteMethod<T, U>(Config, userUid, methodName, parameters, SelectContext(context, Config.Context), cancellationToken);
+        }
+        public static async Task<OdooResult<U>> ExecuteMethod<T, U>(OdooConfig odooConfig, int userUid, string methodName, object[] parameters, OdooContext context = null, CancellationToken cancellationToken = default) where T : IOdooModel, new() where U : IOdooMethodResult, new()
+        {
+            var tableName = OdooExtensions.GetOdooTableName<T>();
+            var requestParams = new OdooRequestParams(odooConfig.ApiUrlJson, "object", "execute_kw", odooConfig.DbName, userUid, odooConfig.Password, tableName, methodName, parameters);
+            var requestModel = new OdooRequestModel(requestParams);
+            return await CallAndDeserializeAsync<U>(requestModel);
+        }
+
+        #endregion
+
+
         private async Task<OdooResult<TResult>> ExecuteWitrAccesDenideRetryAsync<TResult>(Func<int, Task<OdooResult<TResult>>> func, CancellationToken cancellationToken = default)
         {
             var userUid = await GetCurrentUserUidOrLoginAsync(cancellationToken);
@@ -404,5 +425,9 @@ namespace PortaCapena.OdooJsonRpcClient
         {
             return paramContext ?? mainContext;
         }
+
+
+
+
     }
 }
