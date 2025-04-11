@@ -285,6 +285,52 @@ var products = await repository.Query()
                .FirstOrDefaultAsync();
 ```
 
+## Custom Http Message Handler
+If U want to use custom `HttpMessageHandler`, U can use `OdooClientHttp.Configure` before creating `OdooClient` instance. This could be done on your startup class.
+
+These custom handlers can be used for logging odoo requests and responses, adding headers or other customizations.
+
+When configuring the client, you can add multiple handlers. The order in which you add them is the order in which they will be executed.
+
+```C#
+OdooHttpClient.Configure(opt =>
+{
+   opt.AddHttpMessageHandler(new LoggingHandler());
+   //you can add more custom handlers like so
+   //opt.AddHttpMessageHandler(new CustomHandler());
+});
+
+var config = new OdooConfig(
+        apiUrl: "https://odoo-api-url.com", //  "http://localhost:8069"
+        dbName: "odoo-db-name",
+        userName: "admin",
+        password: "admin"
+        );
+
+var odooClient = new OdooClient(config);
+var versionResult = await odooClient.GetVersionAsync();
+
+/** Output **
+Made a request at: 7/19/2024 7:11:28PM
+Got a response at: 7/19/2024 7:11:32PM
+*/
+
+// You can introduce ILogger to the constructor
+public class LoggingHandler : DelegatingHandler
+{
+    protected override async Task<HttpResponseMessage> SendAsync(
+        HttpRequestMessage request,
+        CancellationToken cancellationToken
+    )
+    {
+        Console.WriteLine("Made a request at: {0}", DateTime.UtcNow);
+        var response = await base.SendAsync(request, cancellationToken);
+        Console.WriteLine("Got a response at: {0}", DateTime.UtcNow);
+        return response;
+    }
+}
+```
+
 
 ## Odoo Request and Result models examples
 #### Request 
