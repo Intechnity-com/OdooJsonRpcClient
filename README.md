@@ -1,16 +1,13 @@
-# PortaCapena.OdooJsonRpcClient
+# OdooJsonRpcClient
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/patricoos/PortaCapena.OdooJsonRpcClient/blob/master/LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Intechnity-com/OdooJsonRpcClient/blob/master/LICENSE.md)
 [![NuGet package](https://img.shields.io/nuget/v/PortaCapena.OdooJsonRpcClient?color=blue&logo=NuGet&label=NuGet%20Package)](https://www.nuget.org/packages/PortaCapena.OdooJsonRpcClient)
 [![Nuget](https://img.shields.io/nuget/dt/PortaCapena.OdooJsonRpcClient?logo=NuGet&label=Downloads)](https://www.nuget.org/packages/PortaCapena.OdooJsonRpcClient)
-[![example workflow](https://github.com/patricoos/PortaCapena.OdooJsonRpcClient/actions/workflows/pr_build.yml/badge.svg)](https://github.com/patricoos/PortaCapena.OdooJsonRpcClient/actions/workflows/pr_build.yml)
-[![example workflow](https://github.com/patricoos/PortaCapena.OdooJsonRpcClient/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/patricoos/PortaCapena.OdooJsonRpcClient/actions/workflows/codeql-analysis.yml)
+[![example workflow](https://github.com/Intechnity-com/OdooJsonRpcClient/actions/workflows/pr_build.yml/badge.svg)](https://github.com/Intechnity-com/OdooJsonRpcClient/actions/workflows/pr_build.yml)
+[![example workflow](https://github.com/Intechnity-com/OdooJsonRpcClient/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/Intechnity-com/OdooJsonRpcClient/actions/workflows/codeql-analysis.yml)
 ![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/patricoos/54596b8c061e5c3c25b3072822a105a0/raw/code-coverage.json)
 
 OdooJsonRpcClient is a C# library (.NET Standard) for communication with Odoo.
-
-[Porta Capena - Odoo Partner](https://www.odoo.com/partners/porta-capena-3710126)
-
 
 
 ## Installation
@@ -143,7 +140,7 @@ var model = OdooDictionaryModel.Create(() => new ProductProductOdooModel()
 {
     Name = "test product name updated"
 }); 
-var result = await repository.UpdateAsync(productId, model);
+var result = await repository.UpdateAsync(model, productId);
 ```
 
 #### Delete
@@ -151,6 +148,12 @@ var result = await repository.UpdateAsync(productId, model);
 var deleteProductResult = await repository.DeleteAsync(productId);
 ```
 
+#### Action
+Perform any actions on a model. For example use the code below to comfirm a sale order and turn it from a quote to an order.
+```C#    
+var repository = new OdooRepository<SaleOrderOdooModel>(config);                    
+var confirmResult = await repository.ActionAsync("action_confirm", orderId);
+```
 
 
 
@@ -210,6 +213,20 @@ if(condition)
 var createResult = await odooRepository.CreateAsync(model);
 ```
 
+or 
+```C#                        
+ var model2 = new OdooDictionaryModel("res.partner") {
+                { "name", "test name" },
+                { "country_id", 20 },
+                { "city", "test city" },
+                { "zip", "12345" },
+                { "street", "test address" },
+                { "company_type", "company" },
+            };
+var odooClient = new OdooClient(TestConfig);
+
+var createResult = await odooClient.CreateAsync(model2);
+```
 
 
 

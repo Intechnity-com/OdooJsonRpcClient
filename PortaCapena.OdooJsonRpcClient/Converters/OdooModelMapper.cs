@@ -52,11 +52,15 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                     result = DateTime.Parse(stringTime);
                     return true;
 
+                // Enum part accept both string and integer to avoid issue #54
                 case JTokenType.String when dotnetType.IsEnum:
+                case JTokenType.Integer when dotnetType.IsEnum:
                     result = ConvertToDotNetEnum(dotnetType, value.ToString());
                     return true;
 
                 case JTokenType.String when dotnetType.IsGenericType && dotnetType.GetGenericTypeDefinition() == typeof(Nullable<>) &&
+                                            dotnetType.GenericTypeArguments.Length == 1 && dotnetType.GenericTypeArguments[0].IsEnum:
+                case JTokenType.Integer when dotnetType.IsGenericType && dotnetType.GetGenericTypeDefinition() == typeof(Nullable<>) &&
                                             dotnetType.GenericTypeArguments.Length == 1 && dotnetType.GenericTypeArguments[0].IsEnum:
                     var nullableType = Nullable.GetUnderlyingType(dotnetType);
                     result = ConvertToDotNetEnum(nullableType, value);
@@ -210,6 +214,11 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                 case OdooValueTypeEnum.Reference:
                     return ConvertOdooNameToDotNet(property.Value.RelationField) + OdooModelSuffix;
 
+                case OdooValueTypeEnum.Properties:
+                    return "string";
+                case OdooValueTypeEnum.PropertiesDefinition:
+                    return "string";
+
                 default:
                     throw new ArgumentException($"Not expected Property Value Type: '{property.Value.PropertyValueType}'");
             }
@@ -219,7 +228,13 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
         {
             odooName = odooName.Replace("+", "Plus");
             var odooNameCleaned = Regex.Replace(odooName, "[^A-Za-z0-9-]", "_");
-            var dotnetKeys = odooNameCleaned.Split('_', '-', '.', ',', ' ', ':', ';', '/', '\\', '*', '+', '(', ')', '[', ']').Select(x => CultureInfo.InvariantCulture.TextInfo.ToTitleCase(x));
+            var dotnetKeys = odooNameCleaned
+                .Split('_', '-', '.', ',', ' ', ':', ';', '/', '\\', '*', '+', '(', ')', '[', ']')
+                .Select(x => CultureInfo.InvariantCulture.TextInfo.ToTitleCase(x))
+                .Where(x => !string.IsNullOrEmpty(x))
+                .ToList();
+            if (dotnetKeys.Count == 0)
+                dotnetKeys.Add("None");
             return string.Join(string.Empty, dotnetKeys);
         }
 

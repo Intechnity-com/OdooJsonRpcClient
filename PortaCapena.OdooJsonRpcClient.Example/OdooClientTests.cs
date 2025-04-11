@@ -42,6 +42,21 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             var model = OdooModelMapper.GetDotNetModel(tableName, modelResult.Value);
         }
 
+
+        [Fact]
+        public async Task Can_get_all_products_as_dictionary()
+        {
+            var odooClient = new OdooClient(TestConfig);
+
+            var products = await odooClient.GetAsync("product.product");
+
+            products.Error.Should().BeNull();
+            products.Value.Should().NotBeNull();
+            products.Value.Length.Should().BeGreaterThan(0);
+            products.Succeed.Should().BeTrue();
+        }
+
+
         [Fact]
         public async Task Can_get_all_products()
         {
@@ -173,7 +188,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
                     x.Description,
                     x.WriteDate
                 })
-               // .Where(x => x.Name, OdooOperator.EqualsTo, "Bioboxen 610l")
+                // .Where(x => x.Name, OdooOperator.EqualsTo, "Bioboxen 610l")
                 .Where(x => x.WriteDate, OdooOperator.GreaterThanOrEqualTo, new DateTime(2020, 12, 2));
 
             var products = await odooClient.GetAsync<ProductProductOdooModel>(filters);
@@ -189,29 +204,37 @@ namespace PortaCapena.OdooJsonRpcClient.Example
 
         #region Create
 
-        //  [Fact(Skip = "Test for working on Odoo")]
         [Fact]
         public async Task Can_Create_customer()
         {
-            var name = "dupa";
-            var city = "dupa";
-            var postalCode = "dupa";
-            var vatEu = "test";
-            var address = "dupa";
-            var isCompany = true;
-
-            CompanyTypeResPartnerOdooEnum? test = CompanyTypeResPartnerOdooEnum.Company;
-
             var model = OdooDictionaryModel.Create(() => new ResPartnerOdooModel()
             {
-                Name = name,
+                Name = "test name",
                 CountryId = 20,
-                City = city,
-                Zip = postalCode,
-                //Vat = vatEu,
-                Street = address,
-                CompanyType = test ?? CompanyTypeResPartnerOdooEnum.Individual
+                City = "test city",
+                Zip = "12345",
+                Street = "test address",
+                CompanyType = CompanyTypeResPartnerOdooEnum.Company
             });
+
+            var odooClient = new OdooClient(TestConfig);
+
+            var products = await odooClient.CreateAsync(model);
+
+            products.Succeed.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task Can_Create_customer_with_dictionary()
+        {
+            var model = new OdooDictionaryModel("res.partner") {
+                { "name", "test name" },
+                { "country_id", 20 },
+                { "city", "test city" },
+                { "zip", "12345" },
+                { "street", "test address" },
+                { "company_type", "company" },
+            };
 
             var odooClient = new OdooClient(TestConfig);
 
@@ -506,7 +529,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         }
 
         [Fact(Skip = "Test for working on Odoo")]
-      //  [Fact]
+        //  [Fact]
         public async Task Can_create_purchase_order()
         {
             var odooClient = new OdooClient(TestConfig);
@@ -522,7 +545,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
                 Name = "test purchase",
             });
 
-            var lines = new[] { 
+            var lines = new[] {
                 OdooDictionaryModel.Create(() => new PurchaseOrderLineOdooModel()
                 {
                     Name = "test purchase line",
@@ -537,8 +560,8 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             createResult.Succeed.Should().BeTrue();
         }
 
-       // [Fact(Skip = "Test for working on Odoo")]
-          [Fact]
+        // [Fact(Skip = "Test for working on Odoo")]
+        [Fact]
         public async Task Can_create_update_and_delete_product()
         {
             var odooClient = new OdooClient(TestConfig);
