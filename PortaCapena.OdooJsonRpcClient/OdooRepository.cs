@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using PortaCapena.OdooJsonRpcClient.Extensions;
 using PortaCapena.OdooJsonRpcClient.Models;
 using PortaCapena.OdooJsonRpcClient.Request;
@@ -27,6 +28,14 @@ namespace PortaCapena.OdooJsonRpcClient
         public async Task<OdooResult<long>> CreateAsync(OdooDictionaryModel model, OdooContext context = null)
         {
             return await OdooClient.CreateAsync(model, context);
+        }
+        public async Task<OdooResult<long[]>> CreateAsync(IEnumerable<IOdooCreateModel> models, OdooContext context = null)
+        {
+            return await OdooClient.CreateAsync(models, context);
+        }
+        public async Task<OdooResult<long[]>> CreateAsync(IEnumerable<OdooDictionaryModel> models, OdooContext context = null)
+        {
+            return await OdooClient.CreateAsync(models, context);
         }
 
         public async Task<OdooResult<bool>> UpdateAsync(IOdooCreateModel model, long id, OdooContext context = null)
@@ -58,6 +67,10 @@ namespace PortaCapena.OdooJsonRpcClient
         public async Task<OdooResult<bool>> DeleteRangeAsync(T[] models, OdooContext context = null)
         {
             return await OdooClient.DeleteRangeAsync(models as IOdooModel[], context);
+        }
+        public async Task<OdooResult<object>> ActionAsync(string action, object args, OdooContext context = null)
+        {
+            return await OdooClient.ActionAsync(TableName, action, args, context);
         }
     }
 }
