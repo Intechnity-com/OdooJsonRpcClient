@@ -56,13 +56,14 @@ jobs:
         path: ${{github.workspace}}/${{env.file_name}}
         
 # add report as PR comment (if PR)
-    - name: comment PR
-      uses: machine-learning-apps/pr-comment@master
-      if: ${{ github.event_name == 'pull_request' }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Comment on PR
+      uses: peter-evans/create-or-update-comment@v4
+      if: github.event_name == 'pull_request'
       with:
-        path: ${{env.file_name}} 
+        token: ${{ secrets.GITHUB_TOKEN }}
+        issue-number: ${{ github.event.pull_request.number }}
+        body-path: ${{ env.file_name }}
+        edit-mode: replace
         
     - name: Code Coverage Report
       uses: irongut/CodeCoverageSummary@v1.3.0
