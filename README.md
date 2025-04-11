@@ -148,6 +148,12 @@ var result = await repository.UpdateAsync(model, productId);
 var deleteProductResult = await repository.DeleteAsync(productId);
 ```
 
+#### Action
+Perform any actions on a model. For example use the code below to comfirm a sale order and turn it from a quote to an order.
+```C#    
+var repository = new OdooRepository<SaleOrderOdooModel>(config);                    
+var confirmResult = await repository.ActionAsync("action_confirm", orderId);
+```
 
 
 
