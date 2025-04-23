@@ -104,7 +104,7 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
             var builder = new StringBuilder();
             builder.AppendLine($"[OdooTableName(\"{tableName}\")]");
             builder.AppendLine($"[JsonConverter(typeof({nameof(OdooModelConverter)}))]");
-            builder.AppendLine($"public class {ConvertOdooNameToDotNet(tableName)}{OdooModelSuffix} : IOdooModel");
+            builder.AppendLine($"public partial class {ConvertOdooNameToDotNet(tableName)}{OdooModelSuffix} : IOdooModel");
             builder.AppendLine("{");
 
             foreach (var property in properties)
