@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System.Collections.Concurrent;
 using PortaCapena.OdooJsonRpcClient.Consts;
 using PortaCapena.OdooJsonRpcClient.Extensions;
 using PortaCapena.OdooJsonRpcClient.Models;
@@ -23,7 +24,7 @@ namespace PortaCapena.OdooJsonRpcClient
         private static HttpClient _client;
         public OdooConfig Config { get; }
 
-        [ThreadStatic] private static int? _userUid;
+        private static readonly ConcurrentDictionary<string, int> _userUid = new ConcurrentDictionary<string, int>();
 
         /// <summary>
         /// Can be set to false, if server certificate shall not be validated.
@@ -298,8 +299,8 @@ namespace PortaCapena.OdooJsonRpcClient
 
         public async Task<OdooResult<int>> GetCurrentUserUidOrLoginAsync(CancellationToken cancellationToken = default)
         {
-            if (_userUid.HasValue)
-                return await Task.FromResult(OdooResult<int>.SucceedResult(_userUid.Value));
+            if (_userUid.ContainsKey(Config.ApiUrl))
+                return await Task.FromResult(OdooResult<int>.SucceedResult(_userUid[Config.ApiUrl]));
 
             return await LoginAsync(cancellationToken);
         }
@@ -308,7 +309,7 @@ namespace PortaCapena.OdooJsonRpcClient
             var result = await LoginAsync(Config, cancellationToken);
 
             if (result.Succeed)
-                _userUid = result.Value;
+                _userUid[Config.ApiUrl] = result.Value;
 
             return result;
         }
