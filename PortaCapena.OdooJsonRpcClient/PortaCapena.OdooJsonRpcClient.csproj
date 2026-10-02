@@ -24,12 +24,12 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-    <None Include="../README.md" Pack="true" PackagePath=""/>
-    <None Include="../LICENSE.md" Pack="true" PackagePath=""/>
+    <None Include="../README.md" Pack="true" PackagePath="" />
+    <None Include="../LICENSE.md" Pack="true" PackagePath="" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
 
 </Project>
