@@ -24,6 +24,12 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
 
             switch (value.Type)
             {
+                case JTokenType.Boolean when dotnetType == typeof(int?) || dotnetType == typeof(long?) || dotnetType == typeof(double?):
+                    result = null;
+                    return true;
+                case JTokenType.Boolean when !string.IsNullOrEmpty(dotnetType.Name) && dotnetType.Name.Contains("Dictionary"):
+                    result = null;
+                    return true;
                 case JTokenType.Boolean when dotnetType != typeof(bool) && dotnetType != typeof(bool?):
                     return false;
 
@@ -66,6 +72,26 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                     result = ConvertToDotNetEnum(nullableType, value);
                     return true;
 
+                case JTokenType.Array when !dotnetType.IsArray && dotnetType == typeof(List<long>):
+                    var longArrayType = typeof(long[]);
+                    var longArrayResult = value.ToObject(longArrayType) as long[];
+                    if (longArrayResult != null)
+                    {
+                        result = longArrayResult.ToList();
+                        return true;
+                    }
+
+                    throw new Exception($"Not implemented json mapping '${value.Parent}'");
+                case JTokenType.Array when !dotnetType.IsArray && dotnetType == typeof(List<int>):
+                    var intArrayType = typeof(int[]);
+                    var intArrayResult = value.ToObject(intArrayType) as int[];
+                    if (intArrayResult != null)
+                    {
+                        result = intArrayResult.ToList();
+                        return true;
+                    }
+
+                    throw new Exception($"Not implemented json mapping '${value.Parent}'");
                 case JTokenType.Array when dotnetType.IsArray:
                     if (!value.HasValues)
                     {
@@ -92,7 +118,9 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
 
                     result = value.First.ToObject(dotnetType);
                     return true;
-
+                case JTokenType.Object when !string.IsNullOrEmpty(dotnetType.Name) && dotnetType.Name.Contains("Dictionary"):
+                    result = value.ToObject(dotnetType);
+                    return true;
                 default:
                     throw new Exception($"Not implemented json mapping value: '${value.Parent}' to {dotnetType.Name}");
             }

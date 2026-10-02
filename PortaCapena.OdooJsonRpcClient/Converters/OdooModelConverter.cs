@@ -43,11 +43,16 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
 
                 var dotNetType = objectType.GetProperty(dotNetName);
 
-                if (OdooModelMapper.ConverOdooPropertyToDotNet(dotNetType.PropertyType, keyValuePair.Value, out var result))
+                if (ConverOdooPropertyToDotNet(dotNetType.PropertyType, keyValuePair.Value, out object result))
                     dotNetType.SetValue(instance, result);
             }
 
             return instance;
+        }
+
+        public virtual bool ConverOdooPropertyToDotNet(Type dotnetType, JToken value, out object result)
+        {
+            return OdooModelMapper.ConverOdooPropertyToDotNet(dotnetType, value, out result);
         }
 
         public override bool CanConvert(Type objectType)
