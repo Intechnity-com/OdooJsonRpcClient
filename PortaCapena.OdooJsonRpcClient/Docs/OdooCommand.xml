@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- XML documentation of OdooCommand, referenced by <include> tags. -->
+<docs>
+
+  <member name="OdooCommand">
+    <summary>
+      Commands for writing one2many and many2many fields, e.g. <c>model["tag_ids"] = OdooCommand.Set(1, 2)</c>.
+      Odoo 13+ accepts also a plain list of ids for many2many fields; older versions need commands.
+    </summary>
+  </member>
+
+  <member name="Create">
+    <summary>Creates a new related record from <paramref name="values"/> and links it: <c>[[0, 0, values]]</c>.</summary>
+    <param name="values">Field values of the new record.</param>
+  </member>
+
+  <member name="Update">
+    <summary>Updates the related record <paramref name="id"/> with <paramref name="values"/>: <c>[[1, id, values]]</c>.</summary>
+    <param name="id">Id of the related record.</param>
+    <param name="values">Field values to write.</param>
+  </member>
+
+  <member name="Delete">
+    <summary>Removes the related record <paramref name="id"/> from the field and deletes it from the database: <c>[[2, id, 0]]</c>.</summary>
+    <param name="id">Id of the related record.</param>
+  </member>
+
+  <member name="Unlink">
+    <summary>Removes the related record <paramref name="id"/> from the field, the record stays in the database: <c>[[3, id, 0]]</c>.</summary>
+    <param name="id">Id of the related record.</param>
+  </member>
+
+  <member name="Link">
+    <summary>Adds the existing record <paramref name="id"/> to the field: <c>[[4, id, 0]]</c>.</summary>
+    <param name="id">Id of the existing record.</param>
+  </member>
+
+  <member name="Clear">
+    <summary>Removes all records from the field, the records stay in the database: <c>[[5, 0, 0]]</c>.</summary>
+  </member>
+
+  <member name="Set">
+    <summary>Replaces all records in the field with <paramref name="ids"/>: <c>[[6, 0, ids]]</c>.</summary>
+    <param name="ids">Ids of the existing records.</param>
+  </member>
+
+</docs>
