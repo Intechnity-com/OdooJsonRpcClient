@@ -243,6 +243,28 @@ namespace PortaCapena.OdooJsonRpcClient.Example.Rpc
             result.Value.CategoryId.Should().NotBeNull();
         }
 
+        [Fact]
+        public async Task Archived_records_are_returned_with_active_filter()
+        {
+            // issues #42, #102
+            var repository = new OdooRepository<IntegrationPartnerOdooModel>(TestConfig);
+            var id = (await repository.CreateAsync(OdooDictionaryModel.Create(() => new IntegrationPartnerOdooModel { Name = UniqueName("Archived"), Active = false }))).Value;
+            try
+            {
+                var archived = await repository.Query()
+                    .Where(x => x.Active, OdooOperator.EqualsTo, false)
+                    .Where(x => x.Id, OdooOperator.EqualsTo, id)
+                    .ToListAsync();
+
+                archived.Succeed.Should().BeTrue(archived.Message);
+                archived.Value.Should().ContainSingle(x => x.Id == id && !x.Active);
+            }
+            finally
+            {
+                await repository.DeleteAsync(id);
+            }
+        }
+
         #endregion
 
         #region Create / update / delete
