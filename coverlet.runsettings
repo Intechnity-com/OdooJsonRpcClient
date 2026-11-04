@@ -5,7 +5,8 @@
     <DataCollectors>
       <DataCollector friendlyName="XPlat code coverage">
         <Configuration>
-          <Format>cobertura</Format>
+          <!-- cobertura: PR coverage comment (pr_build.yml), opencover: README badge (code-coverage-badge.yml) -->
+          <Format>cobertura,opencover</Format>
           <!-- Shared contains only test models used by tests - not part of the library -->
           <Exclude>[PortaCapena.OdooJsonRpcClient.Shared]*</Exclude>
         </Configuration>
