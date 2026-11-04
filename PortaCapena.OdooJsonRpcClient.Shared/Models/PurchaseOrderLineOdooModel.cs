@@ -159,6 +159,9 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
 
         [EnumMember(Value = "service")]
         Service = 2,
+
+        [EnumMember(Value = "product")]
+        StorableProduct = 3,
     }
 
 
@@ -194,6 +197,9 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
     {
         [EnumMember(Value = "manual")]
         Manual = 1,
+
+        [EnumMember(Value = "stock_moves")]
+        StockMoves = 2,
     }
 
 
