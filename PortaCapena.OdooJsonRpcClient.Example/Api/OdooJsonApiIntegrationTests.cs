@@ -10,7 +10,7 @@ using PortaCapena.OdooJsonRpcClient.Shared;
 using PortaCapena.OdooJsonRpcClient.Shared.Models;
 using Xunit;
 
-namespace PortaCapena.OdooJsonRpcClient.Example
+namespace PortaCapena.OdooJsonRpcClient.Example.Api
 {
     /// <summary>
     /// The same client methods over the JSON API against Odoo 19 from docker/odoo19 (http://localhost:8070).

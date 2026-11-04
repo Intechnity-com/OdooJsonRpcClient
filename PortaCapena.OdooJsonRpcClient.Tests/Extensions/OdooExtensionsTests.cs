@@ -6,7 +6,7 @@ using FluentAssertions;
 using PortaCapena.OdooJsonRpcClient.Consts;
 using PortaCapena.OdooJsonRpcClient.Extensions;
 using PortaCapena.OdooJsonRpcClient.Result;
-using PortaCapena.OdooJsonRpcClient.Tests.Infrastructure;
+using PortaCapena.OdooJsonRpcClient.Shared.Models;
 using Xunit;
 
 namespace PortaCapena.OdooJsonRpcClient.Tests.Extensions
