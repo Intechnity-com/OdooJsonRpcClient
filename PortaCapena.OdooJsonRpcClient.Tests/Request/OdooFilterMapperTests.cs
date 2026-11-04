@@ -2,7 +2,7 @@ using System;
 using FluentAssertions;
 using Newtonsoft.Json;
 using PortaCapena.OdooJsonRpcClient.Consts;
-using PortaCapena.OdooJsonRpcClient.Tests.Infrastructure;
+using PortaCapena.OdooJsonRpcClient.Shared.Models;
 using PortaCapena.OdooJsonRpcClient.Utils;
 using Xunit;
 

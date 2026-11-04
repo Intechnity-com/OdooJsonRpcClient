@@ -9,7 +9,7 @@ using PortaCapena.OdooJsonRpcClient.Shared;
 using PortaCapena.OdooJsonRpcClient.Shared.Models;
 using Xunit;
 
-namespace PortaCapena.OdooJsonRpcClient.Example
+namespace PortaCapena.OdooJsonRpcClient.Example.Api
 {
     /// <summary>
     /// search / read / get_metadata / check_access_rights / default_get / fields_get(attributes) /

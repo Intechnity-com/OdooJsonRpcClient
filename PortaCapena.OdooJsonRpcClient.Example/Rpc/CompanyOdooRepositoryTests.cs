@@ -7,7 +7,7 @@ using PortaCapena.OdooJsonRpcClient.Shared;
 using PortaCapena.OdooJsonRpcClient.Shared.Models;
 using Xunit;
 
-namespace PortaCapena.OdooJsonRpcClient.Example
+namespace PortaCapena.OdooJsonRpcClient.Example.Rpc
 {
     public class CompanyOdooRepositoryTests : RequestTestBase
     {

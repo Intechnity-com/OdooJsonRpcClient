@@ -12,7 +12,7 @@ using PortaCapena.OdooJsonRpcClient.Shared;
 using PortaCapena.OdooJsonRpcClient.Shared.Models;
 using Xunit;
 
-namespace PortaCapena.OdooJsonRpcClient.Example
+namespace PortaCapena.OdooJsonRpcClient.Example.Api
 {
     /// <summary>
     /// Integration tests against Odoo 19 (docker/odoo19) with the JSON API.
