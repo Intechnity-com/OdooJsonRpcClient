@@ -356,6 +356,23 @@ var products = await repository.Query()
 
 
 
+## Invoice PDF
+```C#
+var wizardRepository = new OdooRepository<AccountMoveSendWizardOdooModel>(config);
+var wizardId = await wizardRepository.CreateAsync(OdooDictionaryModel.Create(() => new AccountMoveSendWizardOdooModel()
+{
+    MoveId = invoiceId,
+    SendingMethods = new string[0]
+}));
+await wizardRepository.ActionAsync("action_send_and_print", wizardId.Value);
+
+var invoiceRepository = new OdooRepository<AccountMoveOdooModel>(config);
+var invoice = await invoiceRepository.Query().ById(invoiceId).FirstAsync();
+var pdf = Convert.FromBase64String(invoice.Value.InvoicePdfReportFile);
+```
+
+
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
