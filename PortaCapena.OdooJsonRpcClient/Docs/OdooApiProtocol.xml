@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- XML documentation of OdooApiProtocol, referenced by <include> tags. -->
+<docs>
+
+  <member name="OdooApiProtocol">
+    <summary>External API used to talk to Odoo, set by <see cref="Models.OdooConfig.Protocol"/>.</summary>
+  </member>
+
+  <member name="JsonRpc">
+    <summary>
+      Classic JSON-RPC API (<c>/jsonrpc</c>) with login and password or API key - works with all Odoo versions.
+      Deprecated since Odoo 19; removed in Odoo 22 (fall 2028) and Odoo Online 21.1 (winter 2027).
+    </summary>
+  </member>
+
+  <member name="JsonApi">
+    <summary>
+      JSON API of Odoo 19+ (called "JSON-2" in Odoo documentation, <c>POST /json/2/&lt;model&gt;/&lt;method&gt;</c>): no login, API key sent as bearer token,
+      database in the <c>X-Odoo-Database</c> header, arguments passed by name.
+      Put the API key into <see cref="Models.OdooConfig.Password"/>.
+      Positional arguments are not supported by JSON API, so calls that need them (e.g. <see cref="OdooClient.ActionCollectionAsync(string, string, object, Models.OdooContext, System.Threading.CancellationToken)"/>)
+      return a failed result - use <see cref="OdooClient.CallMethodAsync"/> with named arguments instead.
+    </summary>
+  </member>
+
+</docs>

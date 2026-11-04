@@ -433,6 +433,9 @@ namespace PortaCapena.OdooJsonRpcClient
             if (timeout <= TimeSpan.Zero)
                 timeout = DefaultTimeout;
 
+            if (request.Config?.Protocol == OdooApiProtocol.JsonApi)
+                return await OdooJsonApiRequestSender.SendAsync<T>(httpClient, request, timeout, cancellationToken).ConfigureAwait(false);
+
             try
             {
                 using (var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
