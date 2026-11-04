@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- XML documentation of OdooRequestModel and OdooRequestParams, referenced by <include> tags.
+     These are low level JSON-RPC request models - normally created by OdooClient. -->
+<docs>
+
+  <!-- OdooRequestModel -->
+
+  <member name="OdooRequestModel">
+    <summary>
+      JSON-RPC 2.0 request sent to Odoo <c>/jsonrpc</c>. Normally created by <see cref="OdooClient"/>;
+      use the static factory methods with <see cref="OdooClient.CallAndDeserializeAsync{T}"/> for calls not covered by the client.
+    </summary>
+  </member>
+
+  <member name="Id">
+    <summary>Request id - Odoo returns it in the answer. Unique within the process.</summary>
+  </member>
+
+  <member name="Jsonrpc">
+    <summary>JSON-RPC protocol version, always <c>2.0</c> for Odoo.</summary>
+  </member>
+
+  <member name="Method">
+    <summary>JSON-RPC method, always <c>call</c> for Odoo.</summary>
+  </member>
+
+  <member name="Params">
+    <summary>Odoo service, method and arguments of the call.</summary>
+  </member>
+
+  <member name="ctor">
+    <summary>Creates JSON-RPC 2.0 <c>call</c> request with a new unique id.</summary>
+    <param name="requestParams">Odoo service, method and arguments.</param>
+  </member>
+
+  <member name="ctor.Method">
+    <summary>Creates request with given protocol version and method and a new unique id.</summary>
+    <param name="jsonrpcVersion">JSON-RPC version, e.g. <c>2.0</c>.</param>
+    <param name="method">JSON-RPC method, e.g. <c>call</c>.</param>
+    <param name="requestParams">Odoo service, method and arguments.</param>
+  </member>
+
+  <member name="ctor.Id">
+    <summary>Creates request with all values given.</summary>
+    <param name="id">Request id.</param>
+    <param name="jsonrpcVersion">JSON-RPC version, e.g. <c>2.0</c>.</param>
+    <param name="method">JSON-RPC method, e.g. <c>call</c>.</param>
+    <param name="requestParams">Odoo service, method and arguments.</param>
+  </member>
+
+  <!-- Factory methods -->
+
+  <member name="Version">
+    <summary>Request for <c>common.version</c> - Odoo server version; does not need login.</summary>
+    <param name="config">Connection settings.</param>
+  </member>
+
+  <member name="Login">
+    <summary>Request for <c>common.login</c> - returns user id, or <c>false</c> for wrong database, user name or password.</summary>
+    <param name="config">Connection settings with credentials.</param>
+  </member>
+
+  <member name="ModelFields">
+    <summary>Request for <c>fields_get</c> - field definitions of an Odoo model.</summary>
+    <param name="config">Connection settings.</param>
+    <param name="uid">Id of a logged in user.</param>
+    <param name="tableName">Odoo model name, e.g. <c>res.partner</c>.</param>
+  </member>
+
+  <member name="Search">
+    <summary>Request for <c>search</c> - ids of records matching the query filters.</summary>
+    <param name="config">Connection settings.</param>
+    <param name="uid">Id of a logged in user.</param>
+    <param name="tableName">Odoo model name.</param>
+    <param name="query">Filters, order, offset and limit; null means all records.</param>
+    <param name="context">Odoo context, or null.</param>
+  </member>
+
+  <member name="SearchRead">
+    <summary>Request for <c>search_read</c> - records matching the query, with requested fields.</summary>
+    <param name="config">Connection settings.</param>
+    <param name="uid">Id of a logged in user.</param>
+    <param name="tableName">Odoo model name.</param>
+    <param name="query">Filters, fields, order, offset and limit; null means all records with all fields.</param>
+    <param name="context">Odoo context, or null.</param>
+  </member>
+
+  <member name="Read">
+    <summary>Request for <c>read</c> - records with given ids. Filters of <paramref name="query"/> are ignored.</summary>
+    <param name="config">Connection settings.</param>
+    <param name="uid">Id of a logged in user.</param>
+    <param name="tableName">Odoo model name.</param>
+    <param name="ids">Ids of records to read.</param>
+    <param name="query">Returned fields; null means all fields.</param>
+    <param name="context">Odoo context, or null.</param>
+  </member>
+
+  <member name="SearchCount">
+    <summary>Request for <c>search_count</c> - number of records matching the query filters.</summary>
+    <param name="config">Connection settings.</param>
+    <param name="uid">Id of a logged in user.</param>
+    <param name="tableName">Odoo model name.</param>
+    <param name="query">Filters; null counts all records.</param>
+    <param name="context">Odoo context, or null.</param>
+  </member>
+
+  <member name="Create">
+    <summary>Request for <c>create</c> - creates a record (or many records when <paramref name="model"/> is a list).</summary>
+    <param name="config">Connection settings.</param>
+    <param name="uid">Id of a logged in user.</param>
+    <param name="tableName">Odoo model name.</param>
+    <param name="model">Values of the record: model class, <see cref="Models.OdooDictionaryModel"/> or a list of them.</param>
+    <param name="context">Odoo context, or null.</param>
+  </member>
+
+  <member name="Update">
+    <summary>Request for <c>write</c> - writes the same values to records with given ids.</summary>
+    <param name="config">Connection settings.</param>
+    <param name="uid">Id of a logged in user.</param>
+    <param name="tableName">Odoo model name.</param>
+    <param name="ids">Ids of updated records.</param>
+    <param name="model">New values: model class or <see cref="Models.OdooDictionaryModel"/>.</param>
+    <param name="context">Odoo context, or null.</param>
+  </member>
+
+  <member name="Delete">
+    <summary>Request for <c>unlink</c> - deletes records with given ids.</summary>
+    <param name="config">Connection settings.</param>
+    <param name="uid">Id of a logged in user.</param>
+    <param name="tableName">Odoo model name.</param>
+    <param name="ids">Ids of records to delete.</param>
+    <param name="context">Odoo context, or null.</param>
+  </member>
+
+  <member name="Metadata">
+    <summary>Request for <c>get_metadata</c> - creation / modification info and external id (xml id) of records.</summary>
+    <param name="config">Connection settings.</param>
+    <param name="uid">Id of a logged in user.</param>
+    <param name="tableName">Odoo model name.</param>
+    <param name="ids">Ids of records.</param>
+    <param name="context">Odoo context, or null.</param>
+  </member>
+
+  <member name="Action">
+    <summary>Request calling any model method with <paramref name="model"/> as the single positional argument (usually record ids).</summary>
+    <param name="config">Connection settings.</param>
+    <param name="uid">Id of a logged in user.</param>
+    <param name="tableName">Odoo model name.</param>
+    <param name="action">Method name, e.g. <c>action_confirm</c>.</param>
+    <param name="model">Single positional argument, usually record id(s).</param>
+    <param name="context">Odoo context, or null.</param>
+  </member>
+
+  <member name="ActionCollection">
+    <summary>Request calling any model method with <paramref name="model"/> as the whole list of positional arguments.</summary>
+    <param name="config">Connection settings.</param>
+    <param name="uid">Id of a logged in user.</param>
+    <param name="tableName">Odoo model name.</param>
+    <param name="action">Method name.</param>
+    <param name="model">Array of positional arguments; the first one is usually record id(s).</param>
+    <param name="context">Odoo context, or null.</param>
+  </member>
+
+  <member name="MapQuery">
+    <summary>Builds keyword arguments of <c>execute_kw</c> (<c>context</c>, <c>fields</c>, <c>order</c>, <c>offset</c>, <c>limit</c>) from context and query.</summary>
+    <param name="context">Odoo context, or null.</param>
+    <param name="query">Query, or null.</param>
+    <returns>Keyword arguments, or null when there are none.</returns>
+  </member>
+
+  <member name="GetRequestFilters">
+    <summary>Builds the domain argument of <c>execute_kw</c> from query filters; no query or no filters gives an empty domain (all records).</summary>
+    <param name="query">Query, or null.</param>
+  </member>
+
+  <!-- OdooRequestParams -->
+
+  <member name="OdooRequestParams">
+    <summary>
+      <c>params</c> of an Odoo JSON-RPC call: service (<c>common</c> / <c>object</c>), its method (e.g. <c>execute_kw</c>) and arguments.
+    </summary>
+  </member>
+
+  <member name="Params.Service">
+    <summary>Odoo service: <c>common</c> (version, login) or <c>object</c> (model methods).</summary>
+  </member>
+
+  <member name="Params.Method">
+    <summary>Method of the service, e.g. <c>login</c>, <c>execute</c>, <c>execute_kw</c>.</summary>
+  </member>
+
+  <member name="Params.Args">
+    <summary>Positional arguments of the method, e.g. database, user id, password, model, model method, its arguments and keyword arguments.</summary>
+  </member>
+
+  <member name="Params.Url">
+    <summary>Url the request is sent to; not serialized.</summary>
+  </member>
+
+  <member name="Params.ctor">
+    <summary>Creates call parameters. Trailing null arguments are removed (e.g. missing keyword arguments).</summary>
+    <param name="url">Url the request is sent to.</param>
+    <param name="service">Odoo service: <c>common</c> or <c>object</c>.</param>
+    <param name="method">Method of the service.</param>
+    <param name="paramethers">Positional arguments of the method.</param>
+  </member>
+
+  <member name="Params.PrepareParams">
+    <summary>Removes trailing null arguments, so optional arguments are not sent.</summary>
+    <param name="paramethers">Arguments to prepare.</param>
+    <returns>Arguments without trailing nulls.</returns>
+  </member>
+
+</docs>

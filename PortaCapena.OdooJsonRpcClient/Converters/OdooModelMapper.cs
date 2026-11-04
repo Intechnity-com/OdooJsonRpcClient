@@ -22,8 +22,22 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
         {
             result = null;
 
+            if (value == null)
+                return false;
+
+            // untyped targets get the raw json value (booleans skipped as before - odoo sends `false` for empty values)
+            if ((dotnetType == typeof(object) || typeof(JToken).IsAssignableFrom(dotnetType)) && value.Type != JTokenType.Boolean)
+            {
+                result = dotnetType == typeof(object) || dotnetType.IsInstanceOfType(value) ? value : value.ToObject(dotnetType);
+                return true;
+            }
+
             switch (value.Type)
             {
+                case JTokenType.Null:
+                case JTokenType.Undefined:
+                    return false;
+
                 case JTokenType.Boolean when dotnetType != typeof(bool) && dotnetType != typeof(bool?):
                     return false;
 
@@ -35,7 +49,7 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                     result = value.ToObject(dotnetType);
                     return true;
 
-                case JTokenType.Integer when dotnetType == typeof(int) || dotnetType == typeof(int?) || dotnetType == typeof(long) || dotnetType == typeof(long?):
+                case JTokenType.Integer when IsNumeric(dotnetType):
                 case JTokenType.Float:
                     result = value.ToObject(dotnetType);
                     return true;
@@ -49,13 +63,13 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
 
                 case JTokenType.String when dotnetType == typeof(DateTime) || dotnetType == typeof(DateTime?):
                     var stringTime = value.ToObject(typeof(string)) as string;
-                    result = DateTime.Parse(stringTime);
+                    result = DateTime.Parse(stringTime, CultureInfo.InvariantCulture);
                     return true;
 
                 // Enum part accept both string and integer to avoid issue #54
                 case JTokenType.String when dotnetType.IsEnum:
                 case JTokenType.Integer when dotnetType.IsEnum:
-                    result = ConvertToDotNetEnum(dotnetType, value.ToString());
+                    result = ConvertToDotNetEnum(dotnetType, value);
                     return true;
 
                 case JTokenType.String when dotnetType.IsGenericType && dotnetType.GetGenericTypeDefinition() == typeof(Nullable<>) &&
@@ -87,17 +101,43 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                         return true;
                     }
 
-                    if (value.Count() > 2 || dotnetType != typeof(long) && dotnetType != typeof(long?) && dotnetType != typeof(int) && dotnetType != typeof(int?) || value.First.Type != JTokenType.Integer)
-                        throw new Exception($"Not implemented json mapping '${value.Parent}'");
+                    // many2one: [id, "display name"]
+                    if (value.Count() <= 2 && IsInteger(dotnetType) && value.First.Type == JTokenType.Integer)
+                    {
+                        result = value.First.ToObject(dotnetType);
+                        return true;
+                    }
 
-                    result = value.First.ToObject(dotnetType);
+                    // e.g. json / properties fields mapped to string
+                    if (dotnetType == typeof(string))
+                    {
+                        result = value.ToString(Formatting.None);
+                        return true;
+                    }
+
+                    throw new Exception($"Not implemented json mapping value: '{value.Path}' ({value.ToString(Formatting.None)}) to {dotnetType.Name}");
+
+                case JTokenType.Object when dotnetType == typeof(string):
+                    result = value.ToString(Formatting.None);
                     return true;
 
                 default:
-                    throw new Exception($"Not implemented json mapping value: '${value.Parent}' to {dotnetType.Name}");
+                    throw new Exception($"Not implemented json mapping value: '{value.Path}' ({value.Type}) to {dotnetType.Name}");
             }
         }
 
+
+        private static bool IsInteger(Type type)
+        {
+            var underlying = Nullable.GetUnderlyingType(type) ?? type;
+            return underlying == typeof(int) || underlying == typeof(long) || underlying == typeof(short);
+        }
+
+        private static bool IsNumeric(Type type)
+        {
+            var underlying = Nullable.GetUnderlyingType(type) ?? type;
+            return IsInteger(underlying) || underlying == typeof(double) || underlying == typeof(decimal) || underlying == typeof(float);
+        }
 
         public static string GetDotNetModel(string tableName, Dictionary<string, OdooPropertyInfo> properties, bool addSummary = true)
         {

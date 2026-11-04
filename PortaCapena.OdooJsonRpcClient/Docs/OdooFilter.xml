@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- XML documentation of OdooFilter, OdooFilter<T> and OdooFilterValue, referenced by <include> tags.
+     OdooFilter takes the Odoo field name, OdooFilter<T> a property expression (x => x.Name) - both share descriptions. -->
+<docs>
+
+  <!-- Types -->
+
+  <member name="OdooFilter">
+    <summary>
+      Builder of an Odoo domain - list of conditions like <c>["name", "=", "Test"]</c> used to filter records.
+      <para>
+        Conditions are joined with AND by default. Logical operators are prefix (Polish notation) and apply to the next two
+        conditions: <c>Or().EqualTo("a", 1).EqualTo("b", 2)</c> means <c>a = 1 OR b = 2</c>.
+        <c>Not()</c> applies to the next condition.
+      </para>
+      Prefer typed <see cref="OdooFilter{T}"/>, which takes property expressions instead of field names.
+    </summary>
+    <example>
+      <code>
+var filter = OdooFilter.Create()
+    .Or()
+    .EqualTo("state", "draft")
+    .Between("amount_total", 100, 500);
+      </code>
+    </example>
+  </member>
+
+  <member name="OdooFilterOfT">
+    <summary>
+      Typed builder of an Odoo domain for model <typeparamref name="T"/>: fields are given as property expressions
+      (<c>x => x.Name</c>) and translated to Odoo field names from <c>[JsonProperty]</c>.
+      Same rules as <see cref="OdooFilter"/>: AND by default, prefix <c>Or()</c> / <c>And()</c> / <c>Not()</c>.
+    </summary>
+    <typeparam name="T">Model class with <c>[JsonProperty]</c> on properties.</typeparam>
+    <example>
+      <code>
+var filter = OdooFilter&lt;ResPartnerOdooModel&gt;.Create()
+    .Or()
+    .ILike(x => x.Name, "test")
+    .In(x => x.CountryId, new long[] { 1, 2 });
+      </code>
+    </example>
+  </member>
+
+  <member name="OdooFilterValue">
+    <summary>List of values for <c>In</c> / <c>NotIn</c> conditions, built fluently with <see cref="AddValue"/>.</summary>
+  </member>
+
+  <member name="OdooFilterValue.AddValue">
+    <summary>Adds a value to the list.</summary>
+    <param name="value">Value to add.</param>
+    <returns>This list, for chaining.</returns>
+  </member>
+
+  <member name="Create">
+    <summary>Creates empty filter - matches all records.</summary>
+  </member>
+
+  <member name="Build">
+    <summary>Returns this filter. Kept for compatibility - the filter can be used directly.</summary>
+  </member>
+
+  <!-- Logical operators -->
+
+  <member name="Or">
+    <summary>Adds OR operator (<c>|</c>) - the next two conditions are joined with OR instead of AND.</summary>
+  </member>
+
+  <member name="And">
+    <summary>Adds explicit AND operator (<c>&amp;</c>) for the next two conditions - needed only inside OR / NOT groups, AND is the default.</summary>
+  </member>
+
+  <member name="Not">
+    <summary>Adds NOT operator (<c>!</c>) - negates the next condition.</summary>
+  </member>
+
+  <!-- Comparison -->
+
+  <member name="EqualTo">
+    <summary>Adds condition <c>field = value</c>. Use <c>false</c> as value to find empty fields.</summary>
+  </member>
+
+  <member name="NotEqual">
+    <summary>Adds condition <c>field != value</c>.</summary>
+  </member>
+
+  <member name="GreaterThan">
+    <summary>Adds condition <c>field &gt; value</c>.</summary>
+  </member>
+
+  <member name="GreaterThanOrEqual">
+    <summary>Adds condition <c>field &gt;= value</c>.</summary>
+  </member>
+
+  <member name="LessThan">
+    <summary>Adds condition <c>field &lt; value</c>.</summary>
+  </member>
+
+  <member name="LessThanOrEqual">
+    <summary>Adds condition <c>field &lt;= value</c>.</summary>
+  </member>
+
+  <member name="Between">
+    <summary>
+      Adds condition <c>value1 &lt;= field &lt;= value2</c> (both bounds inclusive),
+      sent to Odoo as <c>'&amp;', (field, '&gt;=', value1), (field, '&lt;=', value2)</c>.
+    </summary>
+  </member>
+
+  <!-- Text -->
+
+  <member name="Like">
+    <summary>Adds case sensitive "contains" condition (Odoo <c>like</c>) - <c>value</c> may be any part of the text.</summary>
+  </member>
+
+  <member name="ILike">
+    <summary>Adds case insensitive "contains" condition (Odoo <c>ilike</c>) - <c>value</c> may be any part of the text.</summary>
+  </member>
+
+  <member name="NotLike">
+    <summary>Adds case sensitive "does not contain" condition (Odoo <c>not like</c>).</summary>
+  </member>
+
+  <!-- Lists -->
+
+  <member name="In">
+    <summary>Adds condition <c>field in values</c> - field equals any of the values. For many2many / one2many fields: contains any of the ids.</summary>
+  </member>
+
+  <member name="NotIn">
+    <summary>Adds condition <c>field not in values</c> - field equals none of the values.</summary>
+  </member>
+
+  <!-- Empty values -->
+
+  <member name="BeNull">
+    <summary>Adds condition "field is empty" (Odoo <c>field = False</c>).</summary>
+  </member>
+
+  <member name="NotBeNull">
+    <summary>Adds condition "field is set" (Odoo <c>field != False</c>).</summary>
+  </member>
+
+  <!-- Hierarchy -->
+
+  <member name="ChildOf">
+    <summary>
+      Adds condition <c>child_of</c> - records under the given record(s) in a hierarchy (e.g. product categories, companies),
+      including the given record(s) themselves.
+    </summary>
+  </member>
+
+  <member name="ParentOf">
+    <summary>
+      Adds condition <c>parent_of</c> - records above the given record(s) in a hierarchy,
+      including the given record(s) themselves.
+    </summary>
+  </member>
+
+</docs>

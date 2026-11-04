@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- XML documentation of OdooDictionaryModel and OdooDictionaryModel<T>, referenced by <include> tags. -->
+<docs>
+
+  <!-- Types -->
+
+  <member name="OdooDictionaryModel">
+    <summary>
+      Values of an Odoo record as <c>field name -> value</c>. Used to create or update records with only chosen fields
+      (a model class would send all its properties) and as result of untyped reads.
+      <see cref="TableName"/> tells which Odoo model the values belong to.
+    </summary>
+    <example>
+      <code>
+// only name and email are sent, other fields stay unchanged
+var model = OdooDictionaryModel.Create(() => new ResPartnerOdooModel { Name = "New name", Email = null });
+await client.UpdateAsync(model, partnerId);
+      </code>
+    </example>
+  </member>
+
+  <member name="OdooDictionaryModelOfT">
+    <summary>
+      Values of an Odoo record of model <typeparamref name="T"/>; keys are taken from <c>[JsonProperty]</c> of the properties
+      and <see cref="OdooDictionaryModel.TableName"/> from <see cref="Attributes.OdooTableNameAttribute"/> of <typeparamref name="T"/>.
+    </summary>
+    <typeparam name="T">Model class with <see cref="Attributes.OdooTableNameAttribute"/> and <c>[JsonProperty]</c> on properties.</typeparam>
+  </member>
+
+  <member name="TableName">
+    <summary>Odoo model name of the values, e.g. <c>res.partner</c>. Required to create or update a record through <see cref="OdooClient"/>.</summary>
+  </member>
+
+  <!-- Constructors -->
+
+  <member name="ctor">
+    <summary>Creates empty values without table name.</summary>
+  </member>
+
+  <member name="ctor.TableName">
+    <summary>Creates empty values of given Odoo model.</summary>
+    <param name="tableName">Odoo model name, e.g. <c>res.partner</c>.</param>
+  </member>
+
+  <member name="OfT.ctor">
+    <summary>Creates empty values of model <typeparamref name="T"/>.</summary>
+    <exception cref="System.ArgumentException"><typeparamref name="T"/> has no <see cref="Attributes.OdooTableNameAttribute"/>.</exception>
+  </member>
+
+  <!-- Create -->
+
+  <member name="Create">
+    <summary>Creates empty values without table name.</summary>
+  </member>
+
+  <member name="Create.TableName">
+    <summary>Creates empty values of given Odoo model.</summary>
+    <param name="tableName">Odoo model name, e.g. <c>res.partner</c>.</param>
+  </member>
+
+  <member name="Create.Model">
+    <summary>Creates empty values of model <typeparamref name="T"/>; table name comes from its <see cref="Attributes.OdooTableNameAttribute"/>.</summary>
+  </member>
+
+  <member name="Create.Initializer">
+    <summary>
+      Creates values from an object initializer - only assigned properties are added, e.g.
+      <c>Create(() => new ResPartnerOdooModel { Name = "Test", CountryId = 20 })</c>.
+      Assigning null adds the field with empty value (clears it on update).
+    </summary>
+    <param name="expression">Object initializer of <typeparamref name="T"/>; values may be any expressions (variables, method calls...).</param>
+    <exception cref="System.ArgumentException">Expression is not an object initializer, or an assigned property has no <c>[JsonProperty]</c>.</exception>
+  </member>
+
+  <member name="Create.Property">
+    <summary>Creates values with one field, e.g. <c>Create&lt;ResPartnerOdooModel&gt;(x => x.Name, "Test")</c>.</summary>
+    <param name="expression">Property of <typeparamref name="T"/>.</param>
+    <param name="value">Value of the field.</param>
+    <exception cref="System.ArgumentException">Expression does not select a property with <c>[JsonProperty]</c>.</exception>
+  </member>
+
+  <!-- Add -->
+
+  <member name="Add.Property">
+    <summary>
+      Sets value of one field (adds or replaces). When <see cref="OdooDictionaryModel.TableName"/> is not set yet,
+      it is taken from <see cref="Attributes.OdooTableNameAttribute"/> of <typeparamref name="T"/>.
+    </summary>
+    <param name="expression">Property of <typeparamref name="T"/>.</param>
+    <param name="value">Value of the field.</param>
+    <returns>This instance, for chaining.</returns>
+    <exception cref="System.ArgumentException">Expression does not select a property with <c>[JsonProperty]</c>.</exception>
+  </member>
+
+  <member name="Add.Initializer">
+    <summary>
+      Sets values of all properties assigned in an object initializer (adds or replaces). When <see cref="OdooDictionaryModel.TableName"/> is not set yet,
+      it is taken from <see cref="Attributes.OdooTableNameAttribute"/> of <typeparamref name="T"/>.
+    </summary>
+    <param name="expression">Object initializer of <typeparamref name="T"/>.</param>
+    <returns>This instance, for chaining.</returns>
+    <exception cref="System.ArgumentException">Expression is not an object initializer, or an assigned property has no <c>[JsonProperty]</c>.</exception>
+  </member>
+
+  <member name="AddFromExpresion">
+    <summary>Sets values of all properties assigned in an object initializer, without changing <see cref="TableName"/>.</summary>
+    <param name="expression">Object initializer of <typeparamref name="T"/>.</param>
+    <exception cref="System.ArgumentException">Expression is not an object initializer, or an assigned property has no <c>[JsonProperty]</c>.</exception>
+  </member>
+
+  <member name="TryGetOdooTableName">
+    <summary>Reads Odoo model name from <see cref="Attributes.OdooTableNameAttribute"/> of the model used in the expression.</summary>
+    <param name="expression">Expression of the model.</param>
+    <param name="result">Odoo model name, or null.</param>
+    <returns><c>true</c> when the model has the attribute.</returns>
+  </member>
+
+</docs>

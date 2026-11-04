@@ -3,36 +3,27 @@ using PortaCapena.OdooJsonRpcClient.Models;
 
 namespace PortaCapena.OdooJsonRpcClient.Request
 {
+    /// <include file='../Docs/OdooQuery.xml' path='docs/member[@name="OdooQuery"]/*'/>
     public class OdooQuery
     {
-        /// <summary>
-        /// Get records with condition
-        /// </summary>
+        /// <include file='../Docs/OdooQuery.xml' path='docs/member[@name="OdooQuery.Filters"]/*'/>
         public OdooFilter Filters { get; set; }
 
-        /// <summary>
-        /// Get records with ony selected names
-        /// </summary>
+        /// <include file='../Docs/OdooQuery.xml' path='docs/member[@name="OdooQuery.ReturnFields"]/*'/>
         public HashSet<string> ReturnFields { get; set; }
 
 
-        /// <summary>
-        /// Skip records
-        /// </summary>
+        /// <include file='../Docs/OdooQuery.xml' path='docs/member[@name="OdooQuery.Offset"]/*'/>
         public int? Offset { get; set; }
 
-        /// <summary>
-        /// Take records
-        /// </summary>
+        /// <include file='../Docs/OdooQuery.xml' path='docs/member[@name="OdooQuery.Limit"]/*'/>
         public int? Limit { get; set; }
 
-        /// <summary>
-        /// Order by field
-        /// "{odooPropertyName} ASC" or "{odooPropertyName} DESC";
-        /// </summary>
+        /// <include file='../Docs/OdooQuery.xml' path='docs/member[@name="OdooQuery.Order"]/*'/>
         public string Order { get; set; }
 
 
+        /// <include file='../Docs/OdooQuery.xml' path='docs/member[@name="OdooQuery.ctor"]/*'/>
         public OdooQuery()
         {
             ReturnFields = new HashSet<string>();

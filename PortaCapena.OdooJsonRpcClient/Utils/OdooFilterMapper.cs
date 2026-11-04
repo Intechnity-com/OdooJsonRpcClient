@@ -46,5 +46,19 @@ namespace PortaCapena.OdooJsonRpcClient.Utils
          
             return result;
         }
+
+        /// <summary>
+        /// Creates condition on a related field path, e.g. <c>["partner_id.country_id.code", "=", "PL"]</c>.
+        /// </summary>
+        /// <param name="odooOperator">Comparison operator.</param>
+        /// <param name="value">Compared value.</param>
+        /// <param name="fieldPath">Odoo field names from the root model to the compared field.</param>
+        public static OdooFilter ToOdooPathExpresion(OdooOperator odooOperator, object value, params string[] fieldPath)
+        {
+            if (fieldPath == null || fieldPath.Length == 0)
+                throw new ArgumentException("At least one field name is required", nameof(fieldPath));
+
+            return new OdooFilter { string.Join(".", fieldPath), odooOperator.Description(), value };
+        }
     }
 }

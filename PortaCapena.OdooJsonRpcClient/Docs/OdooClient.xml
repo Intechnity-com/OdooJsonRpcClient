@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- XML documentation of OdooClient, referenced from OdooClient.cs by <include> tags. -->
+<docs>
+
+  <member name="OdooClient">
+    <summary>
+      Client for the Odoo external JSON-RPC API (<c>/jsonrpc</c>).
+      <para>
+        Instance methods log in automatically on first use. The user id is cached per server, database and user name,
+        so creating many clients with the same <see cref="OdooConfig"/> logs in only once. When Odoo answers with
+        <c>AccessDenied</c> (e.g. changed password), the client logs in again and retries the request once.
+      </para>
+      <para>
+        Server and transport errors (Odoo exceptions, HTTP errors, timeouts, invalid JSON) are not thrown - they are returned as
+        <see cref="OdooResult{TResult}"/> with <see cref="OdooResult{TResult}.Succeed"/> = false and details in <see cref="OdooResult{TResult}.Error"/>.
+        Invalid arguments (e.g. model without <see cref="Attributes.OdooTableNameAttribute"/>) throw <see cref="System.ArgumentException"/>.
+      </para>
+      <para>
+        Static methods taking <see cref="OdooConfig"/> and <c>userUid</c> are low level variants: they use the shared built-in HttpClient,
+        do not log in and do not retry. Use them when you manage the user id yourself (see <see cref="LoginAsync(OdooConfig, System.Threading.CancellationToken)"/>).
+      </para>
+    </summary>
+  </member>
+
+  <member name="Config">
+    <summary>Connection settings (url, database, credentials, timeout) and default <see cref="OdooContext"/> used by this client.</summary>
+  </member>
+
+  <member name="ValidateServerCertificate">
+    <summary>
+      Can be set to false, if server certificate shall not be validated.
+      Useful for test systems without valid SSL certificate.
+      Applies to clients using the built-in HttpClient (not to a HttpClient passed to the constructor).
+    </summary>
+  </member>
+
+  <member name="BasicAuthenticationUsernamePassword">
+    <summary>
+      Username and Password for Basic Authentication (htaccess).
+      Syntax: username:password
+    </summary>
+  </member>
+
+  <member name="ctor">
+    <summary>Creates client that sends requests using the shared built-in HttpClient.</summary>
+    <param name="config">Connection settings.</param>
+    <exception cref="System.ArgumentNullException"><paramref name="config"/> is null.</exception>
+  </member>
+
+  <member name="ctor.HttpClient">
+    <summary>
+      Creates client that sends requests using given <paramref name="httpClient"/>
+      (e.g. created by IHttpClientFactory). When null, a shared built-in HttpClient is used.
+    </summary>
+    <remarks>
+      <see cref="OdooConfig.Timeout"/> is applied per request, so <c>HttpClient.Timeout</c> of the given client should not be shorter.
+      <see cref="ValidateServerCertificate"/> does not apply to a given client - configure its handler instead.
+    </remarks>
+    <param name="config">Connection settings.</param>
+    <param name="httpClient">HttpClient used to send requests, or null for the built-in one.</param>
+    <exception cref="System.ArgumentNullException"><paramref name="config"/> is null.</exception>
+  </member>
+
+  <!-- Get -->
+
+  <member name="GetAsync.Model">
+    <summary>Reads records of model <typeparamref name="T"/> (Odoo <c>search_read</c>). Logs in when needed.</summary>
+    <typeparam name="T">Model class with <see cref="Attributes.OdooTableNameAttribute"/> and <c>[JsonProperty]</c> on properties.</typeparam>
+    <param name="query">Filters, returned fields, order, offset and limit. Null returns all records with all fields.</param>
+    <param name="context">Odoo context (language, company...). Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>Found records (empty array when nothing matches) or failed result with Odoo error.</returns>
+  </member>
+
+  <member name="GetAsync.Model.UserUid">
+    <summary>Reads records of model <typeparamref name="T"/> (Odoo <c>search_read</c>) as given user, without logging in and without retry.</summary>
+    <param name="userUid">Id of a logged in user (see <see cref="LoginAsync(System.Threading.CancellationToken)"/>).</param>
+    <param name="query">Filters, returned fields, order, offset and limit. Null returns all records with all fields.</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+  </member>
+
+  <member name="GetAsync.Model.Static">
+    <summary>
+      Low level variant of <see cref="GetAsync{T}(Request.OdooQuery, OdooContext, System.Threading.CancellationToken)"/>: reads records as given user
+      using the shared HttpClient, without logging in and without retry.
+    </summary>
+    <param name="odooConfig">Connection settings.</param>
+    <param name="userUid">Id returned by <see cref="LoginAsync(OdooConfig, System.Threading.CancellationToken)"/>.</param>
+    <param name="query">Filters, returned fields, order, offset and limit. Null returns all records.</param>
+    <param name="context">Odoo context. Null sends no context (config context is not applied here).</param>
+    <param name="cancellationToken">Cancels the request.</param>
+  </member>
+
+  <member name="GetAsync.Table">
+    <summary>
+      Reads records of any Odoo model (Odoo <c>search_read</c>) as dictionaries <c>field name -> value</c>,
+      without a .NET model class. Logs in when needed.
+    </summary>
+    <param name="tableName">Odoo model name, e.g. <c>res.partner</c>.</param>
+    <param name="query">Filters, returned fields, order, offset and limit. Null returns all records with all fields.</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>Records as raw values (many2one fields come as <c>[id, "name"]</c>, empty values as <c>false</c>).</returns>
+  </member>
+
+  <member name="GetAsync.Table.UserUid">
+    <summary>Reads records of any Odoo model as dictionaries, as given user, without logging in and without retry.</summary>
+    <param name="tableName">Odoo model name, e.g. <c>res.partner</c>.</param>
+    <param name="userUid">Id of a logged in user.</param>
+    <param name="query">Filters, returned fields, order, offset and limit.</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+  </member>
+
+  <member name="GetAsync.Table.Static">
+    <summary>
+      Low level variant of <see cref="GetAsync(string, Request.OdooQuery, OdooContext, System.Threading.CancellationToken)"/>: reads records as dictionaries
+      using the shared HttpClient, without logging in and without retry.
+    </summary>
+    <param name="tableName">Odoo model name, e.g. <c>res.partner</c>.</param>
+    <param name="odooConfig">Connection settings.</param>
+    <param name="userUid">Id returned by <see cref="LoginAsync(OdooConfig, System.Threading.CancellationToken)"/>.</param>
+    <param name="query">Filters, returned fields, order, offset and limit.</param>
+    <param name="context">Odoo context. Null sends no context.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+  </member>
+
+  <!-- Count -->
+
+  <member name="GetCountAsync">
+    <summary>Counts records of model <typeparamref name="T"/> matching query filters (Odoo <c>search_count</c>). Logs in when needed.</summary>
+    <param name="query">Only <see cref="Request.OdooQuery.Filters"/> are used. Null counts all records.</param>
+    <param name="context">Odoo context, e.g. <c>active_test = false</c> to count archived records too. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+  </member>
+
+  <member name="GetCountAsync.UserUid">
+    <summary>Counts records of model <typeparamref name="T"/> as given user, without logging in and without retry.</summary>
+    <param name="userUid">Id of a logged in user.</param>
+    <param name="query">Only <see cref="Request.OdooQuery.Filters"/> are used.</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+  </member>
+
+  <member name="GetCountAsync.Static">
+    <summary>
+      Low level variant of <see cref="GetCountAsync{T}(Request.OdooQuery, OdooContext, System.Threading.CancellationToken)"/>
+      using the shared HttpClient, without logging in and without retry.
+    </summary>
+    <param name="odooConfig">Connection settings.</param>
+    <param name="userUid">Id returned by <see cref="LoginAsync(OdooConfig, System.Threading.CancellationToken)"/>.</param>
+    <param name="query">Only <see cref="Request.OdooQuery.Filters"/> are used.</param>
+    <param name="context">Odoo context. Null sends no context.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+  </member>
+
+  <!-- Create -->
+
+  <member name="CreateAsync.Model">
+    <summary>Creates one record (Odoo <c>create</c>) from a model class. Logs in when needed.</summary>
+    <param name="model">Values to save. Table comes from its <see cref="Attributes.OdooTableNameAttribute"/>; null properties are sent as empty values unless ignored by <c>NullValueHandling</c>.</param>
+    <param name="context">Odoo context, e.g. <c>default_*</c> values or language. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>Id of the created record, or failed result (e.g. Odoo <c>ValidationError</c>).</returns>
+  </member>
+
+  <member name="CreateAsync.Model.Static">
+    <summary>
+      Low level variant of <see cref="CreateAsync(IOdooCreateModel, OdooContext, System.Threading.CancellationToken)"/>
+      using the shared HttpClient, without logging in and without retry.
+    </summary>
+    <param name="odooConfig">Connection settings.</param>
+    <param name="userUid">Id returned by <see cref="LoginAsync(OdooConfig, System.Threading.CancellationToken)"/>.</param>
+    <param name="model">Values to save.</param>
+    <param name="context">Odoo context. Null sends no context.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+  </member>
+
+  <member name="CreateAsync.Dictionary">
+    <summary>Creates one record (Odoo <c>create</c>) from a dictionary - only fields present in the dictionary are sent. Logs in when needed.</summary>
+    <param name="model">Values to save; <see cref="OdooDictionaryModel.TableName"/> must be set (e.g. by <see cref="OdooDictionaryModel.Create{T}(System.Linq.Expressions.Expression{System.Func{T}})"/>).</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>Id of the created record, or failed result.</returns>
+    <exception cref="System.ArgumentException"><see cref="OdooDictionaryModel.TableName"/> is not set.</exception>
+  </member>
+
+  <member name="CreateAsync.Dictionary.Static">
+    <summary>
+      Low level variant of <see cref="CreateAsync(OdooDictionaryModel, OdooContext, System.Threading.CancellationToken)"/>
+      using the shared HttpClient, without logging in and without retry.
+    </summary>
+    <param name="odooConfig">Connection settings.</param>
+    <param name="userUid">Id returned by <see cref="LoginAsync(OdooConfig, System.Threading.CancellationToken)"/>.</param>
+    <param name="model">Values to save; <see cref="OdooDictionaryModel.TableName"/> must be set.</param>
+    <param name="context">Odoo context. Null sends no context.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+  </member>
+
+  <member name="CreateAsync.Models">
+    <summary>Creates many records of one model in a single request (Odoo <c>create</c> with a list). Logs in when needed.</summary>
+    <param name="models">Values to save - all must belong to the same Odoo table.</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>Ids of created records in the same order as <paramref name="models"/>.</returns>
+    <exception cref="System.ArgumentException"><paramref name="models"/> is empty or contains models of different tables.</exception>
+  </member>
+
+  <member name="CreateAsync.Models.Static">
+    <summary>
+      Low level variant of <see cref="CreateAsync(System.Collections.Generic.IEnumerable{IOdooCreateModel}, OdooContext, System.Threading.CancellationToken)"/>
+      using the shared HttpClient, without logging in and without retry.
+    </summary>
+    <param name="odooConfig">Connection settings.</param>
+    <param name="userUid">Id returned by <see cref="LoginAsync(OdooConfig, System.Threading.CancellationToken)"/>.</param>
+    <param name="models">Values to save - all must belong to the same Odoo table.</param>
+    <param name="context">Odoo context. Null sends no context.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+  </member>
+
+  <member name="CreateAsync.Dictionaries">
+    <summary>Creates many records of one model from dictionaries in a single request. Logs in when needed.</summary>
+    <param name="models">Values to save - all must have the same <see cref="OdooDictionaryModel.TableName"/>.</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>Ids of created records in the same order as <paramref name="models"/>.</returns>
+    <exception cref="System.ArgumentException"><paramref name="models"/> is empty, a table name is missing or table names differ.</exception>
+  </member>
+
+  <member name="CreateAsync.Dictionaries.Static">
+    <summary>
+      Low level variant of <see cref="CreateAsync(System.Collections.Generic.IEnumerable{OdooDictionaryModel}, OdooContext, System.Threading.CancellationToken)"/>
+      using the shared HttpClient, without logging in and without retry.
+    </summary>
+    <param name="odooConfig">Connection settings.</param>
+    <param name="userUid">Id returned by <see cref="LoginAsync(OdooConfig, System.Threading.CancellationToken)"/>.</param>
+    <param name="models">Values to save - all must have the same <see cref="OdooDictionaryModel.TableName"/>.</param>
+    <param name="context">Odoo context. Null sends no context.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+  </member>
+
+  <!-- Action -->
+
+  <member name="ActionAsync">
+    <summary>
+      Calls any public method of an Odoo model, e.g. <c>action_confirm</c> on <c>sale.order</c>. Logs in when needed.
+      <paramref name="param"/> is sent as the single positional argument - usually record id(s), so the call is
+      <c>model.browse(param).action()</c>.
+    </summary>
+    <param name="tableName">Odoo model name, e.g. <c>sale.order</c>.</param>
+    <param name="action">Method name, e.g. <c>action_confirm</c>, <c>action_archive</c>.</param>
+    <param name="param">Record id or array of ids (or other first argument of the method).</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>Raw value returned by the method (often <c>true</c>, null or an action dictionary).</returns>
+  </member>
+
+  <member name="ActionAsync.Static">
+    <summary>
+      Low level variant of <see cref="ActionAsync(string, string, object, OdooContext, System.Threading.CancellationToken)"/>
+      using the shared HttpClient, without logging in and without retry.
+    </summary>
+    <param name="odooConfig">Connection settings.</param>
+    <param name="userUid">Id returned by <see cref="LoginAsync(OdooConfig, System.Threading.CancellationToken)"/>.</param>
+    <param name="tableName">Odoo model name.</param>
+    <param name="action">Method name.</param>
+    <param name="model">Single positional argument, usually record id(s).</param>
+    <param name="context">Odoo context. Null sends no context.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+  </member>
+
+  <member name="ActionCollectionAsync">
+    <summary>
+      Calls any public method of an Odoo model, passing <paramref name="param"/> as the whole positional argument list
+      (unlike <see cref="ActionAsync(string, string, object, OdooContext, System.Threading.CancellationToken)"/>, which wraps it in a list).
+      Use it for methods with several arguments, e.g. <c>new object[] { ids, "arg2" }</c>. Logs in when needed.
+    </summary>
+    <param name="tableName">Odoo model name.</param>
+    <param name="action">Method name.</param>
+    <param name="param">Array of positional arguments; the first one is usually record id(s).</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>Raw value returned by the method.</returns>
+  </member>
+
+  <member name="ActionCollectionAsync.Static">
+    <summary>
+      Low level variant of <see cref="ActionCollectionAsync(string, string, object, OdooContext, System.Threading.CancellationToken)"/>
+      using the shared HttpClient, without logging in and without retry.
+    </summary>
+    <param name="odooConfig">Connection settings.</param>
+    <param name="userUid">Id returned by <see cref="LoginAsync(OdooConfig, System.Threading.CancellationToken)"/>.</param>
+    <param name="tableName">Odoo model name.</param>
+    <param name="action">Method name.</param>
+    <param name="model">Array of positional arguments.</param>
+    <param name="context">Odoo context. Null sends no context.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+  </member>
+
+  <!-- Update -->
+
+  <member name="UpdateAsync.Model">
+    <summary>
+      Updates one record (Odoo <c>write</c>) with all properties of the model. Logs in when needed.
+      To change only some fields use <see cref="UpdateAsync(OdooDictionaryModel, long, OdooContext, System.Threading.CancellationToken)"/>.
+    </summary>
+    <param name="model">New values; table comes from its <see cref="Attributes.OdooTableNameAttribute"/>.</param>
+    <param name="id">Id of the updated record.</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns><c>true</c> when saved, or failed result.</returns>
+  </member>
+
+  <member name="UpdateAsync.Model.Static">
+    <summary>
+      Low level variant of <see cref="UpdateAsync(IOdooCreateModel, long, OdooContext, System.Threading.CancellationToken)"/>
+      using the shared HttpClient, without logging in and without retry.
+    </summary>
+    <param name="odooConfig">Connection settings.</param>
+    <param name="userUid">Id returned by <see cref="LoginAsync(OdooConfig, System.Threading.CancellationToken)"/>.</param>
+    <param name="model">New values.</param>
+    <param name="id">Id of the updated record.</param>
+    <param name="context">Odoo context. Null sends no context.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+  </member>
+
+  <member name="UpdateAsync.Dictionary">
+    <summary>
+      Updates one record (Odoo <c>write</c>) with only the fields present in the dictionary. Logs in when needed.
+      A field with null value is cleared in Odoo.
+    </summary>
+    <param name="model">Changed values; <see cref="OdooDictionaryModel.TableName"/> must be set.</param>
+    <param name="id">Id of the updated record.</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns><c>true</c> when saved, or failed result.</returns>
+    <exception cref="System.ArgumentException"><see cref="OdooDictionaryModel.TableName"/> is not set.</exception>
+  </member>
+
+  <member name="UpdateAsync.Dictionary.Static">
+    <summary>
+      Low level variant of <see cref="UpdateAsync(OdooDictionaryModel, long, OdooContext, System.Threading.CancellationToken)"/>
+      using the shared HttpClient, without logging in and without retry.
+    </summary>
+    <param name="odooConfig">Connection settings.</param>
+    <param name="userUid">Id returned by <see cref="LoginAsync(OdooConfig, System.Threading.CancellationToken)"/>.</param>
+    <param name="model">Changed values; <see cref="OdooDictionaryModel.TableName"/> must be set.</param>
+    <param name="id">Id of the updated record.</param>
+    <param name="context">Odoo context. Null sends no context.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+  </member>
+
+  <member name="UpdateRangeAsync.Model">
+    <summary>Writes the same values (all properties of the model) to many records in one request (Odoo <c>write</c>). Logs in when needed.</summary>
+    <param name="model">New values; table comes from its <see cref="Attributes.OdooTableNameAttribute"/>.</param>
+    <param name="ids">Ids of updated records.</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns><c>true</c> when saved, or failed result.</returns>
+  </member>
+
+  <member name="UpdateRangeAsync.Model.Static">
+    <summary>
+      Low level variant of <see cref="UpdateRangeAsync(IOdooCreateModel, long[], OdooContext, System.Threading.CancellationToken)"/>
+      using the shared HttpClient, without logging in and without retry.
+    </summary>
+    <param name="odooConfig">Connection settings.</param>
+    <param name="userUid">Id returned by <see cref="LoginAsync(OdooConfig, System.Threading.CancellationToken)"/>.</param>
+    <param name="model">New values.</param>
+    <param name="ids">Ids of updated records.</param>
+    <param name="context">Odoo context. Null sends no context.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+  </member>
+
+  <member name="UpdateRangeAsync.Dictionary">
+    <summary>Writes the fields present in the dictionary to many records in one request (Odoo <c>write</c>). Logs in when needed.</summary>
+    <param name="model">Changed values; <see cref="OdooDictionaryModel.TableName"/> must be set.</param>
+    <param name="ids">Ids of updated records.</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns><c>true</c> when saved, or failed result.</returns>
+    <exception cref="System.ArgumentException"><see cref="OdooDictionaryModel.TableName"/> is not set.</exception>
+  </member>
+
+  <member name="UpdateRangeAsync.Dictionary.Static">
+    <summary>
+      Low level variant of <see cref="UpdateRangeAsync(OdooDictionaryModel, long[], OdooContext, System.Threading.CancellationToken)"/>
+      using the shared HttpClient, without logging in and without retry.
+    </summary>
+    <param name="odooConfig">Connection settings.</param>
+    <param name="userUid">Id returned by <see cref="LoginAsync(OdooConfig, System.Threading.CancellationToken)"/>.</param>
+    <param name="model">Changed values; <see cref="OdooDictionaryModel.TableName"/> must be set.</param>
+    <param name="ids">Ids of updated records.</param>
+    <param name="context">Odoo context. Null sends no context.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+  </member>
+
+  <!-- Delete -->
+
+  <member name="DeleteAsync.Model">
+    <summary>Deletes the record represented by <paramref name="model"/> (Odoo <c>unlink</c>). Logs in when needed.</summary>
+    <param name="model">Record to delete; uses its <see cref="IOdooModel.Id"/> and table from <see cref="Attributes.OdooTableNameAttribute"/>.</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns><c>true</c> when deleted, or failed result (e.g. record is referenced and cannot be deleted).</returns>
+    <exception cref="System.ArgumentNullException"><paramref name="model"/> is null.</exception>
+  </member>
+
+  <member name="DeleteAsync.Id">
+    <summary>Deletes one record by id (Odoo <c>unlink</c>). Logs in when needed.</summary>
+    <param name="tableName">Odoo model name, e.g. <c>res.partner</c>.</param>
+    <param name="id">Id of the record to delete.</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns><c>true</c> when deleted, or failed result.</returns>
+  </member>
+
+  <member name="DeleteAsync.Static">
+    <summary>
+      Low level variant of <see cref="DeleteAsync(string, long, OdooContext, System.Threading.CancellationToken)"/>
+      using the shared HttpClient, without logging in and without retry.
+    </summary>
+    <param name="odooConfig">Connection settings.</param>
+    <param name="userUid">Id returned by <see cref="LoginAsync(OdooConfig, System.Threading.CancellationToken)"/>.</param>
+    <param name="tableName">Odoo model name.</param>
+    <param name="id">Id of the record to delete.</param>
+    <param name="context">Odoo context. Null sends no context.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+  </member>
+
+  <member name="DeleteRangeAsync.Models">
+    <summary>Deletes many records in one request (Odoo <c>unlink</c>). Logs in when needed.</summary>
+    <param name="models">Records to delete - all must belong to the same Odoo table.</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns><c>true</c> when deleted, or failed result (nothing is deleted when any record cannot be deleted).</returns>
+    <exception cref="System.ArgumentException"><paramref name="models"/> is empty or contains records of different tables.</exception>
+  </member>
+
+  <member name="DeleteRangeAsync.Ids">
+    <summary>Deletes many records by ids in one request (Odoo <c>unlink</c>). Logs in when needed.</summary>
+    <param name="tableName">Odoo model name, e.g. <c>res.partner</c>.</param>
+    <param name="ids">Ids of records to delete.</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns><c>true</c> when deleted, or failed result (nothing is deleted when any record cannot be deleted).</returns>
+  </member>
+
+  <member name="DeleteRangeAsync.Static">
+    <summary>
+      Low level variant of <see cref="DeleteRangeAsync(string, long[], OdooContext, System.Threading.CancellationToken)"/>
+      using the shared HttpClient, without logging in and without retry.
+    </summary>
+    <param name="odooConfig">Connection settings.</param>
+    <param name="userUid">Id returned by <see cref="LoginAsync(OdooConfig, System.Threading.CancellationToken)"/>.</param>
+    <param name="tableName">Odoo model name.</param>
+    <param name="ids">Ids of records to delete.</param>
+    <param name="context">Odoo context. Null sends no context.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+  </member>
+
+  <!-- Login -->
+
+  <member name="GetCurrentUserUidOrLoginAsync">
+    <summary>
+      Returns the cached user id for this server, database and user name, or logs in when there is none yet.
+      Instance methods call it automatically - use it only when you need the id yourself.
+    </summary>
+    <param name="cancellationToken">Cancels the login request.</param>
+    <returns>User id, or failed result when login failed.</returns>
+  </member>
+
+  <member name="LoginAsync">
+    <summary>
+      Always logs in (Odoo <c>common.login</c>) and stores the user id in the cache shared by clients with the same server, database and user name.
+      A failed login removes the cached id.
+    </summary>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>User id, or failed result - also when database, user name or password is wrong.</returns>
+  </member>
+
+  <member name="LoginAsync.Static">
+    <summary>
+      Logs in (Odoo <c>common.login</c>) using the shared HttpClient, without caching the id.
+      Use the returned id with the static methods taking <c>userUid</c>.
+    </summary>
+    <param name="odooConfig">Connection settings.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>User id, or failed result - also when database, user name or password is wrong.</returns>
+  </member>
+
+  <!-- Build C# model -->
+
+  <member name="GetModelAsync">
+    <summary>
+      Reads field definitions of an Odoo model (Odoo <c>fields_get</c>). Logs in when needed.
+      Pass the result to <see cref="Converters.OdooModelMapper.GetDotNetModel"/> to generate a C# model class.
+    </summary>
+    <param name="tableName">Odoo model name, e.g. <c>res.partner</c>.</param>
+    <returns>Field name -> definition (type, relation, required, selection values...), or failed result.</returns>
+  </member>
+
+  <member name="GetModelAsync.CancellationToken">
+    <summary>
+      Reads field definitions of an Odoo model (Odoo <c>fields_get</c>). Logs in when needed.
+      Pass the result to <see cref="Converters.OdooModelMapper.GetDotNetModel"/> to generate a C# model class.
+    </summary>
+    <param name="tableName">Odoo model name, e.g. <c>res.partner</c>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>Field name -> definition (type, relation, required, selection values...), or failed result.</returns>
+  </member>
+
+  <member name="GetModelAsync.Static">
+    <summary>
+      Low level variant of <see cref="GetModelAsync(string, System.Threading.CancellationToken)"/>
+      using the shared HttpClient, without logging in and without retry.
+    </summary>
+    <param name="odooConfig">Connection settings.</param>
+    <param name="userUid">Id returned by <see cref="LoginAsync(OdooConfig, System.Threading.CancellationToken)"/>.</param>
+    <param name="tableName">Odoo model name.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+  </member>
+
+  <!-- Version -->
+
+  <member name="GetVersionAsync">
+    <summary>
+      Reads Odoo server version (Odoo <c>common.version</c>). Does not need login - useful to check that the url is correct.
+    </summary>
+    <param name="cancellationToken">Cancels the request.</param>
+  </member>
+
+  <member name="GetVersionAsync.Static">
+    <summary>
+      Reads Odoo server version (Odoo <c>common.version</c>) using the shared HttpClient. Does not need login.
+    </summary>
+    <param name="odooConfig">Connection settings - only the url and timeout are used.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+  </member>
+
+  <!-- Transport -->
+
+  <member name="CallAndDeserializeAsync">
+    <summary>
+      Sends a prepared request with the shared HttpClient and deserializes the JSON-RPC answer.
+      Use it for calls not covered by other methods (build the request with <see cref="Request.OdooRequestModel"/> factory methods).
+    </summary>
+    <typeparam name="T">Type of the <c>result</c> field of the answer.</typeparam>
+    <param name="request">Request to send.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>Deserialized result, or failed result for Odoo, HTTP and transport errors (not thrown).</returns>
+  </member>
+
+  <member name="CallAsync">
+    <summary>
+      Sends a prepared request with the shared HttpClient and returns the raw HTTP response, without reading or checking it.
+    </summary>
+    <param name="requestModel">Request to send.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>HTTP response - the caller is responsible for disposing it. Transport errors are thrown.</returns>
+  </member>
+
+</docs>
