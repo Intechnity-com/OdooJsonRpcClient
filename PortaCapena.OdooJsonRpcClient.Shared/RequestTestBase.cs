@@ -18,10 +18,8 @@ namespace PortaCapena.OdooJsonRpcClient.Shared
             apiUrl: "http://localhost:8070",
             dbName: "db-test-19",
             userName: "admin",
-            password: "a1b2c3d4e5f60718293a4b5c6d7e8f9001234567"
-        )
-        {
-            Protocol = Consts.OdooApiProtocol.JsonApi
-        };
+            password: "a1b2c3d4e5f60718293a4b5c6d7e8f9001234567",
+            protocol: Consts.OdooApiProtocol.JsonApi
+        );
     }
 }

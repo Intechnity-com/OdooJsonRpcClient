@@ -192,7 +192,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         [Fact]
         public async Task GetDatabases_does_not_need_valid_credentials()
         {
-            var config = new OdooConfig(JsonApiTestConfig.ApiUrl, "not-existing-db", "nobody", "wrong") { Protocol = OdooApiProtocol.JsonApi };
+            var config = new OdooConfig(JsonApiTestConfig.ApiUrl, "not-existing-db", "nobody", "wrong", protocol: OdooApiProtocol.JsonApi);
 
             var result = await new OdooClient(config).GetDatabasesAsync();
 

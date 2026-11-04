@@ -99,6 +99,20 @@ public enum ActivityExceptionDecorationOdooEnum
 
 
 
+## JSON API (Odoo 19+)
+Odoo 19+ has a new external API ("JSON-2"); JSON-RPC used by default will be removed in Odoo 22.
+Pass `OdooApiProtocol.JsonApi` and use an API key as password - everything else works the same.
+
+```C#
+var config = new OdooConfig(
+        apiUrl: "https://odoo-api-url.com",
+        dbName: "odoo-db-name",
+        userName: "admin",
+        password: "<API key>",
+        protocol: OdooApiProtocol.JsonApi
+        );
+```
+
 ## OdooRepository
 #### Read
 ```C#
