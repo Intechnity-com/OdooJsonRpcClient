@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- XML documentation of OdooAccessOperation, referenced by <include> tags. -->
+<docs>
+
+  <member name="OdooAccessOperation">
+    <summary>Operation checked by <see cref="OdooClient.CheckAccessRightsAsync(string, OdooAccessOperation, Models.OdooContext, System.Threading.CancellationToken)"/>.</summary>
+  </member>
+
+  <member name="Read">
+    <summary>Reading records.</summary>
+  </member>
+
+  <member name="Write">
+    <summary>Changing records.</summary>
+  </member>
+
+  <member name="Create">
+    <summary>Creating records.</summary>
+  </member>
+
+  <member name="Unlink">
+    <summary>Deleting records.</summary>
+  </member>
+
+</docs>

@@ -299,5 +299,17 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
 
             throw new ArgumentException($"Missing atrribute: '{nameof(EnumMemberAttribute)}' for enum '{fieldInfo.FieldType.Name}' - '{fieldInfo.Name}'");
         }
+
+        /// <summary>
+        /// Maps values returned by Odoo as a list (e.g. <c>[id, "display name"]</c> from <c>name_search</c> / <c>name_create</c>)
+        /// to a record: value at position N is stored under N-th key. Missing values are null, extra values are ignored.
+        /// </summary>
+        internal static OdooDictionaryModel ToOdooDictionaryModel(string tableName, string[] keys, object[] values)
+        {
+            var model = new OdooDictionaryModel(tableName);
+            for (var i = 0; i < keys.Length; i++)
+                model[keys[i]] = values != null && i < values.Length ? values[i] : null;
+            return model;
+        }
     }
 }
