@@ -26,7 +26,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         [Fact]
         public async Task Wrong_password_returns_failed_login()
         {
-            var config = new OdooConfig(JsonApiTestConfig.ApiUrl, JsonApiTestConfig.DbName, JsonApiTestConfig.UserName, "wrong-password") { Protocol = OdooApiProtocol.JsonApi };
+            var config = new OdooConfig(JsonApiTestConfig.ApiUrl, JsonApiTestConfig.DbName, JsonApiTestConfig.UserName, "wrong-password", protocol: OdooApiProtocol.JsonApi);
 
             var result = await new OdooClient(config).GetAsync<IntegrationPartnerOdooModel>();
 
@@ -37,7 +37,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         [Fact]
         public async Task Wrong_database_returns_failed_result()
         {
-            var config = new OdooConfig(JsonApiTestConfig.ApiUrl, "db-does-not-exist", JsonApiTestConfig.UserName, JsonApiTestConfig.Password) { Protocol = OdooApiProtocol.JsonApi };
+            var config = new OdooConfig(JsonApiTestConfig.ApiUrl, "db-does-not-exist", JsonApiTestConfig.UserName, JsonApiTestConfig.Password, protocol: OdooApiProtocol.JsonApi);
 
             var result = await new OdooClient(config).LoginAsync();
 
@@ -47,7 +47,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         [Fact]
         public async Task Wrong_url_returns_failed_result_with_http_status()
         {
-            var config = new OdooConfig(JsonApiTestConfig.ApiUrl + "/not-existing-path", JsonApiTestConfig.DbName, JsonApiTestConfig.UserName, JsonApiTestConfig.Password) { Protocol = OdooApiProtocol.JsonApi };
+            var config = new OdooConfig(JsonApiTestConfig.ApiUrl + "/not-existing-path", JsonApiTestConfig.DbName, JsonApiTestConfig.UserName, JsonApiTestConfig.Password, protocol: OdooApiProtocol.JsonApi);
 
             var result = await new OdooClient(config).GetVersionAsync();
 
@@ -58,7 +58,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         [Fact]
         public async Task Very_small_timeout_returns_failed_result()
         {
-            var config = new OdooConfig(JsonApiTestConfig.ApiUrl, JsonApiTestConfig.DbName, JsonApiTestConfig.UserName, JsonApiTestConfig.Password, TimeSpan.FromMilliseconds(1)) { Protocol = OdooApiProtocol.JsonApi };
+            var config = new OdooConfig(JsonApiTestConfig.ApiUrl, JsonApiTestConfig.DbName, JsonApiTestConfig.UserName, JsonApiTestConfig.Password, TimeSpan.FromMilliseconds(1), protocol: OdooApiProtocol.JsonApi);
 
             var result = await new OdooClient(config).GetAsync("product.template");
 
