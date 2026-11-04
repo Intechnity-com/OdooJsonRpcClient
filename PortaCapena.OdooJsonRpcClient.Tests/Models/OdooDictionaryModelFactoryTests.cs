@@ -1,7 +1,7 @@
 using System;
 using FluentAssertions;
 using PortaCapena.OdooJsonRpcClient.Models;
-using PortaCapena.OdooJsonRpcClient.Shared.Models;
+using PortaCapena.OdooJsonRpcClient.Shared.Models.Fake;
 using Xunit;
 
 namespace PortaCapena.OdooJsonRpcClient.Tests.Models

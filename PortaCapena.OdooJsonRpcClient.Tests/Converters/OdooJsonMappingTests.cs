@@ -5,7 +5,7 @@ using FluentAssertions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PortaCapena.OdooJsonRpcClient.Converters;
-using PortaCapena.OdooJsonRpcClient.Shared.Models;
+using PortaCapena.OdooJsonRpcClient.Shared.Models.Fake;
 using Xunit;
 
 namespace PortaCapena.OdooJsonRpcClient.Tests.Converters
