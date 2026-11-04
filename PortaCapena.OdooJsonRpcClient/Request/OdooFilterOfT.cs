@@ -135,6 +135,13 @@ namespace PortaCapena.OdooJsonRpcClient.Request
             return this;
         }
 
+        /// <include file='../Docs/OdooFilter.xml' path='docs/member[@name="In"]/*'/>
+        public OdooFilter<T> In(Expression<Func<T, object>> expression, int[] values)
+        {
+            In(OdooExpresionMapper.GetOdooPropertyName(expression), values);
+            return this;
+        }
+
         /// <include file='../Docs/OdooFilter.xml' path='docs/member[@name="NotIn"]/*'/>
         public OdooFilter<T> NotIn(Expression<Func<T, object>> expression, OdooFilterValue value)
         {
@@ -158,6 +165,13 @@ namespace PortaCapena.OdooJsonRpcClient.Request
 
         /// <include file='../Docs/OdooFilter.xml' path='docs/member[@name="NotIn"]/*'/>
         public OdooFilter<T> NotIn(Expression<Func<T, object>> expression, long[] values)
+        {
+            NotIn(OdooExpresionMapper.GetOdooPropertyName(expression), values);
+            return this;
+        }
+
+        /// <include file='../Docs/OdooFilter.xml' path='docs/member[@name="NotIn"]/*'/>
+        public OdooFilter<T> NotIn(Expression<Func<T, object>> expression, int[] values)
         {
             NotIn(OdooExpresionMapper.GetOdooPropertyName(expression), values);
             return this;

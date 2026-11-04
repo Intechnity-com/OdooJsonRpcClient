@@ -108,6 +108,14 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                         return true;
                     }
 
+                    // many2one to a model with text ids, e.g. account.root in Odoo 18+: ["60", "60"]
+                    if (value.Count() <= 2 && IsInteger(dotnetType) && value.First.Type == JTokenType.String
+                        && long.TryParse(value.First.Value<string>(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var textId))
+                    {
+                        result = Convert.ChangeType(textId, Nullable.GetUnderlyingType(dotnetType) ?? dotnetType, CultureInfo.InvariantCulture);
+                        return true;
+                    }
+
                     // e.g. json / properties fields mapped to string
                     if (dotnetType == typeof(string))
                     {
@@ -193,14 +201,25 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                 builder.AppendLine($"public enum {ConvertOdooNameToDotNet(property.Value.String)}{ConvertOdooNameToDotNet(tableName)}{OdooEnumSuffix}");
                 builder.AppendLine("{");
 
+                var memberNames = new HashSet<string>();
                 for (int i = 0; i < property.Value.Selection.Length; i++)
                 {
                     string[] item = property.Value.Selection[i];
 
+                    // C# names cannot start with a digit (e.g. labels '1', '2') - issue #122
+                    var memberName = ConvertOdooNameToDotNet(item[1]);
+                    if (char.IsDigit(memberName[0]))
+                        memberName = "Value" + memberName;
+
+                    // different labels can give the same name (e.g. 'Etc/GMT-0' and 'Etc/GMT0') - issue #50
+                    var uniqueMemberName = memberName;
+                    for (var number = 2; !memberNames.Add(uniqueMemberName); number++)
+                        uniqueMemberName = memberName + number;
+
                     if (i != 0)
                         builder.AppendLine(string.Empty);
                     builder.AppendLine($"[EnumMember(Value = \"{item[0]}\")]");
-                    builder.AppendLine($"{ConvertOdooNameToDotNet(item[1])} = {i + 1},");
+                    builder.AppendLine($"{uniqueMemberName} = {i + 1},");
                 }
                 builder.AppendLine("}");
             }
