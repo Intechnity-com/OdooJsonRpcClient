@@ -5,7 +5,7 @@ using PortaCapena.OdooJsonRpcClient.Models;
 
 namespace PortaCapena.OdooJsonRpcClient.Converters
 {
-    public static class OdooExpresionMapper
+    public static class OdooExpressionMapper
     {
         /// <summary>
         /// Returns odoo field name (value of <c>[JsonProperty]</c>) of property selected by expression, e.g. <c>x => x.PartnerId</c> gives <c>partner_id</c>.

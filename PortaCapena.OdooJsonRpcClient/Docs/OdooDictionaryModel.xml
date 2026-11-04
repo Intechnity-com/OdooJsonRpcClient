@@ -102,7 +102,7 @@ await client.UpdateAsync(model, partnerId);
     <exception cref="System.ArgumentException">Expression is not an object initializer, or an assigned property has no <c>[JsonProperty]</c>.</exception>
   </member>
 
-  <member name="AddFromExpresion">
+  <member name="AddFromExpression">
     <summary>Sets values of all properties assigned in an object initializer, without changing <see cref="TableName"/>.</summary>
     <param name="expression">Object initializer of <typeparamref name="T"/>.</param>
     <exception cref="System.ArgumentException">Expression is not an object initializer, or an assigned property has no <c>[JsonProperty]</c>.</exception>

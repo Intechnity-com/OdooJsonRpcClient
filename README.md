@@ -43,7 +43,7 @@ When U can connect to odoo, try use login method. (There is no need to use this 
 var loginResult = await odooClient.LoginAsync();
 ```
 
-If You have correct data to login, its time to get model that U intrested off.
+If You have correct data to login, its time to get model that U interested off.
 
 ```C#
 var tableName = "product.product";
@@ -148,7 +148,7 @@ var result = await repository.CreateAsync(model);
 ```
 
 #### Update
-U can update only this fields that U are intrested in. For updating many records use `UpdateRangeAsync`.
+U can update only this fields that U are interested in. For updating many records use `UpdateRangeAsync`.
 ```C#           
 var model = OdooDictionaryModel.Create(() => new ProductProductOdooModel()
 {
@@ -163,7 +163,7 @@ var deleteProductResult = await repository.DeleteAsync(productId);
 ```
 
 #### Action
-Perform any actions on a model. For example use the code below to comfirm a sale order and turn it from a quote to an order.
+Perform any actions on a model. For example use the code below to confirm a sale order and turn it from a quote to an order.
 ```C#    
 var repository = new OdooRepository<SaleOrderOdooModel>(config);                    
 var confirmResult = await repository.ActionAsync("action_confirm", orderId);

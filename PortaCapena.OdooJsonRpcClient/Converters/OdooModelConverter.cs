@@ -62,7 +62,7 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                 {
                     if (atributes.Any(x => x is JsonIgnoreAttribute))
                         continue;
-                    throw new ArgumentException($"Mising attribute '{nameof(JsonPropertyAttribute)}' for property '{propertyInfo.Name}' in model '{objectType.Name}'");
+                    throw new ArgumentException($"Missing attribute '{nameof(JsonPropertyAttribute)}' for property '{propertyInfo.Name}' in model '{objectType.Name}'");
                 }
 
                 if (propertyInfo.CanWrite)
