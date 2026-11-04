@@ -51,6 +51,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example.Api
         [InlineData("account.move")]
         [InlineData("account.move.line")]
         [InlineData("account.journal")]
+        [InlineData("crm.team")]
         public async Task Generated_model_reads_records(string tableName)
         {
             var client = new OdooClient(JsonApiTestConfig);
