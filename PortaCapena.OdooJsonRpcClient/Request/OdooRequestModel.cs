@@ -55,83 +55,83 @@ namespace PortaCapena.OdooJsonRpcClient.Request
         public static OdooRequestModel Version(OdooConfig config)
         {
             var param = new OdooRequestParams(config.ApiUrlJson, "common", "version");
-            return new OdooRequestModel(param);
+            return new OdooRequestModel(param) { Config = config };
         }
         /// <include file='../Docs/OdooRequestModel.xml' path='docs/member[@name="Login"]/*'/>
         public static OdooRequestModel Login(OdooConfig config)
         {
             var param = new OdooRequestParams(config.ApiUrlJson, "common", "login", config.DbName, config.UserName, config.Password);
-            return new OdooRequestModel(param);
+            return new OdooRequestModel(param) { Config = config };
         }
         /// <include file='../Docs/OdooRequestModel.xml' path='docs/member[@name="ModelFields"]/*'/>
         public static OdooRequestModel ModelFields(OdooConfig config, int uid, string tableName)
         {
             var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute", config.DbName, uid, config.Password, tableName, OdooOperation.FieldsGet);
-            return new OdooRequestModel(param);
+            return new OdooRequestModel(param) { Config = config };
         }
 
         /// <include file='../Docs/OdooRequestModel.xml' path='docs/member[@name="Search"]/*'/>
         public static OdooRequestModel Search(OdooConfig config, int uid, string tableName, OdooQuery query = null, OdooContext context = null)
         {
             var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute_kw", config.DbName, uid, config.Password, tableName, OdooOperation.Search, GetRequestFilters(query), MapQuery(context, query));
-            return new OdooRequestModel(param);
+            return new OdooRequestModel(param) { Config = config };
         }
         /// <include file='../Docs/OdooRequestModel.xml' path='docs/member[@name="SearchRead"]/*'/>
         public static OdooRequestModel SearchRead(OdooConfig config, int uid, string tableName, OdooQuery query = null, OdooContext context = null)
         {
             var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute_kw", config.DbName, uid, config.Password, tableName, OdooOperation.SearchRead, GetRequestFilters(query), MapQuery(context, query));
-            return new OdooRequestModel(param);
+            return new OdooRequestModel(param) { Config = config };
         }
         /// <include file='../Docs/OdooRequestModel.xml' path='docs/member[@name="Read"]/*'/>
         public static OdooRequestModel Read(OdooConfig config, int uid, string tableName, long[] ids, OdooQuery query = null, OdooContext context = null)
         {
             var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute_kw", config.DbName, uid, config.Password, tableName, OdooOperation.Read, new object[] { ids }, MapQuery(context, query));
-            return new OdooRequestModel(param);
+            return new OdooRequestModel(param) { Config = config };
         }
 
         /// <include file='../Docs/OdooRequestModel.xml' path='docs/member[@name="SearchCount"]/*'/>
         public static OdooRequestModel SearchCount(OdooConfig config, int uid, string tableName, OdooQuery query = null, OdooContext context = null)
         {
             var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute_kw", config.DbName, uid, config.Password, tableName, OdooOperation.SearchCount, GetRequestFilters(query), MapQuery(context, query));
-            return new OdooRequestModel(param);
+            return new OdooRequestModel(param) { Config = config };
         }
 
         /// <include file='../Docs/OdooRequestModel.xml' path='docs/member[@name="Create"]/*'/>
         public static OdooRequestModel Create(OdooConfig config, int uid, string tableName, object model, OdooContext context = null)
         {
             var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute_kw", config.DbName, uid, config.Password, tableName, OdooOperation.Create, new[] { model }, MapQuery(context));
-            return new OdooRequestModel(param);
+            return new OdooRequestModel(param) { Config = config };
         }
         /// <include file='../Docs/OdooRequestModel.xml' path='docs/member[@name="Update"]/*'/>
         public static OdooRequestModel Update(OdooConfig config, int uid, string tableName, long[] ids, object model, OdooContext context = null)
         {
             var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute_kw", config.DbName, uid, config.Password, tableName, OdooOperation.Update, new []{ids, model}, MapQuery(context));
-            return new OdooRequestModel(param);
+            return new OdooRequestModel(param) { Config = config };
         }
         /// <include file='../Docs/OdooRequestModel.xml' path='docs/member[@name="Delete"]/*'/>
         public static OdooRequestModel Delete(OdooConfig config, int uid, string tableName, long[] ids, OdooContext context = null)
         {
             var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute_kw", config.DbName, uid, config.Password, tableName, OdooOperation.Delete, new object[] { ids }, MapQuery(context));
-            return new OdooRequestModel(param);
+            return new OdooRequestModel(param) { Config = config };
         }
 
         /// <include file='../Docs/OdooRequestModel.xml' path='docs/member[@name="Metadata"]/*'/>
         public static OdooRequestModel Metadata(OdooConfig config, int uid, string tableName, long[] ids, OdooContext context = null)
         {
             var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute_kw", config.DbName, uid, config.Password, tableName, OdooOperation.GetMetadata, new object[] { ids }, MapQuery(context));
-            return new OdooRequestModel(param);
+            return new OdooRequestModel(param) { Config = config };
         }
         /// <include file='../Docs/OdooRequestModel.xml' path='docs/member[@name="Action"]/*'/>
         public static OdooRequestModel Action(OdooConfig config, int uid, string tableName, string action, object model, OdooContext context = null)
         {
             var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute_kw", config.DbName, uid, config.Password, tableName, action, new[] { model }, MapQuery(context));
-            return new OdooRequestModel(param);
+            return new OdooRequestModel(param) { Config = config };
         }
         /// <include file='../Docs/OdooRequestModel.xml' path='docs/member[@name="ActionCollection"]/*'/>
         public static OdooRequestModel ActionCollection(OdooConfig config, int uid, string tableName, string action, object model, OdooContext context = null)
         {
             var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute_kw", config.DbName, uid, config.Password, tableName, action, model, MapQuery(context));
-            return new OdooRequestModel(param);
+            return new OdooRequestModel(param) { Config = config };
         }
 
         /// <include file='../Docs/OdooRequestModel.xml' path='docs/member[@name="MapQuery"]/*'/>
@@ -177,15 +177,21 @@ namespace PortaCapena.OdooJsonRpcClient.Request
                 allKwargs["context"] = context;
 
             var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute_kw", config.DbName, uid, config.Password, tableName, method, args ?? new object[0], allKwargs.Any() ? allKwargs : null);
-            return new OdooRequestModel(param);
+            return new OdooRequestModel(param) { Config = config };
         }
 
         /// <include file='../Docs/OdooRequestModel.xml' path='docs/member[@name="DatabaseList"]/*'/>
         public static OdooRequestModel DatabaseList(OdooConfig config)
         {
             var param = new OdooRequestParams(config.ApiUrlJson, "db", "list");
-            return new OdooRequestModel(param);
+            return new OdooRequestModel(param) { Config = config };
         }
+
+        /// <summary>
+        /// Connection settings the request was created for - decides the protocol (JSON-RPC / JSON-2). Null for requests created by constructors.
+        /// </summary>
+        [JsonIgnore]
+        internal OdooConfig Config { get; set; }
     }
 }
 

@@ -51,5 +51,8 @@ namespace PortaCapena.OdooJsonRpcClient.Models
         {
             this.Context = new OdooContext(language, timezone);
         }
+
+        /// <include file='../Docs/OdooConfig.xml' path='docs/member[@name="Protocol"]/*'/>
+        public Consts.OdooApiProtocol Protocol { get; set; } = Consts.OdooApiProtocol.JsonRpc;
     }
 }
