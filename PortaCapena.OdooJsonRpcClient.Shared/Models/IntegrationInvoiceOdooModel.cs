@@ -26,5 +26,14 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
 
         [JsonProperty("invoice_pdf_report_file")]
         public string InvoicePdfReportFile { get; set; }
+
+        [JsonProperty("partner_id")]
+        public long? PartnerId { get; set; }
+
+        [JsonProperty("invoice_line_ids")]
+        public long[] InvoiceLineIds { get; set; }
+
+        [JsonProperty("company_id")]
+        public long? CompanyId { get; set; }
     }
 }
