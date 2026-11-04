@@ -5,7 +5,7 @@
 [![Nuget](https://img.shields.io/nuget/dt/PortaCapena.OdooJsonRpcClient?logo=NuGet&label=Downloads)](https://www.nuget.org/packages/PortaCapena.OdooJsonRpcClient)
 [![example workflow](https://github.com/Intechnity-com/OdooJsonRpcClient/actions/workflows/pr_build.yml/badge.svg?branch=master&event=push)](https://github.com/Intechnity-com/OdooJsonRpcClient/actions/workflows/pr_build.yml)
 [![example workflow](https://github.com/Intechnity-com/OdooJsonRpcClient/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/Intechnity-com/OdooJsonRpcClient/actions/workflows/codeql-analysis.yml)
-![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/patricoos/54596b8c061e5c3c25b3072822a105a0/raw/code-coverage.json)
+![badge](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/Intechnity-com/OdooJsonRpcClient/badges/code-coverage.json)
 
 OdooJsonRpcClient is a C# library (.NET Standard) for communication with Odoo.
 

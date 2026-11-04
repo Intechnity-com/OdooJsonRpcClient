@@ -3,6 +3,11 @@ on:
   push:
     branches: [ master ]
   workflow_dispatch:
+
+# writes the badge file to the 'badges' branch (master is protected, so the bot cannot commit there)
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,18 +24,27 @@ jobs:
     # same coverage as in PRs (coverlet.runsettings: excludes PortaCapena.OdooJsonRpcClient.Shared, writes cobertura + opencover)
     - name: Run Unit Tests
       run: dotnet test PortaCapena.OdooJsonRpcClient.Tests/PortaCapena.OdooJsonRpcClient.Tests.csproj --no-build --collect:"XPlat Code Coverage" --results-directory ./coverage
-    # the collector writes into a random folder - copy the report to a fixed path for the badge action
+    # the collector writes into a random folder - copy the report to a fixed path
     - name: Copy coverage report
       run: cp coverage/*/coverage.opencover.xml ./coverage.opencover.xml
-    - name: Create Test Coverage Badge
-      uses: simon-k/dotnet-code-coverage-badge@v1.0.0
-      id: create_coverage_badge
-      with:
-        label: Test Coverage
-        color: brightgreen
-        path: coverage.opencover.xml
-        gist-filename: code-coverage.json
-        gist-id: 54596b8c061e5c3c25b3072822a105a0
-        gist-auth-token: ${{ secrets.GIST_AUTH_TOKEN }}
-    - name: Print code coverage
-      run: echo "Code coverage percentage ${{steps.create_coverage_badge.outputs.percentage}}%"
+    # shields.io endpoint json, read by the badge in README.md
+    - name: Create coverage badge file
+      id: coverage
+      run: |
+        PERCENT=$(grep -o 'sequenceCoverage="[0-9.]*"' coverage.opencover.xml | head -1 | grep -o '[0-9.]*' | cut -d. -f1)
+        echo "{\"schemaVersion\":1,\"label\":\"Test Coverage\",\"message\":\"${PERCENT}%\",\"color\":\"brightgreen\"}" > "$RUNNER_TEMP/code-coverage.json"
+        echo "percentage=${PERCENT}" >> "$GITHUB_OUTPUT"
+        echo "Code coverage percentage ${PERCENT}%"
+    - name: Save coverage badge to 'badges' branch
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        if git fetch --depth 1 origin badges:badges; then
+          git switch badges
+        else
+          git switch --orphan badges
+        fi
+        cp "$RUNNER_TEMP/code-coverage.json" code-coverage.json
+        git add code-coverage.json
+        git commit -m "Test coverage ${{ steps.coverage.outputs.percentage }}%" || echo "Coverage did not change"
+        git push origin badges
