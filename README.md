@@ -346,3 +346,14 @@ var products = await repository.Query()
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
+
+### Running integration tests locally
+Integration tests in `PortaCapena.OdooJsonRpcClient.Example` need a running Odoo instance. The repository contains a `docker-compose.yml` that starts Odoo 15 with demo data, matching the test config (`http://localhost:8069`, db `db-test`, `admin` / `admin`):
+
+```
+docker compose up -d        # first start initializes the database (a few minutes)
+dotnet test PortaCapena.OdooJsonRpcClient.Example
+docker compose down -v      # stop and remove all data
+```
+
+Odoo UI: http://localhost:8069 (`admin` / `admin`). On first start the database is created with demo data, modules (accounting, sales, purchase, inventory, coupons, CRM, project, HR, MRP), languages `en_US`, `nl_NL`, `pl_PL` and extra test data from [`docker/odoo/seed.py`](docker/odoo/seed.py) (companies, partners, lot-tracked products, coupon program, orders, invoice). To change modules or seed data, edit `docker-compose.yml` / `seed.py` and recreate with `docker compose down -v && docker compose up -d`.
