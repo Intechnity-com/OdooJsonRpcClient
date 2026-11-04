@@ -316,7 +316,7 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
             if (enumAttribute != null)
                 return enumAttribute.Value;
 
-            throw new ArgumentException($"Missing atrribute: '{nameof(EnumMemberAttribute)}' for enum '{fieldInfo.FieldType.Name}' - '{fieldInfo.Name}'");
+            throw new ArgumentException($"Missing attribute: '{nameof(EnumMemberAttribute)}' for enum '{fieldInfo.FieldType.Name}' - '{fieldInfo.Name}'");
         }
 
         /// <summary>

@@ -24,7 +24,7 @@ namespace PortaCapena.OdooJsonRpcClient.Extensions
         {
             var tableName = TryGetOdooTableName(type);
             if (tableName == null)
-                throw new ArgumentException($"Mising attribute '{nameof(OdooTableNameAttribute)}' for model '{type.Name}'");
+                throw new ArgumentException($"Missing attribute '{nameof(OdooTableNameAttribute)}' for model '{type.Name}'");
             return tableName;
         }
 

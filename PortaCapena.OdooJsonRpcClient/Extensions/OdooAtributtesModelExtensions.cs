@@ -12,7 +12,7 @@ namespace PortaCapena.OdooJsonRpcClient.Extensions
         public static string OdooTableName(this IOdooAtributtesModel model)
         {
             if (!(model.GetType().GetCustomAttributes(typeof(OdooTableNameAttribute), true).FirstOrDefault() is OdooTableNameAttribute attribute))
-                throw new ArgumentException($"Mising attribute '{nameof(OdooTableNameAttribute)}' for model '{model.GetType().Name}'");
+                throw new ArgumentException($"Missing attribute '{nameof(OdooTableNameAttribute)}' for model '{model.GetType().Name}'");
             return attribute.Name;
         }
 
@@ -23,7 +23,7 @@ namespace PortaCapena.OdooJsonRpcClient.Extensions
 
         public static string OdooPropertyName<T>(this T model, Expression<Func<T, object>> expression) where T : IOdooAtributtesModel
         {
-            return OdooExpresionMapper.GetOdooPropertyName(expression);
+            return OdooExpressionMapper.GetOdooPropertyName(expression);
         }
     }
 }
