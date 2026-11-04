@@ -40,7 +40,7 @@ services:
       <<: *db-env
       PGPASSWORD: odoo
       ODOO_DB: db-test-19
-      ODOO_LANGUAGES: en_US
+      ODOO_LANGUAGES: en_US,nl_NL
       ODOO_INIT_ARGS: --with-demo
       ODOO_MODULES: base,contacts,sale_management,purchase,stock
     volumes:
