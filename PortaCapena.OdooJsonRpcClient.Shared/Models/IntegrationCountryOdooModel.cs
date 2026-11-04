@@ -17,5 +17,8 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models
 
         [JsonProperty("code")]
         public string Code { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
     }
 }
