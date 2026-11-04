@@ -198,5 +198,41 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             result.Succeed.Should().BeTrue(result.Message);
             result.Value.Should().Contain(TestConfig.DbName);
         }
+
+        [Fact]
+        public async Task CallMethod_posts_note_with_named_arguments()
+        {
+            var client = new OdooClient(TestConfig);
+            var partnerId = (await client.SearchIdsAsync("res.partner", OdooQuery<IntegrationPartnerOdooModel>.Create()
+                .Where(x => x.Name, OdooOperator.EqualsTo, "Test Partner PL"))).Value.Single();
+            var body = $"Note {Guid.NewGuid():N}";
+            var kwargs = new System.Collections.Generic.Dictionary<string, object> { ["body"] = body, ["message_type"] = "comment", ["subtype_xmlid"] = "mail.mt_note" };
+
+            var posted = await client.CallMethodAsync("res.partner", "message_post", new object[] { new[] { partnerId } }, kwargs);
+            var messageId = Convert.ToInt64(posted.Value);
+            try
+            {
+                posted.Succeed.Should().BeTrue(posted.Message);
+                var message = (await client.ReadAsync("mail.message", new[] { messageId }, new OdooQuery { ReturnFields = { "body", "model", "res_id" } })).Value.Single();
+                ((string)message["body"]).Should().Contain(body);
+                message["model"].Should().Be("res.partner");
+                message["res_id"].Should().Be(partnerId);
+            }
+            finally
+            {
+                if (posted.Succeed)
+                    await client.DeleteAsync("mail.message", messageId);
+            }
+        }
+
+        [Fact]
+        public async Task CallMethod_with_wrong_named_argument_returns_failed_result()
+        {
+            var client = new OdooClient(TestConfig);
+
+            var result = await client.CallMethodAsync("res.partner", "name_search", null, new System.Collections.Generic.Dictionary<string, object> { ["not_existing_argument"] = 1 });
+
+            result.Failed.Should().BeTrue();
+        }
     }
 }

@@ -753,6 +753,26 @@
     <returns>Id of the new record, or failed result.</returns>
   </member>
 
+  <!-- Call method with named arguments -->
+
+  <member name="CallMethodAsync">
+    <summary>
+      Calls any public method of an Odoo model with positional and named arguments (Odoo <c>execute_kw</c>). Logs in when needed.
+      Use it for methods with keyword arguments, e.g. posting a note on a record:
+      <code>
+await client.CallMethodAsync("res.partner", "message_post", new object[] { new long[] { partnerId } },
+    new Dictionary&lt;string, object&gt; { ["body"] = "Note", ["message_type"] = "comment", ["subtype_xmlid"] = "mail.mt_note" });
+      </code>
+    </summary>
+    <param name="tableName">Odoo model name, e.g. <c>res.partner</c>.</param>
+    <param name="method">Method name, e.g. <c>message_post</c>.</param>
+    <param name="args">Positional arguments; for methods on records the first one is the array of record ids. Null sends no positional arguments.</param>
+    <param name="kwargs">Named arguments, or null. Context is added from <paramref name="context"/>.</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>Raw value returned by the method, or failed result.</returns>
+  </member>
+
   <!-- Databases -->
 
   <member name="GetDatabasesAsync">

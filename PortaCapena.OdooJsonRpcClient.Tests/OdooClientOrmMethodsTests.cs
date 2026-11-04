@@ -277,5 +277,50 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
             result.Error.Data.Name.Should().Be(OdooExceptionName.AccessDenied);
             _server.LoginCount.Should().Be(0, "listing databases is not retried with login");
         }
+
+        [Fact]
+        public async Task CallMethod_sends_positional_and_named_arguments_with_context()
+        {
+            _server.OnObjectCall = r => FakeOdooServer.Result(1085);
+            var client = _server.CreateClient(context: new OdooContext("pl_PL"));
+            var kwargs = new Dictionary<string, object> { ["body"] = "Note", ["message_type"] = "comment" };
+
+            var result = await client.CallMethodAsync("res.partner", "message_post", new object[] { new long[] { 1 } }, kwargs);
+
+            result.Value.Should().Be(1085L);
+            var call = _server.ObjectCalls.Single();
+            call.Model.Should().Be("res.partner");
+            call.ModelMethod.Should().Be("message_post");
+            call.ModelArgs.ToString(Formatting.None).Should().Be("[[1]]");
+            ((string)call.Kwargs["body"]).Should().Be("Note");
+            ((string)call.Kwargs["message_type"]).Should().Be("comment");
+            ((string)call.Kwargs["context"]["lang"]).Should().Be("pl_PL");
+        }
+
+        [Fact]
+        public async Task CallMethod_without_arguments()
+        {
+            _server.OnObjectCall = r => FakeOdooServer.Result(new { uid = 7 });
+            var client = _server.CreateClient();
+
+            var result = await client.CallMethodAsync("res.users", "context_get", null);
+
+            result.Succeed.Should().BeTrue();
+            var call = _server.ObjectCalls.Single();
+            call.ModelArgs.ToString(Formatting.None).Should().Be("[]");
+            call.Kwargs.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task CallMethod_error_is_returned_not_thrown()
+        {
+            _server.OnObjectCall = r => FakeOdooServer.Error("builtins.TypeError", "message_post() got an unexpected keyword argument 'x'");
+            var client = _server.CreateClient();
+
+            var result = await client.CallMethodAsync("res.partner", "message_post", new object[] { new long[] { 1 } }, new Dictionary<string, object> { ["x"] = 1 });
+
+            result.Failed.Should().BeTrue();
+            result.Error.Data.Message.Should().Contain("unexpected keyword argument");
+        }
     }
 }
