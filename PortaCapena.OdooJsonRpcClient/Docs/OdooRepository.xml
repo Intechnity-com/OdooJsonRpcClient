@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- XML documentation of OdooRepository<T> and IOdooRepository<T>, referenced by <include> tags.
+     Overloads with and without CancellationToken share one description. -->
+<docs>
+
+  <member name="OdooRepository">
+    <summary>
+      Typed access to one Odoo model: queries, create, update, delete and actions for records of <typeparamref name="T"/>.
+      The Odoo table comes from <see cref="Attributes.OdooTableNameAttribute"/> on <typeparamref name="T"/>.
+      <para>
+        Uses <see cref="OdooClient"/> underneath, so it logs in automatically and returns errors in
+        <see cref="Result.OdooResult{TResult}"/> instead of throwing them.
+      </para>
+    </summary>
+    <typeparam name="T">Model class with <see cref="Attributes.OdooTableNameAttribute"/> and <c>[JsonProperty]</c> on properties.</typeparam>
+    <example>
+      <code>
+var repository = new OdooRepository&lt;ResPartnerOdooModel&gt;(config);
+var companies = await repository.Query()
+    .Where(x => x.IsCompany, OdooOperator.EqualsTo, true)
+    .OrderBy(x => x.Name)
+    .ToListAsync();
+      </code>
+    </example>
+  </member>
+
+  <member name="IOdooRepository">
+    <summary>
+      Typed access to one Odoo model: queries, create, update and delete for records of <typeparamref name="T"/>.
+      Implemented by <see cref="OdooRepository{T}"/>; useful for mocking in tests.
+    </summary>
+    <typeparam name="T">Model class with <see cref="Attributes.OdooTableNameAttribute"/> and <c>[JsonProperty]</c> on properties.</typeparam>
+  </member>
+
+  <member name="TableName">
+    <summary>Odoo model name of <typeparamref name="T"/>, e.g. <c>res.partner</c>.</summary>
+  </member>
+
+  <member name="OdooClient">
+    <summary>Client used to send requests - available for derived repositories with custom calls.</summary>
+  </member>
+
+  <member name="Config">
+    <summary>Connection settings of the underlying <see cref="OdooClient"/>. Change <see cref="Models.OdooConfig.Context"/> to set default language or company.</summary>
+  </member>
+
+  <member name="Query">
+    <summary>
+      Starts a new query for records of the model. Chain filters, ordering, paging and field selection,
+      then execute it with e.g. <c>ToListAsync</c>, <c>FirstOrDefaultAsync</c> or <c>CountAsync</c>.
+    </summary>
+    <returns>New query builder; each call returns an independent query.</returns>
+  </member>
+
+  <!-- Constructors -->
+
+  <member name="ctor">
+    <summary>Creates repository that uses the shared built-in HttpClient.</summary>
+    <param name="config">Connection settings.</param>
+    <exception cref="System.ArgumentException"><typeparamref name="T"/> has no <see cref="Attributes.OdooTableNameAttribute"/>.</exception>
+  </member>
+
+  <member name="ctor.HttpClient">
+    <summary>Creates repository that sends requests using given HttpClient (e.g. from IHttpClientFactory).</summary>
+    <param name="config">Connection settings.</param>
+    <param name="httpClient">HttpClient used to send requests, or null for the built-in one.</param>
+    <exception cref="System.ArgumentException"><typeparamref name="T"/> has no <see cref="Attributes.OdooTableNameAttribute"/>.</exception>
+  </member>
+
+  <member name="ctor.OdooClient">
+    <summary>Creates repository that uses an existing client - e.g. to share its HttpClient and configuration between repositories.</summary>
+    <param name="odooClient">Client used to send requests.</param>
+    <exception cref="System.ArgumentNullException"><paramref name="odooClient"/> is null.</exception>
+    <exception cref="System.ArgumentException"><typeparamref name="T"/> has no <see cref="Attributes.OdooTableNameAttribute"/>.</exception>
+  </member>
+
+  <!-- Create -->
+
+  <member name="CreateAsync.Model">
+    <summary>Creates one record (Odoo <c>create</c>) from a model class. The table comes from the model's <see cref="Attributes.OdooTableNameAttribute"/>.</summary>
+    <returns>Id of the created record, or failed result (e.g. Odoo <c>ValidationError</c>).</returns>
+  </member>
+
+  <member name="CreateAsync.Dictionary">
+    <summary>
+      Creates one record (Odoo <c>create</c>) with only the fields present in the dictionary.
+      A dictionary without table name is created in this repository's table.
+    </summary>
+    <returns>Id of the created record, or failed result.</returns>
+  </member>
+
+  <member name="CreateAsync.Models">
+    <summary>Creates many records in one request. All models must belong to the same Odoo table.</summary>
+    <returns>Ids of created records in the same order as the models.</returns>
+  </member>
+
+  <member name="CreateAsync.Dictionaries">
+    <summary>
+      Creates many records from dictionaries in one request.
+      Dictionaries without table name are created in this repository's table.
+    </summary>
+    <returns>Ids of created records in the same order as the models.</returns>
+  </member>
+
+  <!-- Update -->
+
+  <member name="UpdateAsync.Model">
+    <summary>
+      Updates one record (Odoo <c>write</c>) with all properties of the model.
+      To change only some fields use the <see cref="Models.OdooDictionaryModel"/> overload.
+    </summary>
+    <returns><c>true</c> when saved, or failed result.</returns>
+  </member>
+
+  <member name="UpdateAsync.Dictionary">
+    <summary>
+      Updates one record (Odoo <c>write</c>) with only the fields present in the dictionary; a null value clears the field.
+      A dictionary without table name updates this repository's table.
+    </summary>
+    <returns><c>true</c> when saved, or failed result.</returns>
+  </member>
+
+  <member name="UpdateRangeAsync.Model">
+    <summary>Writes the same values (all properties of the model) to many records in one request (Odoo <c>write</c>).</summary>
+    <returns><c>true</c> when saved, or failed result.</returns>
+  </member>
+
+  <member name="UpdateRangeAsync.Dictionary">
+    <summary>
+      Writes the fields present in the dictionary to many records in one request (Odoo <c>write</c>).
+      Always targets this repository's table - <see cref="Models.OdooDictionaryModel.TableName"/> of the dictionary is overwritten.
+    </summary>
+    <returns><c>true</c> when saved, or failed result.</returns>
+  </member>
+
+  <!-- Delete -->
+
+  <member name="DeleteAsync.Model">
+    <summary>Deletes the record represented by the model (Odoo <c>unlink</c>), using its <see cref="Models.IOdooModel.Id"/>.</summary>
+    <returns><c>true</c> when deleted, or failed result (e.g. record is referenced and cannot be deleted).</returns>
+  </member>
+
+  <member name="DeleteAsync.Id">
+    <summary>Deletes one record of this repository's table by id (Odoo <c>unlink</c>).</summary>
+    <returns><c>true</c> when deleted, or failed result.</returns>
+  </member>
+
+  <member name="DeleteRangeAsync">
+    <summary>Deletes many records in one request (Odoo <c>unlink</c>). Nothing is deleted when any record cannot be deleted.</summary>
+    <returns><c>true</c> when deleted, or failed result.</returns>
+  </member>
+
+  <!-- Action -->
+
+  <member name="ActionAsync">
+    <summary>
+      Calls a public method of this repository's Odoo model, e.g. <c>action_archive</c>.
+      The arguments are sent as the single positional argument - usually record id(s).
+    </summary>
+    <returns>Raw value returned by the method (often <c>true</c>, null or an action dictionary).</returns>
+  </member>
+
+</docs>

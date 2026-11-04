@@ -48,7 +48,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
             // act
             var query = repositoryType.GetMethod("Query").Invoke(repository, null);
 
-            dynamic awaitable = queryBuilderType.GetMethod("ToListAsync").Invoke(query, null);
+            dynamic awaitable = queryBuilderType.GetMethod("ToListAsync").Invoke(query, new object[] { System.Threading.CancellationToken.None });
 
             await awaitable;
             var dynamicItems = awaitable.GetAwaiter().GetResult();

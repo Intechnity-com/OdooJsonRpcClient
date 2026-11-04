@@ -27,11 +27,12 @@ jobs:
       run: dotnet test PortaCapena.OdooJsonRpcClient.Tests/PortaCapena.OdooJsonRpcClient.Tests.csproj --configuration Release --no-restore --no-build
       
     - name: Create Nuget Package
-      run: dotnet pack --configuration Release /p:Version=${{github.event.release.tag_name}} /p:PackageReleaseNotes="See https://github.com/patricoos/PortaCapena.OdooJsonRpcClient/releases/tag/${{github.event.release.tag_name}}"     
+      # GeneratePackageOnBuild=false: the package is created only here, with the release version (avoids NU5026 with the package created by build)
+      run: dotnet pack --configuration Release /p:Version=${{github.event.release.tag_name}} /p:GeneratePackageOnBuild=false /p:PackageReleaseNotes="See https://github.com/Intechnity-com/OdooJsonRpcClient/releases/tag/${{github.event.release.tag_name}}"
       working-directory: ./PortaCapena.OdooJsonRpcClient
-      
+
     - name: Archive Nuget Package
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v4
       with:
         name:  PortaCapena.OdooJsonRpcClient.${{github.event.release.tag_name}}.nupkg
         path: ./PortaCapena.OdooJsonRpcClient/bin/Release/PortaCapena.OdooJsonRpcClient.${{github.event.release.tag_name}}.nupkg

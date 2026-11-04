@@ -6,40 +6,50 @@ using System.Reflection;
 using Newtonsoft.Json;
 using PortaCapena.OdooJsonRpcClient.Attributes;
 using PortaCapena.OdooJsonRpcClient.Converters;
+using PortaCapena.OdooJsonRpcClient.Extensions;
 
 namespace PortaCapena.OdooJsonRpcClient.Models
 {
+    /// <include file='../Docs/OdooDictionaryModel.xml' path='docs/member[@name="OdooDictionaryModel"]/*'/>
     public class OdooDictionaryModel : Dictionary<string, object>
     {
+        /// <include file='../Docs/OdooDictionaryModel.xml' path='docs/member[@name="TableName"]/*'/>
         public string TableName { get; internal set; }
 
+        /// <include file='../Docs/OdooDictionaryModel.xml' path='docs/member[@name="ctor"]/*'/>
         public OdooDictionaryModel() { }
 
+        /// <include file='../Docs/OdooDictionaryModel.xml' path='docs/member[@name="ctor.TableName"]/*'/>
         public OdooDictionaryModel(string tableName)
         {
             TableName = tableName;
         }
 
+        /// <include file='../Docs/OdooDictionaryModel.xml' path='docs/member[@name="Create"]/*'/>
         public static OdooDictionaryModel Create()
         {
             return new OdooDictionaryModel();
         }
 
+        /// <include file='../Docs/OdooDictionaryModel.xml' path='docs/member[@name="Create.TableName"]/*'/>
         public static OdooDictionaryModel Create(string tableName)
         {
             return new OdooDictionaryModel(tableName);
         }
 
+        /// <include file='../Docs/OdooDictionaryModel.xml' path='docs/member[@name="Create.Model"]/*'/>
         public static OdooDictionaryModel<T> Create<T>() where T : IOdooAtributtesModel, new()
         {
             return new OdooDictionaryModel<T>();
         }
 
+        /// <include file='../Docs/OdooDictionaryModel.xml' path='docs/member[@name="Create.Initializer"]/*'/>
         public static OdooDictionaryModel<T> Create<T>(Expression<Func<T>> expression) where T : IOdooAtributtesModel, new()
         {
             return new OdooDictionaryModel<T>().Add(expression);
         }
 
+        /// <include file='../Docs/OdooDictionaryModel.xml' path='docs/member[@name="Create.Property"]/*'/>
         public static OdooDictionaryModel Create<T>(Expression<Func<T, object>> expression, object value) where T : IOdooAtributtesModel, new()
         {
             return new OdooDictionaryModel<T>().Add(expression, value);
@@ -47,14 +57,16 @@ namespace PortaCapena.OdooJsonRpcClient.Models
 
         //TODO: Rename to set / addOrUpdate ?
 
+        /// <include file='../Docs/OdooDictionaryModel.xml' path='docs/member[@name="Add.Property"]/*'/>
         public OdooDictionaryModel Add<T>(Expression<Func<T, object>> expression, object value) where T : IOdooAtributtesModel
         {
-            if (TableName != null && TryGetOdooTableName(expression, out var tableName))
+            if (TableName == null && TryGetOdooTableName(expression, out var tableName))
                 TableName = tableName;
             this[OdooExpresionMapper.GetOdooPropertyName(expression)] = value;
             return this;
         }
 
+        /// <include file='../Docs/OdooDictionaryModel.xml' path='docs/member[@name="Add.Initializer"]/*'/>
         public OdooDictionaryModel Add<T>(Expression<Func<T>> expression) where T : IOdooAtributtesModel, new()
         {
             if (TableName == null && TryGetOdooTableName(expression, out var tableName))
@@ -65,67 +77,36 @@ namespace PortaCapena.OdooJsonRpcClient.Models
             return this;
         }
 
+        /// <include file='../Docs/OdooDictionaryModel.xml' path='docs/member[@name="AddFromExpresion"]/*'/>
         protected void AddFromExpresion<T>(Expression<Func<T>> expression) where T : IOdooAtributtesModel, new()
         {
-            if (!(expression.Body is MemberInitExpression body)) throw new ArgumentException("Invalid Func");
+            if (!(expression.Body is MemberInitExpression body))
+                throw new ArgumentException($"Invalid Func - expected object initializer, e.g. () => new {typeof(T).Name} {{ Name = \"value\" }}", nameof(expression));
 
-            foreach (var memberExpression in body.Bindings)
+            foreach (var binding in body.Bindings)
             {
-                if (memberExpression is MemberAssignment memberExp)
-                {
-                    var property = (PropertyInfo)memberExpression.Member;
-                    var attribute = property.GetCustomAttributes<JsonPropertyAttribute>();
+                if (!(binding is MemberAssignment memberAssignment) || !(binding.Member is PropertyInfo property))
+                    throw new ArgumentException($"Invalid Func - only property assignments are supported ('{binding}')", nameof(expression));
 
-                    var odooName = attribute.FirstOrDefault()?.PropertyName;
+                var odooName = property.GetCustomAttributes<JsonPropertyAttribute>().FirstOrDefault()?.PropertyName;
+                if (odooName == null)
+                    throw new ArgumentException($"Invalid Func - property '{typeof(T).Name}.{property.Name}' has no [JsonProperty] attribute with odoo field name", nameof(expression));
 
-                    if (odooName != null)
-                    {
-                        switch (memberExp.Expression)
-                        {
-                            case ConstantExpression constantExpression:
-                                {
-                                    var value = constantExpression.Value;
-                                    this[odooName] = value;
-                                    continue;
-                                }
-                            case MemberExpression memberExpr:
-                                {
-                                    var value = Expression.Lambda(memberExpr).Compile().DynamicInvoke();
-                                    this[odooName] = value;
-                                    continue;
-                                }
-                            case UnaryExpression unaryExpression:
-                                {
-                                    var value = Expression.Lambda(unaryExpression).Compile().DynamicInvoke();
-                                    this[odooName] = value;
-                                    continue;
-                                }
-                            case MethodCallExpression methodCallExpression:
-                                {
-                                    var value = Expression.Lambda(methodCallExpression).Compile().DynamicInvoke();
-                                    this[odooName] = value;
-                                    continue;
-                                }
-                            case NewExpression memberInitExpression:
-                                {
-                                    var value = Expression.Lambda(memberInitExpression).Compile().DynamicInvoke();
-                                    this[odooName] = value;
-                                    continue;
-                                }
-                            case NewArrayExpression newArrayExpression:
-                                {
-                                    var value = Expression.Lambda(newArrayExpression).Compile().DynamicInvoke();
-                                    this[odooName] = value;
-                                    continue;
-                                }
-                        }
-                    }
-                }
-                throw new ArgumentException("Invalid Func");
+                this[odooName] = Evaluate(memberAssignment.Expression);
             }
         }
 
+        private static object Evaluate(Expression expression)
+        {
+            if (expression is ConstantExpression constantExpression)
+                return constantExpression.Value;
 
+            // variables, method calls, conversions, arrays, arithmetic, conditionals...
+            return Expression.Lambda(expression).Compile().DynamicInvoke();
+        }
+
+
+        /// <include file='../Docs/OdooDictionaryModel.xml' path='docs/member[@name="TryGetOdooTableName"]/*'/>
         protected static bool TryGetOdooTableName<T>(Expression<Func<T>> expression, out string result)
         {
             result = null;
@@ -136,24 +117,18 @@ namespace PortaCapena.OdooJsonRpcClient.Models
             return true;
         }
 
+        /// <include file='../Docs/OdooDictionaryModel.xml' path='docs/member[@name="TryGetOdooTableName"]/*'/>
         protected static bool TryGetOdooTableName<T>(Expression<Func<T, object>> expression, out string result)
         {
-            result = null;
-            var tableNameAttribute = expression.ReturnType.GetCustomAttributes(typeof(OdooTableNameAttribute), true).FirstOrDefault() as OdooTableNameAttribute;
-            if (tableNameAttribute == null) return false;
-
-            result = tableNameAttribute.Name;
-            return true;
+            result = OdooExtensions.TryGetOdooTableName(typeof(T));
+            return result != null;
         }
 
+        /// <include file='../Docs/OdooDictionaryModel.xml' path='docs/member[@name="TryGetOdooTableName"]/*'/>
         protected static bool TryGetOdooTableName<T>(Expression<Func<T, Enum>> expression, out string result)
         {
-            result = null;
-            var tableNameAttribute = expression.ReturnType.GetCustomAttributes(typeof(OdooTableNameAttribute), true).FirstOrDefault() as OdooTableNameAttribute;
-            if (tableNameAttribute == null) return false;
-
-            result = tableNameAttribute.Name;
-            return true;
+            result = OdooExtensions.TryGetOdooTableName(typeof(T));
+            return result != null;
         }
     }
 }

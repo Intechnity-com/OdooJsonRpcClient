@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- XML documentation of OdooConfig, referenced by <include> tags. -->
+<docs>
+
+  <member name="OdooConfig">
+    <summary>
+      Connection settings of an Odoo server: url, database, credentials, timeout and default <see cref="OdooContext"/>.
+      Clients created with equal url, database and user name share one login.
+    </summary>
+    <example>
+      <code>
+var config = new OdooConfig("https://my-company.odoo.com", "my-db", "admin", "api-key-or-password", "pl_PL");
+      </code>
+    </example>
+  </member>
+
+  <member name="ApiUrl">
+    <summary>Odoo server url without trailing slash, e.g. <c>https://my-company.odoo.com</c>.</summary>
+  </member>
+
+  <member name="ApiUrlJson">
+    <summary>JSON-RPC endpoint used for requests: <see cref="ApiUrl"/> + <c>/jsonrpc</c>.</summary>
+  </member>
+
+  <member name="DbName">
+    <summary>Odoo database name.</summary>
+  </member>
+
+  <member name="UserName">
+    <summary>Login of the Odoo user.</summary>
+  </member>
+
+  <member name="Password">
+    <summary>Password or API key of the Odoo user. An API key is recommended (Odoo user preferences - Account Security).</summary>
+  </member>
+
+  <member name="Timeout">
+    <summary>Timeout of a single request. Default (zero) means 100 seconds.</summary>
+  </member>
+
+  <member name="Context">
+    <summary>
+      Default Odoo context sent with requests (language, timezone, company...).
+      Used when a method is called without its own context; can be changed after creating the config.
+    </summary>
+  </member>
+
+  <member name="ctor">
+    <summary>Creates settings with empty context (Odoo uses the user's language and company).</summary>
+    <param name="apiUrl">Odoo server url, e.g. <c>https://my-company.odoo.com</c>; trailing slash is removed.</param>
+    <param name="dbName">Odoo database name.</param>
+    <param name="userName">Login of the Odoo user.</param>
+    <param name="password">Password or API key of the Odoo user.</param>
+    <param name="timeout">Timeout of a single request; default (zero) means 100 seconds.</param>
+    <exception cref="System.ArgumentException"><paramref name="apiUrl"/> is empty.</exception>
+  </member>
+
+  <member name="ctor.Context">
+    <summary>Creates settings with given default context (a copy is stored).</summary>
+    <param name="apiUrl">Odoo server url, e.g. <c>https://my-company.odoo.com</c>; trailing slash is removed.</param>
+    <param name="dbName">Odoo database name.</param>
+    <param name="userName">Login of the Odoo user.</param>
+    <param name="password">Password or API key of the Odoo user.</param>
+    <param name="context">Default context sent with requests.</param>
+    <param name="timeout">Timeout of a single request; default (zero) means 100 seconds.</param>
+    <exception cref="System.ArgumentException"><paramref name="apiUrl"/> is empty.</exception>
+  </member>
+
+  <member name="ctor.Language">
+    <summary>Creates settings with default language - translatable fields are returned in this language.</summary>
+    <param name="apiUrl">Odoo server url, e.g. <c>https://my-company.odoo.com</c>; trailing slash is removed.</param>
+    <param name="dbName">Odoo database name.</param>
+    <param name="userName">Login of the Odoo user.</param>
+    <param name="password">Password or API key of the Odoo user.</param>
+    <param name="language">Odoo language code, e.g. <c>en_US</c>, <c>pl_PL</c>; the language must be installed in Odoo.</param>
+    <param name="timeout">Timeout of a single request; default (zero) means 100 seconds.</param>
+    <exception cref="System.ArgumentException"><paramref name="apiUrl"/> is empty.</exception>
+  </member>
+
+  <member name="ctor.LanguageTimezone">
+    <summary>Creates settings with default language and timezone.</summary>
+    <param name="apiUrl">Odoo server url, e.g. <c>https://my-company.odoo.com</c>; trailing slash is removed.</param>
+    <param name="dbName">Odoo database name.</param>
+    <param name="userName">Login of the Odoo user.</param>
+    <param name="password">Password or API key of the Odoo user.</param>
+    <param name="language">Odoo language code, e.g. <c>en_US</c>, <c>pl_PL</c>.</param>
+    <param name="timezone">Timezone name, e.g. <c>Europe/Warsaw</c>. Odoo still stores and returns datetimes in UTC.</param>
+    <param name="timeout">Timeout of a single request; default (zero) means 100 seconds.</param>
+    <exception cref="System.ArgumentException"><paramref name="apiUrl"/> is empty.</exception>
+  </member>
+
+</docs>
