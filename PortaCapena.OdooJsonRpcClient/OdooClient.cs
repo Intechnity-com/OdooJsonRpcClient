@@ -701,5 +701,15 @@ namespace PortaCapena.OdooJsonRpcClient
         }
 
         #endregion
+
+        #region Call method with named arguments
+
+        /// <include file='Docs/OdooClient.xml' path='docs/member[@name="CallMethodAsync"]/*'/>
+        public async Task<OdooResult<object>> CallMethodAsync(string tableName, string method, object[] args, Dictionary<string, object> kwargs = null, OdooContext context = null, CancellationToken cancellationToken = default)
+        {
+            return await ExecuteAsync<object>(uid => OdooRequestModel.Call(Config, uid, tableName, method, args, kwargs, SelectContext(context)), cancellationToken).ConfigureAwait(false);
+        }
+
+        #endregion
     }
 }
