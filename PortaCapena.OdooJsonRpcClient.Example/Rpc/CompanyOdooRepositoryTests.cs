@@ -3,8 +3,8 @@ using FluentAssertions;
 using PortaCapena.OdooJsonRpcClient.Consts;
 using PortaCapena.OdooJsonRpcClient.Extensions;
 using PortaCapena.OdooJsonRpcClient.Request;
+using PortaCapena.OdooJsonRpcClient.Shared.Models.Odoo15;
 using PortaCapena.OdooJsonRpcClient.Shared;
-using PortaCapena.OdooJsonRpcClient.Shared.Models;
 using Xunit;
 
 namespace PortaCapena.OdooJsonRpcClient.Example.Rpc

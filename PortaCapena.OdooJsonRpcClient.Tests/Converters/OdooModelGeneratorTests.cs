@@ -4,7 +4,8 @@ using System.Reflection;
 using FluentAssertions;
 using PortaCapena.OdooJsonRpcClient.Converters;
 using PortaCapena.OdooJsonRpcClient.Models;
-using PortaCapena.OdooJsonRpcClient.Shared.Models;
+using PortaCapena.OdooJsonRpcClient.Shared.Models.Fake;
+using PortaCapena.OdooJsonRpcClient.Shared.Models.Odoo15;
 using Xunit;
 
 namespace PortaCapena.OdooJsonRpcClient.Tests.Converters
