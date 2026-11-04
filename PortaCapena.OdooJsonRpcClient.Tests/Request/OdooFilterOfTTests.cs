@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Newtonsoft.Json;
 using PortaCapena.OdooJsonRpcClient.Request;
-using PortaCapena.OdooJsonRpcClient.Shared.Models;
+using PortaCapena.OdooJsonRpcClient.Shared.Models.Fake;
 using Xunit;
 
 namespace PortaCapena.OdooJsonRpcClient.Tests.Request

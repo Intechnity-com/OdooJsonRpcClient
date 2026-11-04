@@ -2,7 +2,7 @@
 using FluentAssertions;
 using System.Linq;
 using PortaCapena.OdooJsonRpcClient.Models;
-using PortaCapena.OdooJsonRpcClient.Shared.Models;
+using PortaCapena.OdooJsonRpcClient.Shared.Models.Odoo15;
 using Xunit;
 using PortaCapena.OdooJsonRpcClient.Converters;
 using Newtonsoft.Json;

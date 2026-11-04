@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 using PortaCapena.OdooJsonRpcClient.Consts;
 using PortaCapena.OdooJsonRpcClient.Models;
 using PortaCapena.OdooJsonRpcClient.Request;
-using PortaCapena.OdooJsonRpcClient.Shared.Models;
+using PortaCapena.OdooJsonRpcClient.Shared.Models.Fake;
 using Xunit;
 
 namespace PortaCapena.OdooJsonRpcClient.Tests.Request
