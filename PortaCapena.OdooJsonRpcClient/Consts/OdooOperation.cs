@@ -17,5 +17,12 @@
         public const string GetMetadata = "get_metadata";
 
         public const string OnChage = "onchage";
+
+        public const string ReadGroup = "read_group";
+        public const string NameSearch = "name_search";
+        public const string NameCreate = "name_create";
+        public const string Copy = "copy";
+        public const string DefaultGet = "default_get";
+        public const string CheckAccessRights = "check_access_rights";
     }
 }

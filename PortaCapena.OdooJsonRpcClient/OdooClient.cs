@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using PortaCapena.OdooJsonRpcClient.Consts;
+using PortaCapena.OdooJsonRpcClient.Converters;
 using PortaCapena.OdooJsonRpcClient.Extensions;
 using PortaCapena.OdooJsonRpcClient.Models;
 using PortaCapena.OdooJsonRpcClient.Request;
@@ -544,6 +545,144 @@ namespace PortaCapena.OdooJsonRpcClient
         private OdooContext SelectContext(OdooContext paramContext)
         {
             return paramContext ?? Config.Context;
+        }
+
+        #endregion
+
+        #region Search ids / Read
+
+        /// <include file='Docs/OdooClient.xml' path='docs/member[@name="SearchIdsAsync.Model"]/*'/>
+        public async Task<OdooResult<long[]>> SearchIdsAsync<T>(OdooQuery query = null, OdooContext context = null, CancellationToken cancellationToken = default) where T : IOdooModel, new()
+        {
+            return await SearchIdsAsync(OdooExtensions.GetOdooTableName<T>(), query, context, cancellationToken).ConfigureAwait(false);
+        }
+        /// <include file='Docs/OdooClient.xml' path='docs/member[@name="SearchIdsAsync.Table"]/*'/>
+        public async Task<OdooResult<long[]>> SearchIdsAsync(string tableName, OdooQuery query = null, OdooContext context = null, CancellationToken cancellationToken = default)
+        {
+            var domain = query?.Filters != null ? query.Filters.ToArray() : new object[0];
+            var kwargs = new Dictionary<string, object>();
+            if (query?.Offset != null) kwargs["offset"] = query.Offset;
+            if (query?.Limit != null) kwargs["limit"] = query.Limit;
+            if (!string.IsNullOrWhiteSpace(query?.Order)) kwargs["order"] = query.Order;
+
+            return await ExecuteAsync<long[]>(uid => OdooRequestModel.Call(Config, uid, tableName, OdooOperation.Search, new object[] { domain }, kwargs, SelectContext(context)), cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <include file='Docs/OdooClient.xml' path='docs/member[@name="ReadAsync.Model"]/*'/>
+        public async Task<OdooResult<T[]>> ReadAsync<T>(long[] ids, OdooQuery query = null, OdooContext context = null, CancellationToken cancellationToken = default) where T : IOdooModel, new()
+        {
+            var tableName = OdooExtensions.GetOdooTableName<T>();
+            var kwargs = new Dictionary<string, object>();
+            if (query?.ReturnFields != null && query.ReturnFields.Count > 0) kwargs["fields"] = query.ReturnFields.ToArray();
+
+            return await ExecuteAsync<T[]>(uid => OdooRequestModel.Call(Config, uid, tableName, OdooOperation.Read, new object[] { ids }, kwargs, SelectContext(context)), cancellationToken).ConfigureAwait(false);
+        }
+        /// <include file='Docs/OdooClient.xml' path='docs/member[@name="ReadAsync.Table"]/*'/>
+        public async Task<OdooResult<OdooDictionaryModel[]>> ReadAsync(string tableName, long[] ids, OdooQuery query = null, OdooContext context = null, CancellationToken cancellationToken = default)
+        {
+            var kwargs = new Dictionary<string, object>();
+            if (query?.ReturnFields != null && query.ReturnFields.Count > 0) kwargs["fields"] = query.ReturnFields.ToArray();
+
+            return await ExecuteAsync<OdooDictionaryModel[]>(uid => OdooRequestModel.Call(Config, uid, tableName, OdooOperation.Read, new object[] { ids }, kwargs, SelectContext(context)), cancellationToken).ConfigureAwait(false);
+        }
+
+        #endregion
+
+        #region Metadata / access / defaults
+
+        /// <include file='Docs/OdooClient.xml' path='docs/member[@name="GetMetadataAsync.Model"]/*'/>
+        public async Task<OdooResult<OdooDictionaryModel[]>> GetMetadataAsync<T>(long[] ids, OdooContext context = null, CancellationToken cancellationToken = default) where T : IOdooModel, new()
+        {
+            return await GetMetadataAsync(OdooExtensions.GetOdooTableName<T>(), ids, context, cancellationToken).ConfigureAwait(false);
+        }
+        /// <include file='Docs/OdooClient.xml' path='docs/member[@name="GetMetadataAsync.Table"]/*'/>
+        public async Task<OdooResult<OdooDictionaryModel[]>> GetMetadataAsync(string tableName, long[] ids, OdooContext context = null, CancellationToken cancellationToken = default)
+        {
+            return await ExecuteAsync<OdooDictionaryModel[]>(uid => OdooRequestModel.Metadata(Config, uid, tableName, ids, SelectContext(context)), cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <include file='Docs/OdooClient.xml' path='docs/member[@name="CheckAccessRightsAsync.Model"]/*'/>
+        public async Task<OdooResult<bool>> CheckAccessRightsAsync<T>(OdooAccessOperation operation, OdooContext context = null, CancellationToken cancellationToken = default) where T : IOdooModel, new()
+        {
+            return await CheckAccessRightsAsync(OdooExtensions.GetOdooTableName<T>(), operation, context, cancellationToken).ConfigureAwait(false);
+        }
+        /// <include file='Docs/OdooClient.xml' path='docs/member[@name="CheckAccessRightsAsync.Table"]/*'/>
+        public async Task<OdooResult<bool>> CheckAccessRightsAsync(string tableName, OdooAccessOperation operation, OdooContext context = null, CancellationToken cancellationToken = default)
+        {
+            // raise_exception = false: Odoo answers true / false instead of AccessError
+            var args = new object[] { operation.Description(), false };
+            return await ExecuteAsync<bool>(uid => OdooRequestModel.Call(Config, uid, tableName, OdooOperation.CheckAccessRights, args, null, SelectContext(context)), cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <include file='Docs/OdooClient.xml' path='docs/member[@name="DefaultGetAsync"]/*'/>
+        public async Task<OdooResult<OdooDictionaryModel>> DefaultGetAsync(string tableName, string[] fields, OdooContext context = null, CancellationToken cancellationToken = default)
+        {
+            var args = new object[] { fields ?? new string[0] };
+            return await ExecuteAsync<OdooDictionaryModel>(uid => OdooRequestModel.Call(Config, uid, tableName, OdooOperation.DefaultGet, args, null, SelectContext(context)), cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <include file='Docs/OdooClient.xml' path='docs/member[@name="GetModelAsync.Attributes"]/*'/>
+        public async Task<OdooResult<Dictionary<string, OdooPropertyInfo>>> GetModelAsync(string tableName, string[] attributes, CancellationToken cancellationToken = default)
+        {
+            var kwargs = new Dictionary<string, object> { ["attributes"] = attributes ?? new string[0] };
+            return await ExecuteAsync<Dictionary<string, OdooPropertyInfo>>(uid => OdooRequestModel.Call(Config, uid, tableName, OdooOperation.FieldsGet, new object[0], kwargs), cancellationToken).ConfigureAwait(false);
+        }
+
+        #endregion
+
+        #region Group / names / copy
+
+        /// <include file='Docs/OdooClient.xml' path='docs/member[@name="ReadGroupAsync"]/*'/>
+        public async Task<OdooResult<OdooDictionaryModel[]>> ReadGroupAsync(string tableName, OdooFilter filter, string[] fields, string[] groupBy, bool lazy = true, OdooContext context = null, CancellationToken cancellationToken = default)
+        {
+            var domain = filter != null ? filter.ToArray() : new object[0];
+            var args = new object[] { domain, fields ?? new string[0], groupBy ?? new string[0] };
+            var kwargs = new Dictionary<string, object> { ["lazy"] = lazy };
+            return await ExecuteAsync<OdooDictionaryModel[]>(uid => OdooRequestModel.Call(Config, uid, tableName, OdooOperation.ReadGroup, args, kwargs, SelectContext(context)), cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <include file='Docs/OdooClient.xml' path='docs/member[@name="NameSearchAsync"]/*'/>
+        public async Task<OdooResult<OdooDictionaryModel[]>> NameSearchAsync(string tableName, string name = "", OdooFilter filter = null, OdooOperator odooOperator = OdooOperator.CaseInsensitiveLike, int limit = 100, OdooContext context = null, CancellationToken cancellationToken = default)
+        {
+            // positional arguments - the name of the domain argument differs between Odoo versions (args / domain)
+            var args = new object[] { name ?? string.Empty, filter != null ? filter.ToArray() : new object[0], odooOperator.Description(), limit };
+            var result = await ExecuteAsync<object[][]>(uid => OdooRequestModel.Call(Config, uid, tableName, OdooOperation.NameSearch, args, null, SelectContext(context)), cancellationToken).ConfigureAwait(false);
+            if (result.Failed)
+                return OdooResult<OdooDictionaryModel[]>.FailedResult(result);
+
+            return result.ToResult(result.Value.Select(pair => OdooModelMapper.ToOdooDictionaryModel(tableName, new[] { "id", "display_name" }, pair)).ToArray());
+        }
+
+        /// <include file='Docs/OdooClient.xml' path='docs/member[@name="NameCreateAsync"]/*'/>
+        public async Task<OdooResult<OdooDictionaryModel>> NameCreateAsync(string tableName, string name, OdooContext context = null, CancellationToken cancellationToken = default)
+        {
+            var result = await ExecuteAsync<object[]>(uid => OdooRequestModel.Call(Config, uid, tableName, OdooOperation.NameCreate, new object[] { name }, null, SelectContext(context)), cancellationToken).ConfigureAwait(false);
+            if (result.Failed)
+                return OdooResult<OdooDictionaryModel>.FailedResult(result);
+
+            return result.ToResult(OdooModelMapper.ToOdooDictionaryModel(tableName, new[] { "id", "display_name" }, result.Value));
+        }
+
+        /// <include file='Docs/OdooClient.xml' path='docs/member[@name="CopyAsync.Model"]/*'/>
+        public async Task<OdooResult<long>> CopyAsync<T>(long id, OdooDictionaryModel defaultValues = null, OdooContext context = null, CancellationToken cancellationToken = default) where T : IOdooModel, new()
+        {
+            return await CopyAsync(OdooExtensions.GetOdooTableName<T>(), id, defaultValues, context, cancellationToken).ConfigureAwait(false);
+        }
+        /// <include file='Docs/OdooClient.xml' path='docs/member[@name="CopyAsync.Table"]/*'/>
+        public async Task<OdooResult<long>> CopyAsync(string tableName, long id, OdooDictionaryModel defaultValues = null, OdooContext context = null, CancellationToken cancellationToken = default)
+        {
+            var args = defaultValues == null ? new object[] { new[] { id } } : new object[] { new[] { id }, defaultValues };
+            var result = await ExecuteAsync<JToken>(uid => OdooRequestModel.Call(Config, uid, tableName, OdooOperation.Copy, args, null, SelectContext(context)), cancellationToken).ConfigureAwait(false);
+            if (result.Failed)
+                return OdooResult<long>.FailedResult(result);
+
+            // Odoo up to 17 returns the new id, newer versions may return a list of ids
+            if (result.Value?.Type == JTokenType.Integer)
+                return result.ToResult(result.Value.Value<long>());
+            if (result.Value is JArray ids && ids.Count > 0 && ids[0].Type == JTokenType.Integer)
+                return result.ToResult(ids[0].Value<long>());
+
+            return OdooResult<long>.FailedResult($"Unexpected answer of '{OdooOperation.Copy}': {result.Value?.ToString(Formatting.None)}");
         }
 
         #endregion

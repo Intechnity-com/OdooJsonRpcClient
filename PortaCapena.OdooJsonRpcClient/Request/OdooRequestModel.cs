@@ -168,6 +168,17 @@ namespace PortaCapena.OdooJsonRpcClient.Request
         {
             return query != null && query.Filters.Count > 0 ? new object[] { query.Filters.ToArray() } : new object[] { new object[] { } };
         }
+
+        /// <include file='../Docs/OdooRequestModel.xml' path='docs/member[@name="Call"]/*'/>
+        public static OdooRequestModel Call(OdooConfig config, int uid, string tableName, string method, object[] args, Dictionary<string, object> kwargs = null, OdooContext context = null)
+        {
+            var allKwargs = kwargs == null ? new Dictionary<string, object>() : new Dictionary<string, object>(kwargs);
+            if (context != null && context.Any())
+                allKwargs["context"] = context;
+
+            var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute_kw", config.DbName, uid, config.Password, tableName, method, args ?? new object[0], allKwargs.Any() ? allKwargs : null);
+            return new OdooRequestModel(param);
+        }
     }
 }
 

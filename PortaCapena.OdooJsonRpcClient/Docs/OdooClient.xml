@@ -561,4 +561,196 @@
     <returns>HTTP response - the caller is responsible for disposing it. Transport errors are thrown.</returns>
   </member>
 
+  <!-- Search ids / Read -->
+
+  <member name="SearchIdsAsync.Model">
+    <summary>
+      Returns only ids of records of model <typeparamref name="T"/> matching the query (Odoo <c>search</c>) - faster than reading records
+      when you need ids only, e.g. for delete or update. Logs in when needed.
+    </summary>
+    <param name="query">Filters, order, offset and limit; returned fields are ignored. Null returns ids of all records.</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>Ids of matching records (empty array when nothing matches), or failed result.</returns>
+  </member>
+
+  <member name="SearchIdsAsync.Table">
+    <summary>Returns only ids of records of any Odoo model matching the query (Odoo <c>search</c>). Logs in when needed.</summary>
+    <param name="tableName">Odoo model name, e.g. <c>res.partner</c>.</param>
+    <param name="query">Filters, order, offset and limit; returned fields are ignored. Null returns ids of all records.</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>Ids of matching records (empty array when nothing matches), or failed result.</returns>
+  </member>
+
+  <member name="ReadAsync.Model">
+    <summary>
+      Reads records of model <typeparamref name="T"/> with given ids (Odoo <c>read</c>). Logs in when needed.
+      Ids that do not exist are skipped by Odoo when fields are selected, but reading all fields of a missing record may fail
+      with a server error - select fields, or get existing ids with <see cref="SearchIdsAsync{T}"/> first.
+    </summary>
+    <param name="ids">Ids of records to read.</param>
+    <param name="query">Only <see cref="OdooQuery.ReturnFields"/> are used. Null reads all fields.</param>
+    <param name="context">Odoo context (e.g. language of translated fields). Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>Existing records in the order of <paramref name="ids"/>, or failed result.</returns>
+  </member>
+
+  <member name="ReadAsync.Table">
+    <summary>
+      Reads records of any Odoo model with given ids (Odoo <c>read</c>) as dictionaries. Logs in when needed.
+      Ids that do not exist are skipped by Odoo when fields are selected, but reading all fields of a missing record may fail with a server error.
+    </summary>
+    <param name="tableName">Odoo model name, e.g. <c>res.partner</c>.</param>
+    <param name="ids">Ids of records to read.</param>
+    <param name="query">Only <see cref="OdooQuery.ReturnFields"/> are used. Null reads all fields.</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>Records as raw values, or failed result.</returns>
+  </member>
+
+  <!-- Metadata / access / defaults -->
+
+  <member name="GetMetadataAsync.Model">
+    <summary>
+      Reads metadata of records of model <typeparamref name="T"/> (Odoo <c>get_metadata</c>): who and when created / changed them
+      and their external id (xml id, e.g. <c>base.main_company</c>). Logs in when needed.
+    </summary>
+    <param name="ids">Ids of records.</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>
+      One dictionary per record with all values returned by the Odoo version, e.g. <c>id</c>, <c>create_uid</c>, <c>create_date</c>,
+      <c>write_uid</c>, <c>write_date</c>, <c>xmlid</c>, <c>noupdate</c>; or failed result.
+    </returns>
+  </member>
+
+  <member name="GetMetadataAsync.Table">
+    <summary>
+      Reads metadata of records of any Odoo model (Odoo <c>get_metadata</c>): who and when created / changed them
+      and their external id (xml id). Logs in when needed.
+    </summary>
+    <param name="tableName">Odoo model name, e.g. <c>res.company</c>.</param>
+    <param name="ids">Ids of records.</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>
+      One dictionary per record with all values returned by the Odoo version, e.g. <c>id</c>, <c>create_uid</c>, <c>create_date</c>,
+      <c>write_uid</c>, <c>write_date</c>, <c>xmlid</c>, <c>noupdate</c>; or failed result.
+    </returns>
+  </member>
+
+  <member name="CheckAccessRightsAsync.Model">
+    <summary>
+      Checks whether the logged in user may read / write / create / delete records of model <typeparamref name="T"/>
+      (Odoo <c>check_access_rights</c>, model level rights only - record rules are not checked). Logs in when needed.
+    </summary>
+    <param name="operation">Checked operation.</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns><c>true</c> when allowed, <c>false</c> when not, or failed result.</returns>
+  </member>
+
+  <member name="CheckAccessRightsAsync.Table">
+    <summary>
+      Checks whether the logged in user may read / write / create / delete records of an Odoo model
+      (Odoo <c>check_access_rights</c>, model level rights only - record rules are not checked). Logs in when needed.
+    </summary>
+    <param name="tableName">Odoo model name, e.g. <c>res.partner</c>.</param>
+    <param name="operation">Checked operation.</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns><c>true</c> when allowed, <c>false</c> when not, or failed result.</returns>
+  </member>
+
+  <member name="DefaultGetAsync">
+    <summary>
+      Reads default values Odoo would use for a new record (Odoo <c>default_get</c>), e.g. to prefill a form.
+      Defaults may depend on the context (e.g. <c>default_*</c> keys, company). Logs in when needed.
+    </summary>
+    <param name="tableName">Odoo model name, e.g. <c>res.partner</c>.</param>
+    <param name="fields">Odoo field names to get defaults for; fields without default are not returned.</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>Field name -> default value, or failed result.</returns>
+  </member>
+
+  <member name="GetModelAsync.Attributes">
+    <summary>
+      Reads field definitions of an Odoo model (Odoo <c>fields_get</c>) with only given attributes - much smaller answer
+      than <see cref="GetModelAsync(string)"/>. Logs in when needed.
+    </summary>
+    <param name="tableName">Odoo model name, e.g. <c>res.partner</c>.</param>
+    <param name="attributes">Attributes to return, e.g. <c>type</c>, <c>string</c>, <c>required</c>, <c>relation</c>, <c>selection</c>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>Field name -> definition with requested attributes only, or failed result.</returns>
+  </member>
+
+  <!-- Group / names / copy -->
+
+  <member name="ReadGroupAsync">
+    <summary>
+      Groups records and aggregates fields (Odoo <c>read_group</c>), e.g. total amount of sale orders per customer:
+      <c>ReadGroupAsync("sale.order", null, new[] { "amount_total:sum" }, new[] { "partner_id" })</c>.
+      Logs in when needed. In Odoo 19+ <c>read_group</c> is deprecated in favour of <c>formatted_read_group</c>.
+    </summary>
+    <param name="tableName">Odoo model name, e.g. <c>sale.order</c>.</param>
+    <param name="filter">Records to group; null groups all records.</param>
+    <param name="fields">Aggregated fields, e.g. <c>amount_total:sum</c>, <c>id:count</c>, or plain field names (default aggregation).</param>
+    <param name="groupBy">Fields to group by, e.g. <c>partner_id</c>, <c>date_order:month</c>.</param>
+    <param name="lazy">When <c>true</c>, groups only by the first field of <paramref name="groupBy"/> (others are in <c>__context</c>).</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>
+      One dictionary per group: grouped values (many2one as <c>[id, "name"]</c>), aggregated values,
+      <c>{field}_count</c> and <c>__domain</c> with the domain of the group's records; or failed result.
+    </returns>
+  </member>
+
+  <member name="NameSearchAsync">
+    <summary>
+      Finds records by name, like autocomplete in Odoo (Odoo <c>name_search</c>) - searches also in fields
+      configured by the model, e.g. email or reference. Logs in when needed.
+    </summary>
+    <param name="tableName">Odoo model name, e.g. <c>res.partner</c>.</param>
+    <param name="name">Searched text; empty returns first records.</param>
+    <param name="filter">Additional conditions, or null.</param>
+    <param name="odooOperator">How the name is compared; default case insensitive "contains".</param>
+    <param name="limit">Maximum number of results.</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>Found records with values <c>id</c> and <c>display_name</c> (table name is set), or failed result.</returns>
+  </member>
+
+  <member name="NameCreateAsync">
+    <summary>
+      Creates a record from its name only (Odoo <c>name_create</c>), like "Create ..." in Odoo dropdowns.
+      Works only for models where the name is enough to create a record. Logs in when needed.
+    </summary>
+    <param name="tableName">Odoo model name, e.g. <c>res.partner.category</c>.</param>
+    <param name="name">Name of the new record.</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>Created record with values <c>id</c> and <c>display_name</c> (table name is set), or failed result.</returns>
+  </member>
+
+  <member name="CopyAsync.Model">
+    <summary>Duplicates a record of model <typeparamref name="T"/> (Odoo <c>copy</c>), like "Duplicate" in Odoo. Logs in when needed.</summary>
+    <param name="id">Id of the copied record.</param>
+    <param name="defaultValues">Values to set on the copy instead of copied ones, or null.</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>Id of the new record, or failed result.</returns>
+  </member>
+
+  <member name="CopyAsync.Table">
+    <summary>Duplicates a record of any Odoo model (Odoo <c>copy</c>), like "Duplicate" in Odoo. Logs in when needed.</summary>
+    <param name="tableName">Odoo model name, e.g. <c>res.partner</c>.</param>
+    <param name="id">Id of the copied record.</param>
+    <param name="defaultValues">Values to set on the copy instead of copied ones, or null.</param>
+    <param name="context">Odoo context. Null uses <see cref="OdooConfig.Context"/>.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>Id of the new record, or failed result.</returns>
+  </member>
+
 </docs>
