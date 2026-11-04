@@ -7,6 +7,8 @@
 
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <!-- coverage settings: excludes test models from PortaCapena.OdooJsonRpcClient.Shared -->
+    <RunSettingsFilePath>$(MSBuildThisFileDirectory)..\coverlet.runsettings</RunSettingsFilePath>
   </PropertyGroup>
 
   <ItemGroup>
