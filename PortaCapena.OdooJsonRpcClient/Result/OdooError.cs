@@ -21,7 +21,7 @@ namespace PortaCapena.OdooJsonRpcClient.Result
 
         public override string ToString()
         {
-            return $"{Message}, \n {Data?.Message}"; ;
+            return $"{Message}, \n {Data?.Message}";
         }
     }
 }

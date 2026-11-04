@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- XML documentation of OdooContext, referenced by <include> tags. -->
+<docs>
+
+  <member name="OdooContext">
+    <summary>
+      Odoo context - key/value settings sent with a request, e.g. language (<c>lang</c>), timezone (<c>tz</c>),
+      company (<c>allowed_company_ids</c>) or <c>active_test = false</c> to include archived records.
+      Properties are shortcuts for common keys; any other key can be set as in a dictionary.
+      Setting a property to null removes the key.
+    </summary>
+  </member>
+
+  <member name="Language">
+    <summary>Language of translatable fields (<c>lang</c>), e.g. <c>en_US</c>, <c>pl_PL</c>. The language must be installed in Odoo.</summary>
+  </member>
+
+  <member name="Timezone">
+    <summary>User timezone (<c>tz</c>), e.g. <c>Europe/Warsaw</c>. Used by Odoo for reports and date defaults - datetimes are still returned in UTC.</summary>
+  </member>
+
+  <member name="Tag">
+    <summary>Value of the <c>tag</c> key - used by some Odoo actions.</summary>
+  </member>
+
+  <member name="ActiveModel">
+    <summary>Model name in the <c>active_model</c> key - needed by some wizards and actions.</summary>
+  </member>
+
+  <member name="DefaultIsCompany">
+    <summary>Default value of <c>is_company</c> for created partners (<c>default_is_company</c>).</summary>
+  </member>
+
+  <member name="ForceCompany">
+    <summary>
+      Company id in <c>force_company</c> - used by Odoo 12 and older for company dependent fields.
+      Odoo 13+ ignores it; use <see cref="AllowedCompanyId"/> instead.
+    </summary>
+  </member>
+
+  <member name="AllowedCompanyId">
+    <summary>
+      Company used by the request (<c>allowed_company_ids</c>, Odoo 13+): company dependent fields and new records use this company.
+      The user must have access to it.
+    </summary>
+  </member>
+
+  <member name="ctor">
+    <summary>Creates empty context.</summary>
+  </member>
+
+  <member name="ctor.Language">
+    <summary>Creates context with given language.</summary>
+    <param name="language">Odoo language code, e.g. <c>pl_PL</c>.</param>
+  </member>
+
+  <member name="ctor.LanguageTimezone">
+    <summary>Creates context with given language and timezone.</summary>
+    <param name="language">Odoo language code, e.g. <c>pl_PL</c>.</param>
+    <param name="timezone">Timezone name, e.g. <c>Europe/Warsaw</c>.</param>
+  </member>
+
+  <member name="ctor.Dictionary">
+    <summary>Creates context with values copied from a dictionary. Null creates empty context.</summary>
+    <param name="dict">Values to copy; null values are skipped.</param>
+  </member>
+
+  <member name="ctor.Merge">
+    <summary>Creates context by merging given contexts - later ones override earlier values. Null contexts are ignored.</summary>
+    <param name="dicts">Contexts to merge.</param>
+  </member>
+
+</docs>

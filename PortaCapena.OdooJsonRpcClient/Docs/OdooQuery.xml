@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- XML documentation of OdooQuery, OdooQuery<T> and OdooQueryBuilder<T>, referenced by <include> tags.
+     OdooQuery<T> and OdooQueryBuilder<T> have the same methods, so they share descriptions. -->
+<docs>
+
+  <!-- Types -->
+
+  <member name="OdooQuery">
+    <summary>
+      Query for Odoo <c>search_read</c> / <c>search_count</c>: filters (domain), returned fields, order, offset and limit.
+      Prefer typed <see cref="OdooQuery{T}"/>, which maps .NET properties to Odoo field names.
+    </summary>
+  </member>
+
+  <member name="OdooQuery.ctor">
+    <summary>Creates empty query - all records, all fields, default Odoo order.</summary>
+  </member>
+
+  <member name="OdooQuery.Filters">
+    <summary>Conditions of the query (Odoo domain). Empty means all records.</summary>
+  </member>
+
+  <member name="OdooQuery.ReturnFields">
+    <summary>Odoo field names to return. Empty means all fields - which can be slow for models with many computed fields.</summary>
+  </member>
+
+  <member name="OdooQuery.Offset">
+    <summary>Number of records to skip (for paging). Null means no offset.</summary>
+  </member>
+
+  <member name="OdooQuery.Limit">
+    <summary>Maximum number of returned records. Null means no limit.</summary>
+  </member>
+
+  <member name="OdooQuery.Order">
+    <summary>
+      Order in Odoo syntax: comma separated <c>"{odoo_field} ASC"</c> or <c>"{odoo_field} DESC"</c>, e.g. <c>"name ASC, id DESC"</c>.
+      Null uses the default order of the model.
+    </summary>
+  </member>
+
+  <member name="OdooQueryOfT">
+    <summary>
+      Typed query for records of <typeparamref name="T"/>: filters, fields and order are given by property expressions
+      (<c>x => x.Name</c>) and translated to Odoo field names from <c>[JsonProperty]</c>.
+      Pass it to <see cref="OdooClient.GetAsync{T}(OdooQuery, Models.OdooContext, System.Threading.CancellationToken)"/>.
+      Methods modify this query and return it for chaining.
+    </summary>
+    <typeparam name="T">Model class with <c>[JsonProperty]</c> on properties.</typeparam>
+  </member>
+
+  <member name="OdooQueryOfT.ctor">
+    <summary>Creates empty query - all records, all fields, default Odoo order.</summary>
+  </member>
+
+  <member name="OdooQueryOfT.Filters">
+    <summary>Typed conditions of the query (Odoo domain). Empty means all records.</summary>
+  </member>
+
+  <member name="OdooQueryOfT.Create">
+    <summary>Creates empty query - same as the constructor, convenient for chaining.</summary>
+  </member>
+
+  <member name="OdooQueryBuilder">
+    <summary>
+      Fluent query for records of <typeparamref name="T"/>, created by <see cref="OdooRepository{T}.Query"/>.
+      Chain filters, ordering, paging and field selection, then execute it with
+      <see cref="ToListAsync"/>, <see cref="FirstOrDefaultAsync"/>, <see cref="CountAsync"/> and others.
+      Executing does not change the builder, so it can be executed again.
+    </summary>
+    <typeparam name="T">Model class with <see cref="Attributes.OdooTableNameAttribute"/> and <c>[JsonProperty]</c> on properties.</typeparam>
+  </member>
+
+  <!-- Select -->
+
+  <member name="Select.Selector">
+    <summary>
+      Returns only fields of properties used in an anonymous object, e.g. <c>Select(x => new { x.Name, x.Email })</c>.
+      Other properties of returned records stay default. Field <c>id</c> is always returned by Odoo.
+    </summary>
+    <param name="selector">Anonymous object with properties of <typeparamref name="T"/>; properties are matched by name.</param>
+  </member>
+
+  <member name="Select.Fields">
+    <summary>Returns only given Odoo fields, e.g. <c>Select("name", "email")</c>. Field <c>id</c> is always returned by Odoo.</summary>
+    <param name="fields">Odoo field names (not .NET property names).</param>
+  </member>
+
+  <member name="SelectSimplifiedModel">
+    <summary>
+      Returns only fields that exist as properties in <typeparamref name="T"/>, instead of all fields of the Odoo model.
+      Recommended for big models - Odoo does not compute fields you don't need.
+    </summary>
+  </member>
+
+  <!-- Where -->
+
+  <member name="Where.Filter">
+    <summary>
+      Adds conditions built with <see cref="OdooFilter"/> or <see cref="OdooFilter{T}"/>, e.g. with <c>Or()</c>, <c>In</c>, <c>Between</c>.
+      Conditions added by several <c>Where</c> calls are joined with AND.
+    </summary>
+    <param name="filter">Conditions to add.</param>
+  </member>
+
+  <member name="Where.Expression">
+    <summary>
+      Adds condition on a property, e.g. <c>Where(x => x.Name, OdooOperator.EqualsTo, "Test")</c>.
+      Conditions added by several <c>Where</c> calls are joined with AND.
+    </summary>
+    <param name="expression">Property of <typeparamref name="T"/>, e.g. <c>x => x.Name</c>.</param>
+    <param name="odooOperator">Comparison operator.</param>
+    <param name="value">Compared value; use <c>false</c> to compare with an empty Odoo value.</param>
+    <exception cref="System.ArgumentException">Expression does not select a property with <c>[JsonProperty]</c>.</exception>
+  </member>
+
+  <member name="Where.ForeignKeyLevel1">
+    <summary>
+      Adds condition on a field of a related record (many2one), e.g. partners from Poland:
+      <c>Where&lt;ResCountryOdooModel&gt;(x => x.CountryId, c => c.Code, OdooOperator.EqualsTo, "PL")</c>
+      gives Odoo condition <c>country_id.code = 'PL'</c>.
+    </summary>
+    <typeparam name="TForeignKeyLevel1">Model of the related record.</typeparam>
+    <param name="expression">Many2one property of <typeparamref name="T"/> pointing to <typeparamref name="TForeignKeyLevel1"/>.</param>
+    <param name="expressionForeignKeyLevel1">Compared property of the related record.</param>
+    <param name="odooOperator">Comparison operator.</param>
+    <param name="value">Compared value.</param>
+  </member>
+
+  <member name="Where.ForeignKeyLevel2">
+    <summary>
+      Adds condition on a field of a record related through two many2one fields, e.g. partners whose country uses PLN:
+      <c>Where&lt;ResCountryOdooModel, ResCurrencyOdooModel&gt;(x => x.CountryId, c => c.CurrencyId, cur => cur.Name, OdooOperator.EqualsTo, "PLN")</c>
+      gives Odoo condition <c>country_id.currency_id.name = 'PLN'</c>.
+    </summary>
+    <typeparam name="TForeignKeyLevel1">Model of the first related record.</typeparam>
+    <typeparam name="TForeignKeyLevel2">Model of the second related record.</typeparam>
+    <param name="expression">Many2one property of <typeparamref name="T"/> pointing to <typeparamref name="TForeignKeyLevel1"/>.</param>
+    <param name="expressionForeignKeyLevel1">Many2one property of <typeparamref name="TForeignKeyLevel1"/> pointing to <typeparamref name="TForeignKeyLevel2"/>.</param>
+    <param name="expressionForeignKeyLevel2">Compared property of the second related record.</param>
+    <param name="odooOperator">Comparison operator.</param>
+    <param name="value">Compared value.</param>
+  </member>
+
+  <member name="ById">
+    <summary>Adds condition <c>id = <paramref name="id"/></c>.</summary>
+    <param name="id">Record id.</param>
+  </member>
+
+  <member name="ByIds">
+    <summary>Adds condition <c>id in <paramref name="ids"/></c>. An empty list adds no condition (all records are returned).</summary>
+    <param name="ids">Record ids.</param>
+  </member>
+
+  <member name="WithContext">
+    <summary>Uses given Odoo context for this query instead of <see cref="Models.OdooConfig.Context"/> (e.g. other language or company).</summary>
+    <param name="context">Context values; a copy is stored, so later changes of <paramref name="context"/> are not used.</param>
+  </member>
+
+  <member name="WithContext.KeyValue">
+    <summary>
+      Sets one Odoo context value for this query, e.g. <c>WithContext("active_test", false)</c> to include archived records.
+      When used, context values from <see cref="Models.OdooConfig.Context"/> are not sent - set all needed values here.
+    </summary>
+    <param name="key">Context key, e.g. <c>lang</c>, <c>active_test</c>, <c>allowed_company_ids</c>.</param>
+    <param name="value">Context value.</param>
+  </member>
+
+  <!-- Paging -->
+
+  <member name="Take">
+    <summary>Returns at most <paramref name="limit"/> records (Odoo <c>limit</c>).</summary>
+    <param name="limit">Maximum number of records.</param>
+  </member>
+
+  <member name="Skip">
+    <summary>Skips first <paramref name="offset"/> records (Odoo <c>offset</c>). Use together with an order to get stable pages.</summary>
+    <param name="offset">Number of records to skip.</param>
+  </member>
+
+  <!-- Order -->
+
+  <member name="OrderBy">
+    <summary>Orders records ascending by the property. Replaces previous ordering.</summary>
+    <param name="expression">Property of <typeparamref name="T"/>, e.g. <c>x => x.Name</c>.</param>
+  </member>
+
+  <member name="OrderByDescending">
+    <summary>Orders records descending by the property. Replaces previous ordering.</summary>
+    <param name="expression">Property of <typeparamref name="T"/>, e.g. <c>x => x.Name</c>.</param>
+  </member>
+
+  <member name="ThenOrderBy">
+    <summary>Adds next ascending ordering, used when previous order values are equal.</summary>
+    <param name="expression">Property of <typeparamref name="T"/>.</param>
+  </member>
+
+  <member name="ThenOrderByDescending">
+    <summary>Adds next descending ordering, used when previous order values are equal.</summary>
+    <param name="expression">Property of <typeparamref name="T"/>.</param>
+  </member>
+
+  <!-- Execution (OdooQueryBuilder) -->
+
+  <member name="ToListAsync">
+    <summary>Executes the query (Odoo <c>search_read</c>) and returns all matching records.</summary>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>Matching records (empty array when nothing matches), or failed result with Odoo error.</returns>
+  </member>
+
+  <member name="FirstAsync">
+    <summary>Executes the query with limit 1 and returns the first record.</summary>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>First matching record, or failed result with Odoo error.</returns>
+    <exception cref="System.InvalidOperationException">No record matches (like LINQ <c>First</c>) - use <see cref="FirstOrDefaultAsync"/> to get null instead.</exception>
+  </member>
+
+  <member name="FirstOrDefaultAsync">
+    <summary>Executes the query with limit 1 and returns the first record, or null when nothing matches.</summary>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>First matching record or null, or failed result with Odoo error.</returns>
+  </member>
+
+  <member name="SingleAsync">
+    <summary>Executes the query with limit 2 and returns the only matching record.</summary>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>The matching record, or failed result with Odoo error.</returns>
+    <exception cref="System.InvalidOperationException">No record or more than one record matches (like LINQ <c>Single</c>).</exception>
+  </member>
+
+  <member name="CountAsync">
+    <summary>Counts matching records (Odoo <c>search_count</c>) without reading them. Order, offset and limit are ignored.</summary>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>Number of matching records, or failed result with Odoo error.</returns>
+  </member>
+
+  <member name="AnyAsync">
+    <summary>Checks whether any record matches (reads at most one record).</summary>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns><c>true</c> when at least one record matches, or failed result with Odoo error.</returns>
+  </member>
+
+</docs>

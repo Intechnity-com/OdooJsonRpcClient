@@ -6,45 +6,47 @@ on:
   pull_request:
     branches: [ master, release ]
 
+# GITHUB_TOKEN is read-only by default - commenting on PRs needs write access
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
 jobs:
   build:
 
     runs-on: ubuntu-latest
     env:
       config: 'Release'
-      
+      # PRs from forks get a read-only token, so they cannot comment - skip commenting for them
+      can_comment: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository }}
+
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 6.0.x
-        
+
     - name: Restore dependencies
       run: dotnet restore
-      
+
     - name: Build PR
       run: dotnet build --configuration $config --no-restore
-      
-# set pr number, if it's a pr build (if pr)
-    - name: set pr build number
-      id: PRNUMBER
-      if: ${{ github.event_name == 'pull_request' }}
-      uses: kkak10/pr-number-action@v1.3
 
-# set report file and title  (if pr)
+# set report file and title (with PR number, if it's a pr build)
     - name: Set Test Title
       run: |
            if ${{ github.event_name == 'pull_request' }}
            then
-            echo "title=Test Run for PR #${{steps.PRNUMBER.outputs.pr}} (${{github.run_number}})" >> $GITHUB_ENV
-            echo "file_name=TestReport.${{steps.PRNUMBER.outputs.pr}}.${{github.run_number}}.md" >> $GITHUB_ENV
+            echo "title=Test Run for PR #${{ github.event.pull_request.number }} (${{github.run_number}})" >> $GITHUB_ENV
+            echo "file_name=TestReport.${{ github.event.pull_request.number }}.${{github.run_number}}.md" >> $GITHUB_ENV
            else
             echo "title=Test Run ${{github.run_number}}" >> $GITHUB_ENV
             echo "file_name=TestReport.${{github.run_number}}.md" >> $GITHUB_ENV
            fi
-      
-    - name: Test 
+
+    - name: Test
       run: dotnet test PortaCapena.OdooJsonRpcClient.Tests/PortaCapena.OdooJsonRpcClient.Tests.csproj --configuration $config --no-build --no-restore  --logger:"liquid.md;LogFileName=${{github.workspace}}/${{env.file_name}};Title=${{env.title}};" --collect:"XPlat Code Coverage" --results-directory ./coverage
 
 # upload report as build artifact
@@ -54,17 +56,18 @@ jobs:
       with:
         name: 'Test Run'
         path: ${{github.workspace}}/${{env.file_name}}
-        
-# add report as PR comment (if PR)
+
+# add report as PR comment (if PR from this repository)
     - name: Comment on PR
       uses: peter-evans/create-or-update-comment@v4
-      if: github.event_name == 'pull_request'
+      if: env.can_comment == 'true'
+      continue-on-error: true
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         issue-number: ${{ github.event.pull_request.number }}
         body-path: ${{ env.file_name }}
         edit-mode: replace
-        
+
     - name: Code Coverage Report
       uses: irongut/CodeCoverageSummary@v1.3.0
       with:
@@ -77,11 +80,12 @@ jobs:
         indicators: true
         output: both
         thresholds: '5 60'
-        
+
     - name: Add Coverage Comment
       uses: marocchino/sticky-pull-request-comment@v2
-      if: github.event_name == 'pull_request'
+      if: env.can_comment == 'true'
+      continue-on-error: true
       with:
         recreate: true
         path: code-coverage-results.md
-        
+
