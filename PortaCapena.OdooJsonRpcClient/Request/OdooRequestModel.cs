@@ -179,6 +179,13 @@ namespace PortaCapena.OdooJsonRpcClient.Request
             var param = new OdooRequestParams(config.ApiUrlJson, "object", "execute_kw", config.DbName, uid, config.Password, tableName, method, args ?? new object[0], allKwargs.Any() ? allKwargs : null);
             return new OdooRequestModel(param);
         }
+
+        /// <include file='../Docs/OdooRequestModel.xml' path='docs/member[@name="DatabaseList"]/*'/>
+        public static OdooRequestModel DatabaseList(OdooConfig config)
+        {
+            var param = new OdooRequestParams(config.ApiUrlJson, "db", "list");
+            return new OdooRequestModel(param);
+        }
     }
 }
 

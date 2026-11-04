@@ -753,4 +753,28 @@
     <returns>Id of the new record, or failed result.</returns>
   </member>
 
+  <!-- Databases -->
+
+  <member name="GetDatabasesAsync">
+    <summary>
+      Lists names of databases on the Odoo server (Odoo <c>db.list</c>). Does not need login - useful to find the database name
+      or check the connection. <see cref="OdooConfig.DbName"/> and credentials are not used.
+    </summary>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>
+      Database names, or failed result - e.g. <c>AccessDenied</c> when listing is disabled on the server (<c>list_db = False</c>, common on Odoo Online).
+    </returns>
+  </member>
+
+  <member name="GetDatabasesAsync.Static">
+    <summary>
+      Lists names of databases on the Odoo server (Odoo <c>db.list</c>) using the shared HttpClient. Does not need login.
+    </summary>
+    <param name="odooConfig">Connection settings - only the url and timeout are used.</param>
+    <param name="cancellationToken">Cancels the request.</param>
+    <returns>
+      Database names, or failed result - e.g. <c>AccessDenied</c> when listing is disabled on the server (<c>list_db = False</c>).
+    </returns>
+  </member>
+
 </docs>

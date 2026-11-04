@@ -188,6 +188,11 @@
     <param name="context">Odoo context, or null.</param>
   </member>
 
+  <member name="DatabaseList">
+    <summary>Request for <c>db.list</c> - names of databases on the server; does not need login.</summary>
+    <param name="config">Connection settings - only the url is used.</param>
+  </member>
+
   <!-- OdooRequestParams -->
 
   <member name="OdooRequestParams">
