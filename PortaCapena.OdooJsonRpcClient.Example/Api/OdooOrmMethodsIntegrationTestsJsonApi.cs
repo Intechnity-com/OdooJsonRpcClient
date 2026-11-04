@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Newtonsoft.Json.Linq;
 using PortaCapena.OdooJsonRpcClient.Consts;
 using PortaCapena.OdooJsonRpcClient.Models;
 using PortaCapena.OdooJsonRpcClient.Request;
@@ -56,10 +57,11 @@ namespace PortaCapena.OdooJsonRpcClient.Example.Api
             var withFields = await client.ReadAsync("res.partner", ids, OdooQuery<IntegrationPartnerOdooModel>.Create().Select(x => new { x.Name }));
             var allFields = await client.ReadAsync("res.partner", ids);
 
-            // Odoo skips missing records when fields are given, but fails when computing all fields
+            // Odoo 19 skips missing records also when computing all fields (Odoo 15 fails then)
             withFields.Succeed.Should().BeTrue(withFields.Message);
             withFields.Value.Select(x => x["id"]).Should().Equal(1L);
-            allFields.Failed.Should().BeTrue();
+            allFields.Succeed.Should().BeTrue(allFields.Message);
+            allFields.Value.Select(x => x["id"]).Should().Equal(1L);
         }
 
         [Fact]
@@ -210,7 +212,8 @@ namespace PortaCapena.OdooJsonRpcClient.Example.Api
             var kwargs = new System.Collections.Generic.Dictionary<string, object> { ["body"] = body, ["message_type"] = "comment", ["subtype_xmlid"] = "mail.mt_note" };
 
             var posted = await client.CallMethodAsync("res.partner", "message_post", new object[] { new[] { partnerId } }, kwargs);
-            var messageId = Convert.ToInt64(posted.Value);
+            // JSON API returns the created message as a list of ids
+            var messageId = ((JArray)posted.Value).Single().Value<long>();
             try
             {
                 posted.Succeed.Should().BeTrue(posted.Message);

@@ -44,5 +44,12 @@ def _partners():
             })
 
 
+@section("products (consumable)")
+def _products():
+    Tmpl = env["product.template"]
+    if not Tmpl.search_count([("default_code", "=", "TEST-CONS")]):
+        Tmpl.create({"name": "Test Consumable", "default_code": "TEST-CONS", "type": "consu", "list_price": 5.0})
+
+
 env.cr.commit()
 print("[seed] committed")

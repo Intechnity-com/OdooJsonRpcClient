@@ -31,7 +31,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example.Api
             var result = await new OdooClient(config).GetAsync<IntegrationPartnerOdooModel>();
 
             result.Failed.Should().BeTrue();
-            result.Message.Should().Contain("Login failed");
+            result.Message.Should().Contain("Invalid apikey");
         }
 
         [Fact]
@@ -204,12 +204,12 @@ namespace PortaCapena.OdooJsonRpcClient.Example.Api
         [Fact]
         public async Task Context_language_translates_values()
         {
-            var repository = new OdooRepository<IntegrationProductOdooModel>(JsonApiTestConfig);
-            var product = (await repository.Query().Where(x => x.Name, OdooOperator.EqualsTo, "Acoustic Bloc Screens").FirstAsync()).Value;
+            // Odoo 19 demo products have no Dutch translations, country names have
+            var repository = new OdooRepository<IntegrationCountryOdooModel>(JsonApiTestConfig);
 
-            var dutch = await repository.Query().ById(product.Id).WithContext(new OdooContext("nl_NL")).FirstAsync();
+            var dutch = await repository.Query().Where(x => x.Code, OdooOperator.EqualsTo, "BE").WithContext(new OdooContext("nl_NL")).FirstAsync();
 
-            dutch.Value.Name.Should().Be("Akoestische blokschermen");
+            dutch.Value.Name.Should().Be("België");
         }
 
         [Fact]
