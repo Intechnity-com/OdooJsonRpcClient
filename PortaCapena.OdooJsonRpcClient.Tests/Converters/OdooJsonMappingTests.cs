@@ -154,5 +154,12 @@ namespace PortaCapena.OdooJsonRpcClient.Tests.Converters
         {
             OdooModelMapper.ConvertOdooNameToDotNet(odooName).Should().Be(expected);
         }
+
+        [Fact]
+        public void Many2one_with_text_id_takes_numeric_id()
+        {
+            // account.root in Odoo 18+ has text ids: account_root_id = ["60", "60"]
+            Map("{\"country_id\":[\"60\",\"60\"]}").CountryId.Should().Be(60);
+        }
     }
 }

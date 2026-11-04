@@ -150,6 +150,14 @@ namespace PortaCapena.OdooJsonRpcClient.Request
             return this;
         }
 
+        /// <include file='../Docs/OdooFilter.xml' path='docs/member[@name="In"]/*'/>
+        public OdooFilter In(string fieldName, int[] values)
+        {
+            var field = new object[] { fieldName, OdooOperator.In.Description(), values };
+            Add(field);
+            return this;
+        }
+
         /// <include file='../Docs/OdooFilter.xml' path='docs/member[@name="NotIn"]/*'/>
         public OdooFilter NotIn(string fieldName, OdooFilterValue value)
         {
@@ -176,6 +184,14 @@ namespace PortaCapena.OdooJsonRpcClient.Request
 
         /// <include file='../Docs/OdooFilter.xml' path='docs/member[@name="NotIn"]/*'/>
         public OdooFilter NotIn(string fieldName, long[] values)
+        {
+            var field = new object[] { fieldName, OdooOperator.NotIn.Description(), values };
+            Add(field);
+            return this;
+        }
+
+        /// <include file='../Docs/OdooFilter.xml' path='docs/member[@name="NotIn"]/*'/>
+        public OdooFilter NotIn(string fieldName, int[] values)
         {
             var field = new object[] { fieldName, OdooOperator.NotIn.Description(), values };
             Add(field);
