@@ -1,5 +1,7 @@
 name: Unit Test With Coverage
 on:
+  push:
+    branches: [ master ]
   workflow_dispatch:
 jobs:
   build:
@@ -11,23 +13,24 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
-      run: dotnet restore   
+      run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
+    # same coverage as in PRs (coverlet.runsettings: excludes PortaCapena.OdooJsonRpcClient.Shared, writes cobertura + opencover)
     - name: Run Unit Tests
-      run: dotnet test -p:CollectCoverage=true -p:CoverletOutput=TestResults/ -p:CoverletOutputFormat=opencover --no-build --verbosity normal PortaCapena.OdooJsonRpcClient.Tests/
+      run: dotnet test PortaCapena.OdooJsonRpcClient.Tests/PortaCapena.OdooJsonRpcClient.Tests.csproj --no-build --collect:"XPlat Code Coverage" --results-directory ./coverage
+    # the collector writes into a random folder - copy the report to a fixed path for the badge action
+    - name: Copy coverage report
+      run: cp coverage/*/coverage.opencover.xml ./coverage.opencover.xml
     - name: Create Test Coverage Badge
       uses: simon-k/dotnet-code-coverage-badge@v1.0.0
       id: create_coverage_badge
       with:
         label: Test Coverage
         color: brightgreen
-        path: PortaCapena.OdooJsonRpcClient.Tests/TestResults/coverage.opencover.xml
+        path: coverage.opencover.xml
         gist-filename: code-coverage.json
         gist-id: 54596b8c061e5c3c25b3072822a105a0
-        gist-auth-token: ${{ secrets.GIST_AUTH_TOKEN }}       
+        gist-auth-token: ${{ secrets.GIST_AUTH_TOKEN }}
     - name: Print code coverage
       run: echo "Code coverage percentage ${{steps.create_coverage_badge.outputs.percentage}}%"
-      
-      
-      
