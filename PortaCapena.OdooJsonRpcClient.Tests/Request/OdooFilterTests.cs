@@ -109,5 +109,16 @@ namespace PortaCapena.OdooJsonRpcClient.Tests.Request
 
             act.Should().Throw<ArgumentException>();
         }
+
+        [Fact]
+        public void In_and_not_in_accept_int_arrays()
+        {
+            // issue #77
+            var untyped = OdooFilter.Create().In("id", new[] { 1, 2 }).NotIn("color", new[] { 3 });
+            var typed = OdooFilter<TestPartnerOdooModel>.Create().In(x => x.Id, new[] { 1, 2 }).NotIn(x => x.Color, new[] { 3 });
+
+            Json(untyped).Should().Be("[[\"id\",\"in\",[1,2]],[\"color\",\"not in\",[3]]]");
+            Json(typed).Should().Be(Json(untyped));
+        }
     }
 }

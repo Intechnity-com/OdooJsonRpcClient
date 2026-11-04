@@ -134,5 +134,23 @@ namespace PortaCapena.OdooJsonRpcClient.Tests.Converters
 
             act.Should().Throw<ArgumentException>().WithMessage("*EnumMemberAttribute*");
         }
+
+        [Fact]
+        public void Enum_members_get_unique_valid_names()
+        {
+            var fields = new Dictionary<string, OdooPropertyInfo>
+            {
+                // issue #50: labels giving the same name, issue #122: labels starting with a digit
+                ["tz"] = new OdooPropertyInfo { Type = "selection", String = "Timezone", Selection = new[] { new[] { "Etc/GMT-0", "Etc/GMT-0" }, new[] { "Etc/GMT0", "Etc/GMT0" }, new[] { "Etc/GMT+0", "Etc/GMT+0" } } },
+                ["repeat_day"] = new OdooPropertyInfo { Type = "selection", String = "Repeat Day", Selection = new[] { new[] { "1", "1" }, new[] { "2", "2" } } },
+            };
+
+            var code = OdooModelMapper.GetDotNetModel("project.task", fields);
+
+            code.Should().Contain("EtcGMT0 = 1,").And.Contain("EtcGMT02 = 2,").And.Contain("EtcGmtplus0 = 3,");
+            code.Should().Contain("[EnumMember(Value = \"Etc/GMT0\")]");
+            code.Should().Contain("Value1 = 1,").And.Contain("Value2 = 2,");
+            code.Should().Contain("[EnumMember(Value = \"1\")]");
+        }
     }
 }
