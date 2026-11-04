@@ -22,7 +22,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         [Fact]
         public async Task Version_is_read_without_api_key()
         {
-            var config = new OdooConfig(JsonApiTestConfig.ApiUrl, JsonApiTestConfig.DbName, "admin", "") { Protocol = OdooApiProtocol.JsonApi };
+            var config = new OdooConfig(JsonApiTestConfig.ApiUrl, JsonApiTestConfig.DbName, "admin", "", protocol: OdooApiProtocol.JsonApi);
 
             var result = await new OdooClient(config).GetVersionAsync();
 
@@ -43,7 +43,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example
         [Fact]
         public async Task Wrong_api_key_returns_failed_result_with_odoo_error()
         {
-            var config = new OdooConfig(JsonApiTestConfig.ApiUrl, JsonApiTestConfig.DbName, "admin", "wrong-key") { Protocol = OdooApiProtocol.JsonApi };
+            var config = new OdooConfig(JsonApiTestConfig.ApiUrl, JsonApiTestConfig.DbName, "admin", "wrong-key", protocol: OdooApiProtocol.JsonApi);
 
             var result = await new OdooClient(config).GetAsync<IntegrationPartnerOdooModel>();
 

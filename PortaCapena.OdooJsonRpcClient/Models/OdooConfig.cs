@@ -21,9 +21,12 @@ namespace PortaCapena.OdooJsonRpcClient.Models
         /// <include file='../Docs/OdooConfig.xml' path='docs/member[@name="Context"]/*'/>
         public OdooContext Context { get; }
 
+        /// <include file='../Docs/OdooConfig.xml' path='docs/member[@name="Protocol"]/*'/>
+        public Consts.OdooApiProtocol Protocol { get; } = Consts.OdooApiProtocol.JsonRpc;
+
 
         /// <include file='../Docs/OdooConfig.xml' path='docs/member[@name="ctor"]/*'/>
-        public OdooConfig(string apiUrl, string dbName, string userName, string password, TimeSpan timeout = default(TimeSpan))
+        public OdooConfig(string apiUrl, string dbName, string userName, string password, TimeSpan timeout = default(TimeSpan), Consts.OdooApiProtocol protocol = Consts.OdooApiProtocol.JsonRpc)
         {
             if (string.IsNullOrWhiteSpace(apiUrl)) throw new ArgumentException("Odoo url is required", nameof(apiUrl));
             this.ApiUrl = apiUrl.TrimEnd(new[] { '/' });
@@ -32,27 +35,25 @@ namespace PortaCapena.OdooJsonRpcClient.Models
             this.Password = password;
             this.Context = new OdooContext();
             this.Timeout = timeout;
+            this.Protocol = protocol;
         }
 
         /// <include file='../Docs/OdooConfig.xml' path='docs/member[@name="ctor.Context"]/*'/>
-        public OdooConfig(string apiUrl, string dbName, string userName, string password, OdooContext context, TimeSpan timeout = default(TimeSpan)) : this(apiUrl, dbName, userName, password, timeout)
+        public OdooConfig(string apiUrl, string dbName, string userName, string password, OdooContext context, TimeSpan timeout = default(TimeSpan), Consts.OdooApiProtocol protocol = Consts.OdooApiProtocol.JsonRpc) : this(apiUrl, dbName, userName, password, timeout, protocol)
         {
             this.Context = new OdooContext(context);
         }
 
         /// <include file='../Docs/OdooConfig.xml' path='docs/member[@name="ctor.Language"]/*'/>
-        public OdooConfig(string apiUrl, string dbName, string userName, string password, string language, TimeSpan timeout = default(TimeSpan)) : this(apiUrl, dbName, userName, password, timeout)
+        public OdooConfig(string apiUrl, string dbName, string userName, string password, string language, TimeSpan timeout = default(TimeSpan), Consts.OdooApiProtocol protocol = Consts.OdooApiProtocol.JsonRpc) : this(apiUrl, dbName, userName, password, timeout, protocol)
         {
             this.Context = new OdooContext(language);
         }
 
         /// <include file='../Docs/OdooConfig.xml' path='docs/member[@name="ctor.LanguageTimezone"]/*'/>
-        public OdooConfig(string apiUrl, string dbName, string userName, string password, string language, string timezone, TimeSpan timeout = default(TimeSpan)) : this(apiUrl, dbName, userName, password, timeout)
+        public OdooConfig(string apiUrl, string dbName, string userName, string password, string language, string timezone, TimeSpan timeout = default(TimeSpan), Consts.OdooApiProtocol protocol = Consts.OdooApiProtocol.JsonRpc) : this(apiUrl, dbName, userName, password, timeout, protocol)
         {
             this.Context = new OdooContext(language, timezone);
         }
-
-        /// <include file='../Docs/OdooConfig.xml' path='docs/member[@name="Protocol"]/*'/>
-        public Consts.OdooApiProtocol Protocol { get; set; } = Consts.OdooApiProtocol.JsonRpc;
     }
 }

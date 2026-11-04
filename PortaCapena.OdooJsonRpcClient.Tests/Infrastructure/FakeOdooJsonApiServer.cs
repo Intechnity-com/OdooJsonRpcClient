@@ -37,7 +37,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests.Infrastructure
         public OdooConfig CreateConfig(TimeSpan timeout = default)
         {
             // unique url per test - user ids are cached per url/db/user
-            return new OdooConfig($"http://odoo-{Guid.NewGuid():N}.test", "db", "admin", ApiKey, timeout) { Protocol = OdooApiProtocol.JsonApi };
+            return new OdooConfig($"http://odoo-{Guid.NewGuid():N}.test", "db", "admin", ApiKey, timeout, protocol: OdooApiProtocol.JsonApi);
         }
 
         public OdooClient CreateClient(TimeSpan timeout = default)
