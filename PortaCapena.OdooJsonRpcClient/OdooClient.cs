@@ -686,5 +686,20 @@ namespace PortaCapena.OdooJsonRpcClient
         }
 
         #endregion
+
+        #region Databases
+
+        /// <include file='Docs/OdooClient.xml' path='docs/member[@name="GetDatabasesAsync"]/*'/>
+        public Task<OdooResult<string[]>> GetDatabasesAsync(CancellationToken cancellationToken = default)
+        {
+            return SendAsync<string[]>(OdooRequestModel.DatabaseList(Config), cancellationToken);
+        }
+        /// <include file='Docs/OdooClient.xml' path='docs/member[@name="GetDatabasesAsync.Static"]/*'/>
+        public static Task<OdooResult<string[]>> GetDatabasesAsync(OdooConfig odooConfig, CancellationToken cancellationToken = default)
+        {
+            return SendAsync<string[]>(DefaultHttpClient, OdooRequestModel.DatabaseList(odooConfig), odooConfig.Timeout, cancellationToken);
+        }
+
+        #endregion
     }
 }

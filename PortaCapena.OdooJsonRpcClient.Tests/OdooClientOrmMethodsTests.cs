@@ -248,5 +248,34 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
             kwargs.Should().NotContainKey("context", "given dictionary is not modified");
             withoutAnything.Params.Args.Should().HaveCount(6, "empty positional args are sent, empty kwargs are omitted");
         }
+
+        [Fact]
+        public async Task GetDatabases_calls_db_service_without_login()
+        {
+            _server.OnObjectCall = r => FakeOdooServer.Result(new[] { "db-test", "other" });
+            var client = _server.CreateClient();
+
+            var result = await client.GetDatabasesAsync();
+
+            result.Value.Should().Equal("db-test", "other");
+            _server.LoginCount.Should().Be(0);
+            var call = _server.Requests.Single();
+            call.Service.Should().Be("db");
+            call.Method.Should().Be("list");
+            call.Args.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task GetDatabases_when_listing_is_disabled_returns_failed_result()
+        {
+            _server.OnObjectCall = r => FakeOdooServer.Error(OdooExceptionName.AccessDenied, "Access Denied");
+            var client = _server.CreateClient();
+
+            var result = await client.GetDatabasesAsync();
+
+            result.Failed.Should().BeTrue();
+            result.Error.Data.Name.Should().Be(OdooExceptionName.AccessDenied);
+            _server.LoginCount.Should().Be(0, "listing databases is not retried with login");
+        }
     }
 }

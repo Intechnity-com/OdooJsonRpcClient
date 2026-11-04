@@ -45,6 +45,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests
                 (await OdooClient.ActionCollectionAsync(Unreachable, 1, "res.partner", "action_archive", new object[] { 1 })).Failed,
                 (await OdooClient.GetModelAsync(Unreachable, 1, "res.partner")).Failed,
                 (await OdooClient.CallAndDeserializeAsync<object>(OdooRequestModel.Version(Unreachable))).Failed,
+                (await OdooClient.GetDatabasesAsync(Unreachable)).Failed,
             };
 
             results.Should().OnlyContain(failed => failed);

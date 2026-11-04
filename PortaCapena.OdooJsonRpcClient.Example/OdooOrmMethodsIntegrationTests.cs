@@ -176,5 +176,27 @@ namespace PortaCapena.OdooJsonRpcClient.Example
                     await client.DeleteAsync("res.partner", copy.Value);
             }
         }
+
+        [Fact]
+        public async Task GetDatabases_lists_test_database()
+        {
+            var instance = await new OdooClient(TestConfig).GetDatabasesAsync();
+            var shared = await OdooClient.GetDatabasesAsync(TestConfig);
+
+            instance.Succeed.Should().BeTrue(instance.Message);
+            instance.Value.Should().Contain(TestConfig.DbName);
+            shared.Value.Should().Equal(instance.Value);
+        }
+
+        [Fact]
+        public async Task GetDatabases_does_not_need_valid_credentials()
+        {
+            var config = new OdooConfig(TestConfig.ApiUrl, "not-existing-db", "nobody", "wrong");
+
+            var result = await new OdooClient(config).GetDatabasesAsync();
+
+            result.Succeed.Should().BeTrue(result.Message);
+            result.Value.Should().Contain(TestConfig.DbName);
+        }
     }
 }
