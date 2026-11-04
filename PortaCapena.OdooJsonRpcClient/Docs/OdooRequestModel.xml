@@ -173,6 +173,21 @@
     <param name="query">Query, or null.</param>
   </member>
 
+  <member name="Call">
+    <summary>
+      Request calling any model method with positional and named arguments (Odoo <c>execute_kw</c>),
+      e.g. <c>Call(config, uid, "res.partner", "search", new object[] { domain }, new Dictionary&lt;string, object&gt; { ["limit"] = 5 })</c>.
+      Context is added to the named arguments.
+    </summary>
+    <param name="config">Connection settings.</param>
+    <param name="uid">Id of a logged in user.</param>
+    <param name="tableName">Odoo model name.</param>
+    <param name="method">Model method name, e.g. <c>search</c>, <c>read_group</c>.</param>
+    <param name="args">Positional arguments; for methods on records the first one is the list of ids.</param>
+    <param name="kwargs">Named arguments, or null.</param>
+    <param name="context">Odoo context, or null.</param>
+  </member>
+
   <!-- OdooRequestParams -->
 
   <member name="OdooRequestParams">
