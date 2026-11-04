@@ -7,7 +7,7 @@
       Odoo context - key/value settings sent with a request, e.g. language (<c>lang</c>), timezone (<c>tz</c>),
       company (<c>allowed_company_ids</c>) or <c>active_test = false</c> to include archived records.
       Properties are shortcuts for common keys; any other key can be set as in a dictionary.
-      Setting a property to null removes the key.
+      Setting a property to null removes an existing key.
     </summary>
   </member>
 
@@ -62,7 +62,7 @@
 
   <member name="ctor.Dictionary">
     <summary>Creates context with values copied from a dictionary. Null creates empty context.</summary>
-    <param name="dict">Values to copy; null values are skipped.</param>
+    <param name="dict">Values to copy.</param>
   </member>
 
   <member name="ctor.Merge">
