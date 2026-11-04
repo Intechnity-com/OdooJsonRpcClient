@@ -35,7 +35,7 @@ namespace PortaCapena.OdooJsonRpcClient.Models
         /// <include file='../Docs/OdooDictionaryModel.xml' path='docs/member[@name="Add.Initializer"]/*'/>
         public OdooDictionaryModel<T> Add(Expression<Func<T>> expression)
         {
-            AddFromExpresion(expression);
+            AddFromExpression(expression);
             return this;
         }
     }

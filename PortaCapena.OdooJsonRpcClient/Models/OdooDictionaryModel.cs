@@ -62,7 +62,7 @@ namespace PortaCapena.OdooJsonRpcClient.Models
         {
             if (TableName == null && TryGetOdooTableName(expression, out var tableName))
                 TableName = tableName;
-            this[OdooExpresionMapper.GetOdooPropertyName(expression)] = value;
+            this[OdooExpressionMapper.GetOdooPropertyName(expression)] = value;
             return this;
         }
 
@@ -72,13 +72,20 @@ namespace PortaCapena.OdooJsonRpcClient.Models
             if (TableName == null && TryGetOdooTableName(expression, out var tableName))
                 TableName = tableName;
 
-            AddFromExpresion(expression);
+            AddFromExpression(expression);
 
             return this;
         }
 
-        /// <include file='../Docs/OdooDictionaryModel.xml' path='docs/member[@name="AddFromExpresion"]/*'/>
+        /// <include file='../Docs/OdooDictionaryModel.xml' path='docs/member[@name="AddFromExpression"]/*'/>
+        [Obsolete("Use " + nameof(AddFromExpression))]
         protected void AddFromExpresion<T>(Expression<Func<T>> expression) where T : IOdooAtributtesModel, new()
+        {
+            AddFromExpression(expression);
+        }
+
+        /// <include file='../Docs/OdooDictionaryModel.xml' path='docs/member[@name="AddFromExpression"]/*'/>
+        protected void AddFromExpression<T>(Expression<Func<T>> expression) where T : IOdooAtributtesModel, new()
         {
             if (!(expression.Body is MemberInitExpression body))
                 throw new ArgumentException($"Invalid Func - expected object initializer, e.g. () => new {typeof(T).Name} {{ Name = \"value\" }}", nameof(expression));

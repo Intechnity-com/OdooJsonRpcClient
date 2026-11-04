@@ -68,45 +68,45 @@ namespace PortaCapena.OdooJsonRpcClient.Request
         /// <include file='../Docs/OdooQuery.xml' path='docs/member[@name="Where.Expression"]/*'/>
         public OdooQuery<T> Where(Expression<Func<T, object>> expression, OdooOperator odooOperator, object value)
         {
-            Filters.Add(new OdooFilter { OdooExpresionMapper.GetOdooPropertyName(expression), odooOperator.Description(), value });
+            Filters.Add(new OdooFilter { OdooExpressionMapper.GetOdooPropertyName(expression), odooOperator.Description(), value });
             return this;
         }
 
         /// <include file='../Docs/OdooQuery.xml' path='docs/member[@name="Where.ForeignKeyLevel1"]/*'/>
         public OdooQuery<T> Where<TForeignKeyLevel1>(Expression<Func<T, long>> expression, Expression<Func<TForeignKeyLevel1, object>> expressionForeignKeyLevel1, OdooOperator odooOperator, object value) where TForeignKeyLevel1 : IOdooModel, new()
         {
-            Filters.Add(OdooFilterMapper.ToOdooPathExpresion(odooOperator, value, OdooExpresionMapper.GetOdooPropertyName<T>(expression), OdooExpresionMapper.GetOdooPropertyName<TForeignKeyLevel1>(expressionForeignKeyLevel1)));
+            Filters.Add(OdooFilterMapper.ToOdooPathExpression(odooOperator, value, OdooExpressionMapper.GetOdooPropertyName<T>(expression), OdooExpressionMapper.GetOdooPropertyName<TForeignKeyLevel1>(expressionForeignKeyLevel1)));
             return this;
         }
         /// <include file='../Docs/OdooQuery.xml' path='docs/member[@name="Where.ForeignKeyLevel1"]/*'/>
         public OdooQuery<T> Where<TForeignKeyLevel1>(Expression<Func<T, long?>> expression, Expression<Func<TForeignKeyLevel1, object>> expressionForeignKeyLevel1, OdooOperator odooOperator, object value) where TForeignKeyLevel1 : IOdooModel, new()
         {
-            Filters.Add(OdooFilterMapper.ToOdooPathExpresion(odooOperator, value, OdooExpresionMapper.GetOdooPropertyName<T>(expression), OdooExpresionMapper.GetOdooPropertyName<TForeignKeyLevel1>(expressionForeignKeyLevel1)));
+            Filters.Add(OdooFilterMapper.ToOdooPathExpression(odooOperator, value, OdooExpressionMapper.GetOdooPropertyName<T>(expression), OdooExpressionMapper.GetOdooPropertyName<TForeignKeyLevel1>(expressionForeignKeyLevel1)));
             return this;
         }
 
         /// <include file='../Docs/OdooQuery.xml' path='docs/member[@name="Where.ForeignKeyLevel2"]/*'/>
         public OdooQuery<T> Where<TForeignKeyLevel1, TForeignKeyLevel2>(Expression<Func<T, long?>> expression, Expression<Func<TForeignKeyLevel1, long>> expressionForeignKeyLevel1, Expression<Func<TForeignKeyLevel2, object>> expressionForeignKeyLevel2, OdooOperator odooOperator, object value) where TForeignKeyLevel1 : IOdooModel, new() where TForeignKeyLevel2 : IOdooModel, new()
         {
-            Filters.Add(OdooFilterMapper.ToOdooPathExpresion(odooOperator, value, OdooExpresionMapper.GetOdooPropertyName<T>(expression), OdooExpresionMapper.GetOdooPropertyName<TForeignKeyLevel1>(expressionForeignKeyLevel1), OdooExpresionMapper.GetOdooPropertyName<TForeignKeyLevel2>(expressionForeignKeyLevel2)));
+            Filters.Add(OdooFilterMapper.ToOdooPathExpression(odooOperator, value, OdooExpressionMapper.GetOdooPropertyName<T>(expression), OdooExpressionMapper.GetOdooPropertyName<TForeignKeyLevel1>(expressionForeignKeyLevel1), OdooExpressionMapper.GetOdooPropertyName<TForeignKeyLevel2>(expressionForeignKeyLevel2)));
             return this;
         }
         /// <include file='../Docs/OdooQuery.xml' path='docs/member[@name="Where.ForeignKeyLevel2"]/*'/>
         public OdooQuery<T> Where<TForeignKeyLevel1, TForeignKeyLevel2>(Expression<Func<T, long>> expression, Expression<Func<TForeignKeyLevel1, long?>> expressionForeignKeyLevel1, Expression<Func<TForeignKeyLevel2, object>> expressionForeignKeyLevel2, OdooOperator odooOperator, object value) where TForeignKeyLevel1 : IOdooModel, new() where TForeignKeyLevel2 : IOdooModel, new()
         {
-            Filters.Add(OdooFilterMapper.ToOdooPathExpresion(odooOperator, value, OdooExpresionMapper.GetOdooPropertyName<T>(expression), OdooExpresionMapper.GetOdooPropertyName<TForeignKeyLevel1>(expressionForeignKeyLevel1), OdooExpresionMapper.GetOdooPropertyName<TForeignKeyLevel2>(expressionForeignKeyLevel2)));
+            Filters.Add(OdooFilterMapper.ToOdooPathExpression(odooOperator, value, OdooExpressionMapper.GetOdooPropertyName<T>(expression), OdooExpressionMapper.GetOdooPropertyName<TForeignKeyLevel1>(expressionForeignKeyLevel1), OdooExpressionMapper.GetOdooPropertyName<TForeignKeyLevel2>(expressionForeignKeyLevel2)));
             return this;
         }
         /// <include file='../Docs/OdooQuery.xml' path='docs/member[@name="Where.ForeignKeyLevel2"]/*'/>
         public OdooQuery<T> Where<TForeignKeyLevel1, TForeignKeyLevel2>(Expression<Func<T, long>> expression, Expression<Func<TForeignKeyLevel1, long>> expressionForeignKeyLevel1, Expression<Func<TForeignKeyLevel2, object>> expressionForeignKeyLevel2, OdooOperator odooOperator, object value) where TForeignKeyLevel1 : IOdooModel, new() where TForeignKeyLevel2 : IOdooModel, new()
         {
-            Filters.Add(OdooFilterMapper.ToOdooPathExpresion(odooOperator, value, OdooExpresionMapper.GetOdooPropertyName<T>(expression), OdooExpresionMapper.GetOdooPropertyName<TForeignKeyLevel1>(expressionForeignKeyLevel1), OdooExpresionMapper.GetOdooPropertyName<TForeignKeyLevel2>(expressionForeignKeyLevel2)));
+            Filters.Add(OdooFilterMapper.ToOdooPathExpression(odooOperator, value, OdooExpressionMapper.GetOdooPropertyName<T>(expression), OdooExpressionMapper.GetOdooPropertyName<TForeignKeyLevel1>(expressionForeignKeyLevel1), OdooExpressionMapper.GetOdooPropertyName<TForeignKeyLevel2>(expressionForeignKeyLevel2)));
             return this;
         }
         /// <include file='../Docs/OdooQuery.xml' path='docs/member[@name="Where.ForeignKeyLevel2"]/*'/>
         public OdooQuery<T> Where<TForeignKeyLevel1, TForeignKeyLevel2>(Expression<Func<T, long?>> expression, Expression<Func<TForeignKeyLevel1, long?>> expressionForeignKeyLevel1, Expression<Func<TForeignKeyLevel2, object>> expressionForeignKeyLevel2, OdooOperator odooOperator, object value) where TForeignKeyLevel1 : IOdooModel, new() where TForeignKeyLevel2 : IOdooModel, new()
         {
-            Filters.Add(OdooFilterMapper.ToOdooPathExpresion(odooOperator, value, OdooExpresionMapper.GetOdooPropertyName<T>(expression), OdooExpresionMapper.GetOdooPropertyName<TForeignKeyLevel1>(expressionForeignKeyLevel1), OdooExpresionMapper.GetOdooPropertyName<TForeignKeyLevel2>(expressionForeignKeyLevel2)));
+            Filters.Add(OdooFilterMapper.ToOdooPathExpression(odooOperator, value, OdooExpressionMapper.GetOdooPropertyName<T>(expression), OdooExpressionMapper.GetOdooPropertyName<TForeignKeyLevel1>(expressionForeignKeyLevel1), OdooExpressionMapper.GetOdooPropertyName<TForeignKeyLevel2>(expressionForeignKeyLevel2)));
             return this;
         }
 
@@ -148,28 +148,28 @@ namespace PortaCapena.OdooJsonRpcClient.Request
         /// <include file='../Docs/OdooQuery.xml' path='docs/member[@name="OrderBy"]/*'/>
         public OdooQuery<T> OrderBy(Expression<Func<T, object>> expression)
         {
-            var odooPropertyName = OdooExpresionMapper.GetOdooPropertyName(expression);
+            var odooPropertyName = OdooExpressionMapper.GetOdooPropertyName(expression);
             this.Order = $"{odooPropertyName} ASC";
             return this;
         }
         /// <include file='../Docs/OdooQuery.xml' path='docs/member[@name="OrderByDescending"]/*'/>
         public OdooQuery<T> OrderByDescending(Expression<Func<T, object>> expression)
         {
-            var odooPropertyName = OdooExpresionMapper.GetOdooPropertyName(expression);
+            var odooPropertyName = OdooExpressionMapper.GetOdooPropertyName(expression);
             this.Order = $"{odooPropertyName} DESC";
             return this;
         }
         /// <include file='../Docs/OdooQuery.xml' path='docs/member[@name="ThenOrderBy"]/*'/>
         public OdooQuery<T> ThenOrderBy(Expression<Func<T, object>> expression)
         {
-            var odooPropertyName = OdooExpresionMapper.GetOdooPropertyName(expression);
+            var odooPropertyName = OdooExpressionMapper.GetOdooPropertyName(expression);
             this.Order += $", {odooPropertyName} ASC";
             return this;
         }
         /// <include file='../Docs/OdooQuery.xml' path='docs/member[@name="ThenOrderByDescending"]/*'/>
         public OdooQuery<T> ThenOrderByDescending(Expression<Func<T, object>> expression)
         {
-            var odooPropertyName = OdooExpresionMapper.GetOdooPropertyName(expression);
+            var odooPropertyName = OdooExpressionMapper.GetOdooPropertyName(expression);
             this.Order += $", {odooPropertyName} DESC";
             return this;
         }

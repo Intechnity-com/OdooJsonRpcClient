@@ -2,6 +2,13 @@
 <!-- https://learn.microsoft.com/dotnet/fundamentals/package-validation/diagnostic-ids -->
 <Suppressions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Suppression>
+    <DiagnosticId>CP0001</DiagnosticId>
+    <Target>T:PortaCapena.OdooJsonRpcClient.Converters.OdooExpresionMapper</Target>
+    <Left>lib/netstandard2.0/PortaCapena.OdooJsonRpcClient.dll</Left>
+    <Right>lib/netstandard2.0/PortaCapena.OdooJsonRpcClient.dll</Right>
+    <IsBaselineSuppression>true</IsBaselineSuppression>
+  </Suppression>
+  <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:PortaCapena.OdooJsonRpcClient.Models.OdooConfig.#ctor(System.String,System.String,System.String,System.String,PortaCapena.OdooJsonRpcClient.Models.OdooContext,System.TimeSpan)</Target>
     <Left>lib/netstandard2.0/PortaCapena.OdooJsonRpcClient.dll</Left>
