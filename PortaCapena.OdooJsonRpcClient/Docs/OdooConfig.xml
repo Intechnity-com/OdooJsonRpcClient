@@ -89,4 +89,20 @@ var config = new OdooConfig("https://my-company.odoo.com", "my-db", "admin", "ap
     <exception cref="System.ArgumentException"><paramref name="apiUrl"/> is empty.</exception>
   </member>
 
+  <member name="Protocol">
+    <summary>
+      External API used for requests. Default <see cref="Consts.OdooApiProtocol.JsonRpc"/> works with all Odoo versions;
+      set <see cref="Consts.OdooApiProtocol.JsonApi"/> for Odoo 19+ and put an API key into <see cref="Password"/>.
+      All client, repository and query methods work the same with both protocols.
+    </summary>
+    <example>
+      <code>
+var config = new OdooConfig("https://my-company.odoo.com", "my-db", "admin", "&lt;API key&gt;")
+{
+    Protocol = OdooApiProtocol.JsonApi
+};
+      </code>
+    </example>
+  </member>
+
 </docs>

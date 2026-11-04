@@ -1,0 +1,73 @@
+# Odoo 19 instance for integration tests of the JSON-2 API (/json/2/<model>/<method>).
+# http://localhost:8070, db "db-test-19", admin / admin, API key for admin from seed.py (TEST_API_KEY).
+#
+#   docker compose -f docker/odoo19/docker-compose.yml up -d          # start (first run initializes the database, takes a few minutes)
+#   docker compose -f docker/odoo19/docker-compose.yml logs -f odoo   # follow logs
+#   docker compose -f docker/odoo19/docker-compose.yml down -v        # stop and wipe all data
+#
+# Runs next to the Odoo 15 instance (docker/odoo15) - own database server, own port.
+
+name: odoo-jsonrpc-tests-19
+
+x-db-env: &db-env
+  HOST: db
+  USER: odoo
+  PASSWORD: odoo
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: odoo
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odoo -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # One-shot: creates "db-test-19" with demo data, installs modules and runs seed.py.
+  # Skipped if the DB already exists (reset with `down -v`).
+  odoo-init:
+    image: odoo:19.0
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      <<: *db-env
+      PGPASSWORD: odoo
+      ODOO_DB: db-test-19
+      ODOO_LANGUAGES: en_US
+      ODOO_INIT_ARGS: --with-demo
+      ODOO_MODULES: base,contacts,sale_management,purchase,stock
+    volumes:
+      - odoo-web-data:/var/lib/odoo
+      - ./seed.py:/seed/seed.py:ro
+      - ../init.sh:/init.sh:ro
+    entrypoint: ["/bin/bash", "/init.sh"]
+
+  odoo:
+    image: odoo:19.0
+    depends_on:
+      odoo-init:
+        condition: service_completed_successfully
+    environment:
+      <<: *db-env
+    ports:
+      - "8070:8069"
+    volumes:
+      - odoo-web-data:/var/lib/odoo
+    command: ["odoo", "--db-filter=^db-test-19$$", "--workers=2", "--max-cron-threads=1", "--limit-time-real=600"]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://localhost:8069/web/health > /dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    restart: unless-stopped
+
+volumes:
+  odoo-db-data:
+  odoo-web-data:

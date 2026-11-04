@@ -348,12 +348,17 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 Please make sure to update tests as appropriate.
 
 ### Running integration tests locally
-Integration tests in `PortaCapena.OdooJsonRpcClient.Example` need a running Odoo instance. The repository contains a `docker-compose.yml` that starts Odoo 15 with demo data, matching the test config (`http://localhost:8069`, db `db-test`, `admin` / `admin`):
+Integration tests in `PortaCapena.OdooJsonRpcClient.Example` need a running Odoo instance. The [`docker`](docker) folder contains one self-contained setup per Odoo version - each has its own `docker-compose.yml`, `seed.py` with test data and database, and they can run at the same time:
+
+| Version | Folder | Url | Database | Login | Used for |
+|---|---|---|---|---|---|
+| Odoo 15 | [`docker/odoo15`](docker/odoo15) | http://localhost:8069 | `db-test` | `admin` / `admin` | JSON-RPC tests |
+| Odoo 19 | [`docker/odoo19`](docker/odoo19) | http://localhost:8070 | `db-test-19` | `admin` / `admin`, API key in `seed.py` | JSON-2 API tests |
 
 ```
-docker compose up -d        # first start initializes the database (a few minutes)
+docker compose -f docker/odoo15/docker-compose.yml up -d     # first start initializes the database (a few minutes)
 dotnet test PortaCapena.OdooJsonRpcClient.Example
-docker compose down -v      # stop and remove all data
+docker compose -f docker/odoo15/docker-compose.yml down -v   # stop and remove all data
 ```
 
-Odoo UI: http://localhost:8069 (`admin` / `admin`). On first start the database is created with demo data, modules (accounting, sales, purchase, inventory, coupons, CRM, project, HR, MRP), languages `en_US`, `nl_NL`, `pl_PL` and extra test data from [`docker/odoo/seed.py`](docker/odoo/seed.py) (companies, partners, lot-tracked products, coupon program, orders, invoice). To change modules or seed data, edit `docker-compose.yml` / `seed.py` and recreate with `docker compose down -v && docker compose up -d`.
+On first start the database is created with demo data, modules and extra test data from the version's `seed.py` (Odoo 15: accounting, sales, purchase, inventory, coupons, CRM, project, HR, MRP, languages `en_US`, `nl_NL`, `pl_PL`, companies, partners, lot-tracked products, orders, invoice; Odoo 19: sales, purchase, inventory, partners and a fixed API key for `admin`). To change modules or seed data, edit the version's `docker-compose.yml` / `seed.py` and recreate it with `down -v` and `up -d`.
