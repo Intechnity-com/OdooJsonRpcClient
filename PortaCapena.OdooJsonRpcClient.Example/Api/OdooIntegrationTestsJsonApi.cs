@@ -183,6 +183,18 @@ namespace PortaCapena.OdooJsonRpcClient.Example.Api
         }
 
         [Fact]
+        public async Task Untyped_filter_on_display_name_returns_only_matching_records()
+        {
+            // issue #97
+            var filter = OdooFilter.Create().EqualTo("display_name", "Test Partner PL");
+
+            var result = await new OdooRepository<IntegrationPartnerOdooModel>(JsonApiTestConfig).Query().Where(filter).ToListAsync();
+
+            result.Succeed.Should().BeTrue(result.Message);
+            result.Value.Should().ContainSingle().Which.Name.Should().Be("Test Partner PL");
+        }
+
+        [Fact]
         public async Task Order_skip_take()
         {
             var repository = new OdooRepository<IntegrationPartnerOdooModel>(JsonApiTestConfig);
