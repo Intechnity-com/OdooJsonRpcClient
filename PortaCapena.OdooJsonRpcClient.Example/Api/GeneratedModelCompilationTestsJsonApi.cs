@@ -46,6 +46,7 @@ namespace PortaCapena.OdooJsonRpcClient.Example.Api
         [InlineData("res.partner")]
         [InlineData("res.users")]
         [InlineData("product.template")]
+        [InlineData("product.product")]
         [InlineData("sale.order")]
         [InlineData("purchase.order")]
         [InlineData("account.move")]
