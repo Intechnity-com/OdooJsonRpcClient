@@ -83,7 +83,7 @@ namespace PortaCapena.OdooJsonRpcClient.Tests.Converters
 
             code.Should().Contain("[OdooTableName(\"sale.order\")]");
             code.Should().Contain("[JsonConverter(typeof(OdooModelConverter))]");
-            code.Should().Contain("public class SaleOrderOdooModel : IOdooModel");
+            code.Should().Contain("public partial class SaleOrderOdooModel : IOdooModel");
             code.Should().Contain("[JsonProperty(\"id\")]").And.Contain("public long Id { get; set; }");
             code.Should().Contain("public string Name { get; set; }");
             code.Should().Contain("public long? PartnerId { get; set; }");

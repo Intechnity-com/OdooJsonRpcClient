@@ -129,6 +129,11 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
                     result = value.ToString(Formatting.None);
                     return true;
 
+                // e.g. analytic_distribution {"144": 100.0} mapped to Dictionary<string, double>
+                case JTokenType.Object when typeof(System.Collections.IDictionary).IsAssignableFrom(dotnetType):
+                    result = value.ToObject(dotnetType);
+                    return true;
+
                 default:
                     throw new Exception($"Not implemented json mapping value: '{value.Path}' ({value.Type}) to {dotnetType.Name}");
             }
@@ -152,7 +157,7 @@ namespace PortaCapena.OdooJsonRpcClient.Converters
             var builder = new StringBuilder();
             builder.AppendLine($"[OdooTableName(\"{tableName}\")]");
             builder.AppendLine($"[JsonConverter(typeof({nameof(OdooModelConverter)}))]");
-            builder.AppendLine($"public class {ConvertOdooNameToDotNet(tableName)}{OdooModelSuffix} : IOdooModel");
+            builder.AppendLine($"public partial class {ConvertOdooNameToDotNet(tableName)}{OdooModelSuffix} : IOdooModel");
             builder.AppendLine("{");
 
             foreach (var property in properties)
