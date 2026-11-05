@@ -111,6 +111,19 @@ namespace PortaCapena.OdooJsonRpcClient.Tests.Converters
         }
 
         [Fact]
+        public void Json_object_maps_to_dictionary_property()
+        {
+            Map("{\"analytic_distribution\":{\"144\":100.0,\"145\":25.5}}").AnalyticDistribution
+                .Should().Equal(new System.Collections.Generic.Dictionary<string, double> { ["144"] = 100.0, ["145"] = 25.5 });
+        }
+
+        [Fact]
+        public void False_means_empty_dictionary_value()
+        {
+            Map("{\"analytic_distribution\":false}").AnalyticDistribution.Should().BeNull();
+        }
+
+        [Fact]
         public void List_of_strings_maps_to_dotted_string_as_before()
         {
             Map("{\"name\":[\"a\",\"b\"]}").Name.Should().Be("a.b");

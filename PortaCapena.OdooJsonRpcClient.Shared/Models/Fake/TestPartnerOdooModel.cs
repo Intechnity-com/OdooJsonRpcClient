@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using PortaCapena.OdooJsonRpcClient.Attributes;
 using PortaCapena.OdooJsonRpcClient.Converters;
@@ -48,6 +49,9 @@ namespace PortaCapena.OdooJsonRpcClient.Shared.Models.Fake
 
         [JsonProperty("raw")]
         public object Raw { get; set; }
+
+        [JsonProperty("analytic_distribution")]
+        public Dictionary<string, double> AnalyticDistribution { get; set; }
 
         [JsonIgnore]
         public string Computed => Name?.ToUpperInvariant();
